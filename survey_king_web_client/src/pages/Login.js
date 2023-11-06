@@ -1,20 +1,16 @@
-import React from "react";
+import React, {useRef} from "react";
 import { useState } from 'react';
 import "../plugins/fontawesome-free/css/all.min.css"
 import "../plugins/icheck-bootstrap/icheck-bootstrap.min.css"
 
-function Password({password}){
-    return (
-        <input
-            type="password"
-            className="form-control"
-            placeholder="Password"
-        />
-    )
-}
 export function RenderLogin(){
-    const [userName, setUserName] = useState(null);
-    const [password, setPassword] = useState(null);
+    const userNameRef = useRef();
+    const passwordRef = useRef();
+
+    function handleSubmit(){
+        const userName = userNameRef.current;
+        const password = passwordRef.current;
+    }
 
     return (
         <>
@@ -36,9 +32,14 @@ export function RenderLogin(){
                 <div className="card">
                     <div className="card-body login-card-body">
                         <p className="login-box-msg">Sign in to start your session</p>
-                        <form action="../../index3.html" method="post">
+                        <form onSubmit={handleSubmit}>
                             <div className="input-group mb-3">
-                                <input type="email" className="form-control" placeholder="Email" />
+                                <input
+                                    ref={userNameRef}
+                                    type="email"
+                                    className="form-control"
+                                    placeholder="Email"
+                                />
                                 <div className="input-group-append">
                                     <div className="input-group-text">
                                         <span className="fas fa-envelope" />
@@ -47,6 +48,7 @@ export function RenderLogin(){
                             </div>
                             <div className="input-group mb-3">
                                 <input
+                                    ref={passwordRef}
                                     type="password"
                                     className="form-control"
                                     placeholder="Password"
