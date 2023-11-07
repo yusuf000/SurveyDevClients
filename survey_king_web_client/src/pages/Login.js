@@ -6,7 +6,7 @@ import "../plugins/icheck-bootstrap/icheck-bootstrap.min.css"
 
 const authURL = `api/v1/auth/authenticate`
 
-export function Login() {
+export function Login({logIn}) {
     const [token, setToken] = useState(null)
     const [isInvalidCredentials, setInvalidCredentials] = useState(false)
     const userNameRef = useRef(null);
@@ -23,7 +23,7 @@ export function Login() {
         );
     }
 
-    function doLogin({userName, password}) {
+    const doLogin = ({userName, password}) => {
         axios
             .post(authURL, {
                 email: userName,
@@ -31,9 +31,11 @@ export function Login() {
             })
             .then((response) => {
                 setToken(response.data.token)
-                navigate(`/home`)
+                logIn()
+                navigate('')
             })
-            .catch(() => {
+            .catch((error) => {
+                console.log(error)
                 setInvalidCredentials(true)
             })
 

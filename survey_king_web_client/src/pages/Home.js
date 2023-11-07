@@ -1,7 +1,12 @@
+import {Login} from "./Login";
 
-export function Home(){
-    return (
-        <>
-        </>
-    )
+export function Home({userLoggedIn}){
+    if(userLoggedIn){
+        return (
+            <>
+            </>
+        )
+    }else{
+        return <Login/>
+    }
 }
