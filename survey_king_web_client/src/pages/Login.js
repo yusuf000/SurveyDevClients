@@ -1,25 +1,27 @@
 import React, {useRef, useState} from "react";
+import { useNavigate } from "react-router-dom"
 import axios from "axios";
 import "../plugins/fontawesome-free/css/all.min.css"
 import "../plugins/icheck-bootstrap/icheck-bootstrap.min.css"
 
 const authURL = `api/v1/auth/authenticate`
 
-function InvalidInputText() {
-    return (
-        <div className="invalid-feedback">
-            <p>
-                Username and/or password didn't match
-            </p>
-        </div>
-    );
-}
-
 export function Login() {
     const [token, setToken] = useState(null)
     const [isInvalidCredentials, setInvalidCredentials] = useState(false)
     const userNameRef = useRef(null);
     const passwordRef = useRef(null);
+    const navigate = useNavigate();
+
+    function InvalidInputText() {
+        return (
+            <div className="invalid-feedback">
+                <p>
+                    Username and/or password didn't match
+                </p>
+            </div>
+        );
+    }
 
     function doLogin({userName, password}) {
         axios
@@ -29,8 +31,9 @@ export function Login() {
             })
             .then((response) => {
                 setToken(response.data.token)
+                navigate(`/home`)
             })
-            .catch(error => {
+            .catch(() => {
                 setInvalidCredentials(true)
             })
 
