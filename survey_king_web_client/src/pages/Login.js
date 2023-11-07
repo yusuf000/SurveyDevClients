@@ -1,21 +1,53 @@
-import React, {useRef} from "react";
-import { useState } from 'react';
+import React, {useRef, useState} from "react";
+import axios from "axios";
 import "../plugins/fontawesome-free/css/all.min.css"
 import "../plugins/icheck-bootstrap/icheck-bootstrap.min.css"
 
-export function RenderLogin(){
-    const userNameRef = useRef();
-    const passwordRef = useRef();
+const authURL = `api/v1/auth/authenticate`
 
-    function handleSubmit(){
-        const userName = userNameRef.current;
-        const password = passwordRef.current;
+function InvalidInputText() {
+    return (
+        <div className="invalid-feedback">
+            <p>
+                Username and/or password didn't match
+            </p>
+        </div>
+    );
+}
+
+export function Login() {
+    const [token, setToken] = useState(null)
+    const [isInvalidCredentials, setInvalidCredentials] = useState(false)
+    const userNameRef = useRef(null);
+    const passwordRef = useRef(null);
+
+    function doLogin({userName, password}) {
+        axios
+            .post(authURL, {
+                email: userName,
+                password: password
+            })
+            .then((response) => {
+                setToken(response.data.token)
+            })
+            .catch(error => {
+                setInvalidCredentials(true)
+            })
+
+    }
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+        console.log('login clicked');
+        const userName = userNameRef.current.value;
+        const password = passwordRef.current.value;
+        doLogin({userName, password});
     }
 
     return (
         <div className="hold-transition login-page">
-            <meta charSet="utf-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <meta charSet="utf-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
             <title>AdminLTE 3 | Log in</title>
             {/* Google Font: Source Sans Pro */}
             <link
@@ -24,7 +56,7 @@ export function RenderLogin(){
             />
             <div className="login-box">
                 <div className="login-logo">
-                    <a href="../../index2.html">
+                    <a>
                         <b>Survey</b>King
                     </a>
                 </div>
@@ -32,7 +64,7 @@ export function RenderLogin(){
                 <div className="card">
                     <div className="card-body login-card-body">
                         <p className="login-box-msg">Sign in to start your session</p>
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={onSubmit}>
                             <div className="input-group mb-3">
                                 <input
                                     ref={userNameRef}
@@ -42,7 +74,7 @@ export function RenderLogin(){
                                 />
                                 <div className="input-group-append">
                                     <div className="input-group-text">
-                                        <span className="fas fa-envelope" />
+                                        <span className="fas fa-envelope"/>
                                     </div>
                                 </div>
                             </div>
@@ -55,14 +87,17 @@ export function RenderLogin(){
                                 />
                                 <div className="input-group-append">
                                     <div className="input-group-text">
-                                        <span className="fas fa-lock" />
+                                        <span className="fas fa-lock"/>
                                     </div>
                                 </div>
                             </div>
+                            {
+                                isInvalidCredentials ? <InvalidInputText/> : null
+                            }
                             <div className="row">
                                 <div className="col-8">
                                     <div className="icheck-primary">
-                                        <input type="checkbox" id="remember" />
+                                        <input type="checkbox" id="remember"/>
                                         <label htmlFor="remember">Remember Me</label>
                                     </div>
                                 </div>
@@ -75,7 +110,7 @@ export function RenderLogin(){
                                 {/* /.col */}
                             </div>
                         </form>
-                       {/* <div className="social-auth-links text-center mb-3">
+                        {/* <div className="social-auth-links text-center mb-3">
                             <p>- OR -</p>
                             <a href="#" className="btn btn-block btn-primary">
                                 <i className="fab fa-facebook mr-2" /> Sign in using Facebook

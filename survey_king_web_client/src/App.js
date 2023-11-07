@@ -1,11 +1,11 @@
 
 import './App.css';
-import {RenderLogin} from './pages/Login'
+import {Login} from './pages/Login'
 import React from "react";
 
 function App() {
   return (
-    <RenderLogin />
+    <Login />
   );
 }
 
