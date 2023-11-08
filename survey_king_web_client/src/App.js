@@ -1,7 +1,6 @@
 import './App.css';
 import {Login} from './pages/Login'
 import {Home} from "./pages/Home";
-import React, {useState} from "react";
 import {
     BrowserRouter as Router,
     Routes,
@@ -9,15 +8,6 @@ import {
 } from "react-router-dom";
 
 function App() {
-    const [userLoggedIn, setUserLoggedIn] = useState(false);
-
-    const logIn = () => {
-        setUserLoggedIn(true);
-    }
-
-    function logOut() {
-        setUserLoggedIn(false);
-    }
 
     return (
         <>
@@ -25,12 +15,12 @@ function App() {
                 <Routes>
                     <Route
                         exact
-                        path=""
-                        element={<Home userLoggedIn={userLoggedIn}/>}
+                        path="/"
+                        element={<Home/>}
                     />
                     <Route
                         path="/login"
-                        element={<Login logIn={logIn}/>}
+                        element={<Login/>}
                     />
                 </Routes>
             </Router>

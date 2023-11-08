@@ -6,7 +6,7 @@ import "../plugins/icheck-bootstrap/icheck-bootstrap.min.css"
 
 const authURL = `api/v1/auth/authenticate`
 
-export function Login({logIn}) {
+export function Login() {
     const [token, setToken] = useState(null)
     const [isInvalidCredentials, setInvalidCredentials] = useState(false)
     const userNameRef = useRef(null);
@@ -31,8 +31,7 @@ export function Login({logIn}) {
             })
             .then((response) => {
                 setToken(response.data.token)
-                logIn()
-                navigate('')
+                navigate('/')
             })
             .catch((error) => {
                 console.log(error)
