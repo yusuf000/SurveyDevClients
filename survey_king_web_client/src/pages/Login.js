@@ -128,7 +128,7 @@ export function Login() {
                             <a href="forgot-password.html">I forgot my password</a>
                         </p>
                         <p className="mb-0">
-                            <a href="register.html" className="text-center">
+                            <a href="/register" className="text-center">
                                 Register a new membership
                             </a>
                         </p>
