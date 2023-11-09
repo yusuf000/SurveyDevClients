@@ -1,22 +1,9 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-import { useState } from "react";
-
+import React, { useRef, useState } from "react";
 // react-router-dom components
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+
+//axios to call apis
+import axios from "axios";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -41,10 +28,53 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
+const authURL = `api/v1/auth/authenticate`
+
 function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
+  const [token, setToken] = useState(null)
+  const [isInvalidCredentials, setInvalidCredentials] = useState(false)
+  const userNameRef = useRef(null);
+  const passwordRef = useRef(null);
+  const navigate = useNavigate();
+
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
+
+  function InvalidInputText() {
+    return (
+        <div className="invalid-feedback">
+          <p>
+            Username and/or password didn't match
+          </p>
+        </div>
+    );
+  }
+
+  const doLogin = ({userName, password}) => {
+    axios
+        .post(authURL, {
+          email: userName,
+          password: password
+        })
+        .then((response) => {
+          setToken(response.data.token)
+          navigate('/')
+        })
+        .catch((error) => {
+          console.log(error)
+          setInvalidCredentials(true)
+        })
+
+  }
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    console.log('login clicked');
+    const userName = userNameRef.current.value;
+    const password = passwordRef.current.value;
+    doLogin({userName, password});
+  }
 
   return (
     <BasicLayout image={bgImage}>
