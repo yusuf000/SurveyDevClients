@@ -1,3 +1,4 @@
+/*
 import "../plugins/fontawesome-free/css/all.min.css"
 import "../plugins/icheck-bootstrap/icheck-bootstrap.min.css"
 import React, {useRef, useState} from "react";
@@ -83,7 +84,7 @@ export function Register() {
             <meta charSet="utf-8"/>
             <meta name="viewport" content="width=device-width, initial-scale=1"/>
             <title>AdminLTE 3 | Registration Page</title>
-            {/* Google Font: Source Sans Pro */}
+            {/!* Google Font: Source Sans Pro *!/}
             <link
                 rel="stylesheet"
                 href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"
@@ -168,16 +169,16 @@ export function Register() {
                                         </label>
                                     </div>
                                 </div>
-                                {/* /.col */}
+                                {/!* /.col *!/}
                                 <div className="col-4">
                                     <button type="submit" className="btn btn-primary btn-block">
                                         Register
                                     </button>
                                 </div>
-                                {/* /.col */}
+                                {/!* /.col *!/}
                             </div>
                         </form>
-                        {/*<div className="social-auth-links text-center">
+                        {/!*<div className="social-auth-links text-center">
                             <p>- OR -</p>
                             <a href="#" className="btn btn-block btn-primary">
                                 <i className="fab fa-facebook mr-2" />
@@ -187,15 +188,15 @@ export function Register() {
                                 <i className="fab fa-google-plus mr-2" />
                                 Sign up using Google+
                             </a>
-                        </div>*/}
+                        </div>*!/}
                         <a href="/login" className="text-center">
                             I already have a membership
                         </a>
                     </div>
-                    {/* /.form-box */}
+                    {/!* /.form-box *!/}
                 </div>
-                {/* /.card */}
+                {/!* /.card *!/}
             </div>
         </div>
     )
-}
+}*/

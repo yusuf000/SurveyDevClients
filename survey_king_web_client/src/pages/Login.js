@@ -1,3 +1,4 @@
+/*
 import React, {useRef, useState} from "react";
 import { useNavigate } from "react-router-dom"
 import axios from "axios";
@@ -53,7 +54,7 @@ export function Login() {
             <meta charSet="utf-8"/>
             <meta name="viewport" content="width=device-width, initial-scale=1"/>
             <title>AdminLTE 3 | Log in</title>
-            {/* Google Font: Source Sans Pro */}
+            {/!* Google Font: Source Sans Pro *!/}
             <link
                 rel="stylesheet"
                 href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"
@@ -64,7 +65,7 @@ export function Login() {
                         <b>Survey</b>King
                     </a>
                 </div>
-                {/* /.login-logo */}
+                {/!* /.login-logo *!/}
                 <div className="card">
                     <div className="card-body login-card-body">
                         <p className="login-box-msg">Sign in to start your session</p>
@@ -105,16 +106,16 @@ export function Login() {
                                         <label htmlFor="remember">Remember Me</label>
                                     </div>
                                 </div>
-                                {/* /.col */}
+                                {/!* /.col *!/}
                                 <div className="col-4">
                                     <button type="submit" className="btn btn-primary btn-block">
                                         Sign In
                                     </button>
                                 </div>
-                                {/* /.col */}
+                                {/!* /.col *!/}
                             </div>
                         </form>
-                        {/* <div className="social-auth-links text-center mb-3">
+                        {/!* <div className="social-auth-links text-center mb-3">
                             <p>- OR -</p>
                             <a href="#" className="btn btn-block btn-primary">
                                 <i className="fab fa-facebook mr-2" /> Sign in using Facebook
@@ -122,21 +123,21 @@ export function Login() {
                             <a href="#" className="btn btn-block btn-danger">
                                 <i className="fab fa-google-plus mr-2" /> Sign in using Google+
                             </a>
-                        </div>*/}
-                        {/* /.social-auth-links */}
-                        {/*<p className="mb-1">
+                        </div>*!/}
+                        {/!* /.social-auth-links *!/}
+                        {/!*<p className="mb-1">
                             <a href="forgot-password.html">I forgot my password</a>
-                        </p>*/}
+                        </p>*!/}
                         <p className="mb-0">
                             <a href="/register" className="text-center">
                                 Register a new membership
                             </a>
                         </p>
                     </div>
-                    {/* /.login-card-body */}
+                    {/!* /.login-card-body *!/}
                 </div>
             </div>
         </div>
 
     )
-}
+}*/

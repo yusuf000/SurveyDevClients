@@ -1,3 +1,4 @@
+/*
 import "../plugins/fontawesome-free/css/all.min.css"
 import logo from "../img/AdminLTELogo.png"
 import defaultImage from "../img/defaultAvatar.png"
@@ -8,21 +9,21 @@ export function Home(){
             <meta charSet="utf-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <title>AdminLTE 3 | Dashboard 3</title>
-            {/* Google Font: Source Sans Pro */}
+            {/!* Google Font: Source Sans Pro *!/}
             <link
                 rel="stylesheet"
                 href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"
             />
-            {/* IonIcons */}
+            {/!* IonIcons *!/}
             <link
                 rel="stylesheet"
                 href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"
             />
 
             <div className="wrapper">
-                {/* Navbar */}
+                {/!* Navbar *!/}
                 <nav className="main-header navbar navbar-expand navbar-white navbar-light">
-                    {/* Left navbar links */}
+                    {/!* Left navbar links *!/}
                     <ul className="navbar-nav">
                         <li className="nav-item">
                             <a className="nav-link" data-widget="pushmenu" href="#" role="button">
@@ -41,12 +42,12 @@ export function Home(){
                         </li>
                     </ul>
                 </nav>
-                {/* /.navbar */}
+                {/!* /.navbar *!/}
 
 
-                {/* Main Sidebar Container */}
+                {/!* Main Sidebar Container *!/}
                 <aside className="main-sidebar sidebar-dark-primary elevation-4">
-                    {/* Brand Logo */}
+                    {/!* Brand Logo *!/}
                     <a href="/" className="brand-link">
                         <img
                             src={logo}
@@ -56,9 +57,9 @@ export function Home(){
                         />
                         <span className="brand-text font-weight-light">SurveyKing</span>
                     </a>
-                    {/* Sidebar */}
+                    {/!* Sidebar *!/}
                     <div className="sidebar">
-                        {/* Sidebar user panel (optional) */}
+                        {/!* Sidebar user panel (optional) *!/}
                         <div className="user-panel mt-3 pb-3 mb-3 d-flex">
                             <div className="image">
                                 <img
@@ -74,13 +75,13 @@ export function Home(){
                             </div>
                         </div>
                     </div>
-                    {/* /.sidebar */}
+                    {/!* /.sidebar *!/}
                 </aside>
 
 
-                {/* Content Wrapper. Contains page content */}
+                {/!* Content Wrapper. Contains page content *!/}
                 <div className="content-wrapper">
-                    {/* Content Header (Page header) */}
+                    {/!* Content Header (Page header) *!/}
                     <div className="content-header">
                         <div className="container-fluid">
                             <div className="row mb-2">
@@ -88,15 +89,15 @@ export function Home(){
                                     <h1 className="m-0">Survey King</h1>
                                 </div>
                             </div>
-                            {/* /.row */}
+                            {/!* /.row *!/}
                         </div>
-                        {/* /.container-fluid */}
+                        {/!* /.container-fluid *!/}
                     </div>
                 </div>
-                {/* /.control-sidebar */}
+                {/!* /.control-sidebar *!/}
 
 
-                {/* Main Footer */}
+                {/!* Main Footer *!/}
                 <footer className="main-footer">
                     <strong>
                         Copyright © 2023 <a href="https://adminlte.io">SurveyKing</a>.
@@ -109,4 +110,4 @@ export function Home(){
             </div>
         </div>
     );
-}
+}*/
