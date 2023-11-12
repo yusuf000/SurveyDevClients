@@ -14,7 +14,7 @@ Coded by www.creative-tim.com
 */
 
 // react-router-dom components
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -26,15 +26,75 @@ import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 
-// Authentication layout components
-import CoverLayout from "layouts/authentication/components/CoverLayout";
-
 // Images
 import bgImage from "assets/images/bg-sign-up-cover.jpeg";
+import {useRef, useState} from "react";
+import axios from "axios";
+import BasicLayout from "../components/BasicLayout";
+
+const registerURL = `http://localhost:8080/api/v1/auth/register`
 
 function Cover() {
+  const fullNameRef = useRef(null);
+  const userNameRef = useRef(null);
+  const passwordRef = useRef(null);
+  const retypePasswordRef = useRef(null);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [termsAgreed, setTermsAgreed] = useState(false);
+  const navigate = useNavigate();
+
+  const doRegister = ({fullName, userName, password}) => {
+    axios
+        .post(registerURL, {
+          name: fullName,
+          email: userName,
+          password: password
+        })
+        .then((response) => {
+          if (response.data) {
+            navigate('/authentication/sign-in');
+          } else {
+            setErrorMessage("Registration failed,please give valid information");
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+  }
+
+  const isValidInput = ({fullName, userName, password, retypePassword}) => {
+    if (fullName === "" || userName === "" || password === "" || retypePassword === "") {
+      setErrorMessage("Please enter valid information")
+      return false;
+    } else if (password !== retypePassword) {
+      setErrorMessage("Passwords don't match, please re enter password")
+      return false;
+    } else if (termsAgreed === false) {
+      setErrorMessage("Agree terms to continue")
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  const handleOnClick = (e) => {
+    e.preventDefault();
+    console.log('register clicked');
+    const fullName = fullNameRef.current.value;
+    const userName = userNameRef.current.value;
+    const password = passwordRef.current.value;
+    const retypePassword = retypePasswordRef.current.value;
+    if (isValidInput({fullName, userName, password, retypePassword})) {
+      doRegister({fullName, userName, password});
+    }
+  }
+
+  function handleChange() {
+    setTermsAgreed(!termsAgreed);
+  }
+
   return (
-    <CoverLayout image={bgImage}>
+    <BasicLayout image={bgImage} errorMessage={errorMessage}>
       <Card>
         <MDBox
           variant="gradient"
@@ -57,16 +117,22 @@ function Cover() {
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput type="text" label="Name" variant="standard" fullWidth />
+              <MDInput type="text" label="Name" variant="standard" inputRef={fullNameRef} fullWidth />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="email" label="Email" variant="standard" fullWidth />
+              <MDInput type="email" label="Email" variant="standard" inputRef={userNameRef} fullWidth />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="password" label="Password" variant="standard" fullWidth />
+              <MDInput type="password" label="Password" variant="standard" inputRef={passwordRef} fullWidth />
+            </MDBox>
+            <MDBox mb={2}>
+              <MDInput type="password" label="Re-enter password" variant="standard" inputRef={retypePasswordRef} fullWidth />
             </MDBox>
             <MDBox display="flex" alignItems="center" ml={-1}>
-              <Checkbox />
+              <Checkbox
+                  checked={termsAgreed}
+                  onChange={handleChange}
+              />
               <MDTypography
                 variant="button"
                 fontWeight="regular"
@@ -87,7 +153,7 @@ function Cover() {
               </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="info" fullWidth>
+              <MDButton variant="gradient" color="info" onClick={handleOnClick} fullWidth>
                 sign in
               </MDButton>
             </MDBox>
@@ -109,7 +175,7 @@ function Cover() {
           </MDBox>
         </MDBox>
       </Card>
-    </CoverLayout>
+    </BasicLayout>
   );
 }
 
