@@ -30,21 +30,13 @@ import Footer from "layouts/authentication/components/Footer";
 import MDAlert from "../../../../components/MDAlert";
 import React from "react";
 import Icon from "@mui/material/Icon";
+import MDTypography from "../../../../components/MDTypography";
 
 function BasicLayout({ image, errorMessage, children}) {
 
 
   return (
     <PageLayout>
-      {/*<DefaultNavbar
-        action={{
-          type: "external",
-          route: "https://creative-tim.com/product/material-dashboard-react",
-          label: "free download",
-          color: "dark",
-        }}
-      />*/}
-
       <MDBox
         position="absolute"
         width="100%"
@@ -60,7 +52,13 @@ function BasicLayout({ image, errorMessage, children}) {
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
-      />
+        textAlign="center"
+      >
+
+          <MDTypography variant="h3" fontWeight="light" color="white" mt={1}>
+              SurveyKing
+          </MDTypography>
+      </MDBox>
       <MDBox px={1} width="100%" height="100vh" mx="auto">
         {
           errorMessage ? <MDAlert fontSize="small" color="error" > <Icon fontSize="small">error</Icon>&nbsp; {errorMessage} </MDAlert> : null
