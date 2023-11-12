@@ -27,30 +27,20 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
-import MDAlert from "../../../components/MDAlert";
 
-const authURL = `api/v1/auth/authenticate`
+const authURL = `http://localhost:8080/api/v1/auth/authenticate`
 
 function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
   const [token, setToken] = useState(null)
-  const [isInvalidCredentials, setInvalidCredentials] = useState(false)
   const userNameRef = useRef(null);
   const passwordRef = useRef(null);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
-  function InvalidInputText() {
-    return (
-        <div className="invalid-feedback">
-          <p>
-            Username and/or password didn't match
-          </p>
-        </div>
-    );
-  }
 
   const doLogin = ({userName, password}) => {
     axios
@@ -62,99 +52,104 @@ function Basic() {
           setToken(response.data.token)
           navigate('/')
         })
-        .catch((error) => {
-          console.log(error)
-          setInvalidCredentials(true)
+        .catch(() => {
+          setErrorMessage("Username and/or password don't match")
         })
 
   }
 
-  const handleOnClick = (e) => {
-    e.preventDefault();
+  const handleOnClick = () => {
     console.log('login clicked');
     const userName = userNameRef.current.value;
     const password = passwordRef.current.value;
-    doLogin({userName, password});
+    if(!userName || !password){
+      setErrorMessage("Username and/or password don't match")
+    }else{
+      doLogin({userName, password});
+    }
   }
 
   return (
-    <BasicLayout image={bgImage}>
-      <Card>
-        <MDBox
-          variant="gradient"
-          bgColor="info"
-          borderRadius="lg"
-          coloredShadow="info"
-          mx={2}
-          mt={-3}
-          p={2}
-          mb={1}
-          textAlign="center"
-        >
-          <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            Sign in
-          </MDTypography>
-          <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <FacebookIcon color="inherit" />
-              </MDTypography>
-            </Grid>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <GitHubIcon color="inherit" />
-              </MDTypography>
-            </Grid>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <GoogleIcon color="inherit" />
-              </MDTypography>
-            </Grid>
-          </Grid>
-        </MDBox>
-        <MDBox pt={4} pb={3} px={3}>
-          <MDBox component="form" role="form">
-            <MDBox mb={2}>
-              <MDInput type="email" label="Email" ref={userNameRef} fullWidth />
-            </MDBox>
-            <MDBox mb={2}>
-              <MDInput type="password" label="Password" ref={passwordRef} fullWidth />
-            </MDBox>
-            <MDBox display="flex" alignItems="center" ml={-1}>
-              <Switch checked={rememberMe} onChange={handleSetRememberMe} />
-              <MDTypography
-                variant="button"
-                fontWeight="regular"
-                color="text"
-                onClick={handleSetRememberMe}
-                sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-              >
-                &nbsp;&nbsp;Remember me
-              </MDTypography>
-            </MDBox>
-            <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" onClick={handleOnClick} color="info" fullWidth>
-                sign in
-              </MDButton>
-            </MDBox>
-            <MDBox mt={3} mb={1} textAlign="center">
-              <MDTypography variant="button" color="text">
-                Don&apos;t have an account?{" "}
-                <MDTypography
-                  component={Link}
-                  to="/authentication/sign-up"
-                  variant="button"
-                  color="info"
-                  fontWeight="medium"
-                  textGradient
-                >
-                  Sign up
+    <BasicLayout image={bgImage} errorMessage={errorMessage} spacing={7} >
+      <MDBox>
+        <Card>
+          <MDBox
+            variant="gradient"
+            bgColor="info"
+            borderRadius="lg"
+            coloredShadow="info"
+            mx={2}
+            mt={-3}
+            p={2}
+            mb={1}
+            textAlign="center"
+          >
+            <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+              Sign in
+            </MDTypography>
+            <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
+              <Grid item xs={2}>
+                <MDTypography component={MuiLink} href="#" variant="body1" color="white">
+                  <FacebookIcon color="inherit" />
                 </MDTypography>
-              </MDTypography>
+              </Grid>
+              <Grid item xs={2}>
+                <MDTypography component={MuiLink} href="#" variant="body1" color="white">
+                  <GitHubIcon color="inherit" />
+                </MDTypography>
+              </Grid>
+              <Grid item xs={2}>
+                <MDTypography component={MuiLink} href="#" variant="body1" color="white">
+                  <GoogleIcon color="inherit" />
+                </MDTypography>
+              </Grid>
+            </Grid>
+          </MDBox>
+          <MDBox pt={4} pb={3} px={3}>
+            <MDBox component="form" role="form">
+              <MDBox mb={2}>
+                <MDInput type="email" label="Email" inputRef={userNameRef} fullWidth />
+              </MDBox>
+              <MDBox mb={2}>
+                <MDInput type="password" label="Password" inputRef={passwordRef} fullWidth />
+              </MDBox>
+              <MDBox display="flex" alignItems="center" ml={-1}>
+                <Switch checked={rememberMe} onChange={handleSetRememberMe} />
+                <MDTypography
+                  variant="button"
+                  fontWeight="regular"
+                  color="text"
+                  onClick={handleSetRememberMe}
+                  sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+                >
+                  &nbsp;&nbsp;Remember me
+                </MDTypography>
+              </MDBox>
+              <MDBox mt={4} mb={1}>
+                <MDButton variant="gradient" onClick={handleOnClick} color="info" fullWidth>
+                  sign in
+                </MDButton>
+              </MDBox>
+              <MDBox mt={3} mb={1} textAlign="center">
+                <MDTypography variant="button" color="text">
+                  Don&apos;t have an account?{" "}
+                  <MDTypography
+                    component={Link}
+                    to="/authentication/sign-up"
+                    variant="button"
+                    color="info"
+                    fontWeight="medium"
+                    textGradient
+                  >
+                    Sign up
+                  </MDTypography>
+                </MDTypography>
+              </MDBox>
             </MDBox>
           </MDBox>
-        </MDBox>
-      </Card>
+        </Card>
+      </MDBox>
+
     </BasicLayout>
   );
 }
