@@ -34,6 +34,7 @@ import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 import Projects from "layouts/dashboard/components/Projects";
 
 function Dashboard() {
+
   const { sales, tasks } = reportsLineChartData;
 
   return (
