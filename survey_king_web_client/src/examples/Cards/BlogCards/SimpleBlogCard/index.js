@@ -28,13 +28,11 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 
-function SimpleBlogCard({ image, title, description, action }) {
+function SimpleBlogCard({title, description, action }) {
   return (
     <Card>
-      <MDBox position="relative" borderRadius="lg" mt={-3} mx={2}>
+      <MDBox position="relative" borderRadius="lg" mt={-3} mx={5}>
         <MDBox
-          component="img"
-          src={image}
           alt={title}
           borderRadius="lg"
           shadow="md"
@@ -42,21 +40,7 @@ function SimpleBlogCard({ image, title, description, action }) {
           height="100%"
           position="relative"
           zIndex={1}
-        />
-        <MDBox
-          borderRadius="lg"
-          shadow="md"
-          width="100%"
-          height="100%"
-          position="absolute"
-          left={0}
-          top="3%"
-          sx={{
-            backgroundImage: `url(${image})`,
-            transform: "scale(0.94)",
-            filter: "blur(12px)",
-            backgroundSize: "cover",
-          }}
+          my={3}
         />
       </MDBox>
       <MDBox p={3}>
@@ -84,7 +68,6 @@ function SimpleBlogCard({ image, title, description, action }) {
 
 // Typechecking props for the SimpleBlogCard
 SimpleBlogCard.propTypes = {
-  image: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   action: PropTypes.shape({

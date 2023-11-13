@@ -23,15 +23,16 @@ import MDBox from "components/MDBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
-import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
-import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 
 // Data
-import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
 import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 
 // Dashboard components
-import Projects from "layouts/dashboard/components/Projects";
+import SimpleBlogCard from "../../examples/Cards/BlogCards/SimpleBlogCard";
+import DataTable from "../../examples/Tables/DataTable";
+import MDTypography from "../../components/MDTypography";
+import React from "react";
+import Card from "@mui/material/Card";
 
 function Dashboard() {
 
@@ -44,67 +45,22 @@ function Dashboard() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="dark"
-                icon="weekend"
-                title="Bookings"
-                count={281}
-                percentage={{
-                  color: "success",
-                  amount: "+55%",
-                  label: "than lask week",
-                }}
-              />
-            </MDBox>
-          </Grid>
-          {/*<Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                icon="leaderboard"
-                title="Today's Users"
-                count="2,300"
-                percentage={{
-                  color: "success",
-                  amount: "+3%",
-                  label: "than last month",
-                }}
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="success"
-                icon="store"
-                title="Revenue"
-                count="34k"
-                percentage={{
-                  color: "success",
-                  amount: "+1%",
-                  label: "than yesterday",
-                }}
-              />
-            </MDBox>
-          </Grid>*/}
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="primary"
-                icon="person_add"
-                title="Followers"
-                count="+91"
-                percentage={{
-                  color: "success",
-                  amount: "",
-                  label: "Just updated",
-                }}
-              />
+                <SimpleBlogCard
+                    title="Create Project"
+                    description="Start right away by creating a project and adding questions"
+                    action={{
+                        type: "internal",
+                        route: "/somewhere",
+                        color: "info",
+                        label: "create"
+                    }}
+                />
             </MDBox>
           </Grid>
         </Grid>
         <MDBox mt={4.5}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={4}>
+            {/*<Grid item xs={12} md={6} lg={4}>
               <MDBox mb={3}>
                 <ReportsBarChart
                   color="info"
@@ -114,7 +70,7 @@ function Dashboard() {
                   chart={reportsBarChartData}
                 />
               </MDBox>
-            </Grid>
+            </Grid>*/}
             {/*<Grid item xs={12} md={6} lg={4}>
               <MDBox mb={3}>
                 <ReportsLineChart
@@ -146,7 +102,29 @@ function Dashboard() {
         <MDBox>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={8}>
-              <Projects />
+                <Card>
+                    <MDTypography variant="h5" fontWeight="medium" color="black" mt={1} my={3} mx={3}>
+                        Your Projects
+                    </MDTypography>
+                    <DataTable
+                        table={{
+                            columns: [
+                                { Header: "project name", accessor: "project_name", width: "35%" },
+                                { Header: "client", accessor: "client"},
+                                { Header: "start date", accessor: "start_date" },
+                                { Header: "end date", accessor: "end_date" },
+                            ],
+                            rows: [
+                                {
+                                    project_name: "X",
+                                    client: "Hanny Baniard",
+                                    start_date: "4/11/2021",
+                                    end_date: "10/11/2021",
+                                }
+                            ]
+                        }}
+                    />
+                </Card>
             </Grid>
             {/*<Grid item xs={12} md={6} lg={4}>
               <OrdersOverview />
@@ -154,7 +132,7 @@ function Dashboard() {
           </Grid>
         </MDBox>
       </MDBox>
-      <Footer />
+      <Footer/>
     </DashboardLayout>
   );
 }
