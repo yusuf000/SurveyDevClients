@@ -45,12 +45,12 @@ function Basic() {
   const doLogin = ({userName, password}) => {
     axios
         .post(authURL, {
-          email: userName,
+          userId: userName,
           password: password
         })
         .then((response) => {
           setToken(response.data.token)
-          navigate('/')
+          navigate('/dashboard')
         })
         .catch(() => {
           setErrorMessage("Username and/or password don't match")
