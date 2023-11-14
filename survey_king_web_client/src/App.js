@@ -49,6 +49,10 @@ import routes from "routes";
 // Material Dashboard 2 React contexts
 import {setMiniSidenav, setOpenConfigurator, useMaterialUIController} from "context";
 import SignIn from "./layouts/authentication/sign-in";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+
+
+import {LocalizationProvider} from "@mui/x-date-pickers";
 
 // Images
 
@@ -154,28 +158,30 @@ export default function App() {
         </ThemeProvider>
     } else {
         return (
-            <ThemeProvider theme={darkMode ? themeDark : theme}>
-                <CssBaseline/>
-                {layout === "dashboard" && (
-                    <>
-                        <Sidenav
-                            color={sidenavColor}
-                            /*brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}*/
-                            brandName="SurveyKing"
-                            routes={routes}
-                            onMouseEnter={handleOnMouseEnter}
-                            onMouseLeave={handleOnMouseLeave}
-                        />
-                        <Configurator/>
-                        {configsButton}
-                    </>
-                )}
-                {layout === "vr" && <Configurator/>}
-                <Routes>
-                    {getRoutes(routes)}
-                    <Route path="*" element={<Navigate to="/dashboard"/>}/>
-                </Routes>
-            </ThemeProvider>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <ThemeProvider theme={darkMode ? themeDark : theme}>
+                    <CssBaseline/>
+                    {layout === "dashboard" && (
+                        <>
+                            <Sidenav
+                                color={sidenavColor}
+                                /*brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}*/
+                                brandName="SurveyKing"
+                                routes={routes}
+                                onMouseEnter={handleOnMouseEnter}
+                                onMouseLeave={handleOnMouseLeave}
+                            />
+                            <Configurator/>
+                            {configsButton}
+                        </>
+                    )}
+                    {layout === "vr" && <Configurator/>}
+                    <Routes>
+                        {getRoutes(routes)}
+                        <Route path="*" element={<Navigate to="/dashboard"/>}/>
+                    </Routes>
+                </ThemeProvider>
+            </LocalizationProvider>
         );
     }
 
