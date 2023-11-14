@@ -16,7 +16,7 @@ Coded by www.creative-tim.com
 import {useEffect, useMemo, useState} from "react";
 
 // react-router components
-import {Navigate, Route, Routes, useLocation} from "react-router-dom";
+import {Navigate, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 
 // @mui material components
 import {ThemeProvider} from "@mui/material/styles";
@@ -52,6 +52,7 @@ import {setMiniSidenav, setOpenConfigurator, useMaterialUIController} from "cont
 // Images
 
 export default function App() {
+  const navigate = useNavigate();
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
@@ -105,7 +106,14 @@ export default function App() {
   useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
-  }, [pathname]);
+    const loggedInUser = localStorage.getItem("user");
+    console.log(pathname);
+    if(!loggedInUser){
+      if(pathname !== "/authentication/sign-in" && pathname !== "/authentication/sign-up"){
+        navigate('/authentication/sign-in');
+      }
+    }
+  }, [navigate, pathname]);
 
   const getRoutes = (allRoutes) =>
     allRoutes.map((route) => {

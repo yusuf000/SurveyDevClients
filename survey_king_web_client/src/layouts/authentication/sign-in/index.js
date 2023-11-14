@@ -32,7 +32,6 @@ const authURL = `http://localhost:8080/api/v1/auth/authenticate`
 
 function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
-  const [token, setToken] = useState(null)
   const userNameRef = useRef(null);
   const passwordRef = useRef(null);
   const [errorMessage, setErrorMessage] = useState("");
@@ -49,7 +48,7 @@ function Basic() {
           password: password
         })
         .then((response) => {
-          setToken(response.data.token)
+          localStorage.setItem("user", response.data.token);
           navigate('/dashboard')
         })
         .catch(() => {
@@ -58,7 +57,7 @@ function Basic() {
 
   }
 
-  const handleOnClick = () => {
+  const handleOnClick = async () => {
     console.log('login clicked');
     const userName = userNameRef.current.value;
     const password = passwordRef.current.value;

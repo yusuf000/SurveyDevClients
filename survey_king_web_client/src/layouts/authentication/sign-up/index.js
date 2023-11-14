@@ -77,7 +77,7 @@ function Cover() {
     }
   }
 
-  const handleOnClick = (e) => {
+  const handleOnClick = async (e) => {
     e.preventDefault();
     console.log('register clicked');
     const fullName = fullNameRef.current.value;

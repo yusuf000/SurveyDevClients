@@ -16,7 +16,7 @@ Coded by www.creative-tim.com
 import { useState, useEffect } from "react";
 
 // react-router components
-import { useLocation, Link } from "react-router-dom";
+import {useLocation, Link, useNavigate} from "react-router-dom";
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -30,7 +30,6 @@ import Icon from "@mui/material/Icon";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
-import MDInput from "components/MDInput";
 
 // Material Dashboard 2 React example components
 import Breadcrumbs from "examples/Breadcrumbs";
@@ -57,7 +56,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
-  const [openMenu, setOpenMenu] = useState(false);
+  const [openLogoutMenu, setOpenLogoutMenu] = useState(false);
+  const navigate = useNavigate();
   const route = useLocation().pathname.split("/").slice(1);
 
   useEffect(() => {
@@ -88,25 +88,28 @@ function DashboardNavbar({ absolute, light, isMini }) {
 
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
-  const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
-  const handleCloseMenu = () => setOpenMenu(false);
+  const handleOpenLogoutMenu = (event) => setOpenLogoutMenu(event.currentTarget);
+  const handleCloseLogoutMenu = () => setOpenLogoutMenu(false);
 
-  // Render the notifications menu
+  const handleOnLogoutClick = () =>{
+    localStorage.clear();
+    navigate('/authentication/sign-in')
+  }
+
+  // Render the logout menu
   const renderMenu = () => (
     <Menu
-      anchorEl={openMenu}
+      anchorEl={openLogoutMenu}
       anchorReference={null}
       anchorOrigin={{
         vertical: "bottom",
         horizontal: "left",
       }}
-      open={Boolean(openMenu)}
-      onClose={handleCloseMenu}
+      open={Boolean(openLogoutMenu)}
+      onClose={handleCloseLogoutMenu}
       sx={{ mt: 2 }}
     >
-      <NotificationItem icon={<Icon>email</Icon>} title="Check new messages" />
-      <NotificationItem icon={<Icon>podcasts</Icon>} title="Manage Podcast sessions" />
-      <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Payment successfully completed" />
+      <NotificationItem title="logout" onClick = {handleOnLogoutClick}/>
     </Menu>
   );
 
@@ -135,9 +138,9 @@ function DashboardNavbar({ absolute, light, isMini }) {
         </MDBox>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
-            <MDBox pr={1}>
+            {/*<MDBox pr={1}>
               <MDInput label="Search here" />
-            </MDBox>
+            </MDBox>*/}
             <MDBox color={light ? "white" : "inherit"}>
               <Link to="/authentication/sign-in/basic">
                 <IconButton sx={navbarIconButton} size="small" disableRipple>
@@ -169,12 +172,12 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 disableRipple
                 color="inherit"
                 sx={navbarIconButton}
-                aria-controls="notification-menu"
+                aria-controls="logout-menu"
                 aria-haspopup="true"
                 variant="contained"
-                onClick={handleOpenMenu}
+                onClick={handleOpenLogoutMenu}
               >
-                <Icon sx={iconsStyle}>notifications</Icon>
+                <Icon sx={iconsStyle}>logout</Icon>
               </IconButton>
               {renderMenu()}
             </MDBox>
