@@ -48,7 +48,8 @@ function Basic() {
           password: password
         })
         .then((response) => {
-          localStorage.setItem("user", response.data.token);
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("user", userName);
           navigate('/dashboard')
         })
         .catch(() => {

@@ -47,7 +47,7 @@ function Cover() {
     axios
         .post(registerURL, {
           name: fullName,
-          email: userName,
+          userId: userName,
           password: password
         })
         .then((response) => {
@@ -57,8 +57,8 @@ function Cover() {
             setErrorMessage("Registration failed,please give valid information");
           }
         })
-        .catch((error) => {
-          console.log(error)
+        .catch(() => {
+          setErrorMessage("Registration failed,please give valid information");
         })
   }
 
@@ -154,7 +154,7 @@ function Cover() {
             </MDBox>
             <MDBox mt={4} mb={1}>
               <MDButton variant="gradient" color="info" onClick={handleOnClick} fullWidth>
-                sign in
+                sign Up
               </MDButton>
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
