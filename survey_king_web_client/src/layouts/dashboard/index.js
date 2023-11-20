@@ -57,9 +57,6 @@ function Dashboard() {
         loadData();
     }, []);
 
-    const handleOnClickProject = () => {
-        console.log('project clicked');
-    }
 
 
     return (
@@ -107,6 +104,8 @@ function Dashboard() {
                                                 {Header: "client", accessor: "clientName"},
                                                 {Header: "start date", accessor: "startDate"},
                                                 {Header: "end date", accessor: "endDate"},
+                                                {Header: "", accessor: "delete"},
+                                                {Header: "", accessor: "expand"}
                                             ],
                                             rows: projectData
                                         }}/>

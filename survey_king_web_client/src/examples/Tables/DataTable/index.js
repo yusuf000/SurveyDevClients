@@ -194,6 +194,7 @@ function DataTable({
                   width={column.width ? column.width : "auto"}
                   align={column.align ? column.align : "left"}
                   sorted={setSortedValue(column)}
+                  value={column.render("Header")}
                 >
                   {column.render("Header")}
                 </DataTableHeadCell>

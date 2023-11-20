@@ -25,10 +25,10 @@ import MDBox from "components/MDBox";
 // Material Dashboard 2 React contexts
 import { useMaterialUIController } from "context";
 
-function DataTableHeadCell({ width, children, sorted, align, ...rest }) {
+function DataTableHeadCell({ width, children, sorted, align,value, ...rest }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
-
+  console.log(value)
   return (
     <MDBox
       component="th"
@@ -64,22 +64,27 @@ function DataTableHeadCell({ width, children, sorted, align, ...rest }) {
               fontSize: size.lg,
             })}
           >
-            <MDBox
-              position="absolute"
-              top={-6}
-              color={sorted === "asce" ? "text" : "secondary"}
-              opacity={sorted === "asce" ? 1 : 0.5}
-            >
-              <Icon>arrow_drop_up</Icon>
-            </MDBox>
-            <MDBox
-              position="absolute"
-              top={0}
-              color={sorted === "desc" ? "text" : "secondary"}
-              opacity={sorted === "desc" ? 1 : 0.5}
-            >
-              <Icon>arrow_drop_down</Icon>
-            </MDBox>
+              {
+                  value ? <MDBox>
+                      <MDBox
+                          position="absolute"
+                          top={-6}
+                          color={sorted === "asce" ? "text" : "secondary"}
+                          opacity={sorted === "asce" ? 1 : 0.5}
+                      >
+                          <Icon>arrow_drop_up</Icon>
+                      </MDBox>
+                      <MDBox
+                          position="absolute"
+                          top={0}
+                          color={sorted === "desc" ? "text" : "secondary"}
+                          opacity={sorted === "desc" ? 1 : 0.5}
+                      >
+                          <Icon>arrow_drop_down</Icon>
+                      </MDBox>
+                  </MDBox> : null
+              }
+
           </MDBox>
         )}
       </MDBox>
