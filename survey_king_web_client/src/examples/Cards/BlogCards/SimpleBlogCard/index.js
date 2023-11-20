@@ -31,7 +31,7 @@ import MDButton from "components/MDButton";
 function SimpleBlogCard({title, description, action }) {
   return (
     <Card>
-      <MDBox position="relative" borderRadius="lg" mt={-3} mx={5}>
+      <MDBox position="relative" borderRadius="lg" mt={-5.5} mx={5.5}>
         <MDBox
           alt={title}
           borderRadius="lg"
