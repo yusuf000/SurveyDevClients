@@ -15,15 +15,15 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 
-import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
-import MDButton from "../../components/MDButton";
+import DashboardLayout from "../../../examples/LayoutContainers/DashboardLayout";
+import MDButton from "../../../components/MDButton";
 import {DatePicker} from "@mui/x-date-pickers";
-import MDAlert from "../../components/MDAlert";
+import MDAlert from "../../../components/MDAlert";
 import Icon from "@mui/material/Icon";
 
 const url = `http://localhost:8080/api/v1/project/add`
 
-function Project() {
+function ProjectCreate() {
     const [errorMessage, setErrorMessage] = useState("");
     const projectNameRef = useRef(null);
 
@@ -167,4 +167,4 @@ function Project() {
     );
 }
 
-export default Project;
+export default ProjectCreate;

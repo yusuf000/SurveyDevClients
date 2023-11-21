@@ -119,7 +119,7 @@ function Dashboard() {
                                 description="Start right away by creating a project and adding questions"
                                 action={{
                                     type: "internal",
-                                    route: "/project",
+                                    route: "/project-create",
                                     color: "info",
                                     label: "create"
                                 }}

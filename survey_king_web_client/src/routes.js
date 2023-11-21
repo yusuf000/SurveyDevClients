@@ -47,7 +47,7 @@ import SignUp from "layouts/authentication/sign-up";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
-import Project from "./layouts/project";
+import ProjectCreate from "./layouts/project/create";
 
 const routes = [
   {
@@ -63,8 +63,8 @@ const routes = [
     name: "Project",
     key: "project",
     icon: <Icon fontSize="small">folder</Icon>,
-    route: "/project",
-    component: <Project />,
+    route: "/project-create",
+    component: <ProjectCreate />,
   },
   /*{
     type: "collapse",
