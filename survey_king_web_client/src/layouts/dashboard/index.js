@@ -18,6 +18,8 @@ import DefaultInfoCard from "../../examples/Cards/InfoCards/DefaultInfoCard";
 import axios from "axios";
 import Icon from "@mui/material/Icon";
 
+import {useNavigate} from "react-router-dom";
+
 const url = `http://localhost:8080/api/v1/project`
 
 
@@ -26,6 +28,8 @@ function Dashboard() {
     const [projectData, setProjectData] = useState(null);
     const [totalRunningProject, setTotalRunningProject] = useState(0);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
+    const navigate = useNavigate();
+    const data = { name: "John", age: 30 };
 
     const getTotalRunningProject = (data)=>{
         let count= 0;
@@ -56,8 +60,8 @@ function Dashboard() {
             })
     }
 
-    const onExpand = ({sasCode})=>{
-        console.log("on expand clicked");
+    const onExpand = ({item})=>{
+        navigate('/project-details', { state: item });
     }
 
     const prepareTableData = (data)=>{
@@ -73,7 +77,7 @@ function Dashboard() {
                 "delete" : <MDTypography component="a" href="#" role="button" onClick={()=>onDelete({sasCode})} color="text">
                     <Icon>delete</Icon>
                 </MDTypography>,
-                "expand" : <MDTypography component="a" href="#" role="button" onClick={()=>onExpand({sasCode})} color="text">
+                "expand" : <MDTypography component="a" href="#" role="button" onClick={()=>onExpand({item})} color="text">
                     <Icon>arrow_outward</Icon>
                 </MDTypography>
             });
