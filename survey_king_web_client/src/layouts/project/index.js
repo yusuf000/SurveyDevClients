@@ -26,6 +26,7 @@ const url = `http://localhost:8080/api/v1/project/add`
 function Project() {
     const [errorMessage, setErrorMessage] = useState("");
     const projectNameRef = useRef(null);
+
     const projectTypeRef = useRef(null);
     const clientNameRef = useRef(null);
     const statusRef = useRef(null);

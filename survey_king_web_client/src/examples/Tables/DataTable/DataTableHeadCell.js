@@ -28,7 +28,6 @@ import { useMaterialUIController } from "context";
 function DataTableHeadCell({ width, children, sorted, align,value, ...rest }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
-  console.log(value)
   return (
     <MDBox
       component="th"
@@ -65,7 +64,7 @@ function DataTableHeadCell({ width, children, sorted, align,value, ...rest }) {
             })}
           >
               {
-                  value ? <MDBox>
+                  (value !== "delete" && value !== "expand") ? <MDBox>
                       <MDBox
                           position="absolute"
                           top={-6}

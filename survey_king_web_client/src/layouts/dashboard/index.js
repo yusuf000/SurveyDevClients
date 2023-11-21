@@ -16,8 +16,11 @@ import React, {useEffect, useState} from "react";
 import Card from "@mui/material/Card";
 import DefaultInfoCard from "../../examples/Cards/InfoCards/DefaultInfoCard";
 import axios from "axios";
+import Icon from "@mui/material/Icon";
 
 const url = `http://localhost:8080/api/v1/project`
+
+
 
 function Dashboard() {
     const [projectData, setProjectData] = useState(null);
@@ -33,6 +36,51 @@ function Dashboard() {
         })
         return count;
     }
+
+    const onDelete = ({sasCode})=>{
+        const token = localStorage.getItem('token');
+        axios
+            .post(url+"/delete", {},{
+                headers: {
+                    'Authorization': 'Bearer '+token
+                },
+                params:  {
+                    'sasCode': sasCode
+                }
+            })
+            .then(() => {
+                loadData()
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }
+
+    const onExpand = ({sasCode})=>{
+        console.log("on expand clicked");
+    }
+
+    const prepareTableData = (data)=>{
+        let tableData = [];
+        for(let i in data){
+            let item = data[i];
+            let sasCode = item.sasCode;
+            tableData.push({
+                "name" : item.name,
+                "clientName" : item.clientName,
+                "startDate" : item.startDate,
+                "endDate" : item.endDate,
+                "delete" : <MDTypography component="a" href="#" role="button" onClick={()=>onDelete({sasCode})} color="text">
+                    <Icon>delete</Icon>
+                </MDTypography>,
+                "expand" : <MDTypography component="a" href="#" role="button" onClick={()=>onExpand({sasCode})} color="text">
+                    <Icon>arrow_outward</Icon>
+                </MDTypography>
+            });
+        }
+        return tableData;
+    }
+
     const loadData = () => {
         const token = localStorage.getItem('token');
         axios
@@ -43,7 +91,7 @@ function Dashboard() {
             })
             .then((response) => {
                 if(response.data.length !== 0){
-                    setProjectData(response.data);
+                    setProjectData(prepareTableData(response.data));
                     setIsDataLoaded(true);
                     setTotalRunningProject(getTotalRunningProject(response.data))
                 }
@@ -104,8 +152,8 @@ function Dashboard() {
                                                 {Header: "client", accessor: "clientName"},
                                                 {Header: "start date", accessor: "startDate"},
                                                 {Header: "end date", accessor: "endDate"},
-                                                {Header: "", accessor: "delete"},
-                                                {Header: "", accessor: "expand"}
+                                                {Header: "delete", accessor: "delete"},
+                                                {Header: "expand", accessor: "expand"}
                                             ],
                                             rows: projectData
                                         }}/>
