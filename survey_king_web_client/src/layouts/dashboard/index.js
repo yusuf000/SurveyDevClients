@@ -18,10 +18,9 @@ import DefaultInfoCard from "../../examples/Cards/InfoCards/DefaultInfoCard";
 import axios from "axios";
 import Icon from "@mui/material/Icon";
 
-import {useNavigate} from "react-router-dom";
+import {createSearchParams, useNavigate} from "react-router-dom";
 
 const url = `http://localhost:8080/api/v1/project`
-
 
 
 function Dashboard() {
@@ -29,26 +28,26 @@ function Dashboard() {
     const [totalRunningProject, setTotalRunningProject] = useState(0);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const navigate = useNavigate();
-    const data = { name: "John", age: 30 };
+    const data = {name: "John", age: 30};
 
-    const getTotalRunningProject = (data)=>{
-        let count= 0;
-        data.forEach((project)=>{
-            if(project.status === 'running'){
+    const getTotalRunningProject = (data) => {
+        let count = 0;
+        data.forEach((project) => {
+            if (project.status === 'running') {
                 count++;
             }
         })
         return count;
     }
 
-    const onDelete = ({sasCode})=>{
+    const onDelete = ({sasCode}) => {
         const token = localStorage.getItem('token');
         axios
-            .post(url+"/delete", {},{
+            .post(url + "/delete", {}, {
                 headers: {
-                    'Authorization': 'Bearer '+token
+                    'Authorization': 'Bearer ' + token
                 },
-                params:  {
+                params: {
                     'sasCode': sasCode
                 }
             })
@@ -60,24 +59,26 @@ function Dashboard() {
             })
     }
 
-    const onExpand = ({item})=>{
-        navigate('/project-details', { state: item });
+    const onExpand = ({item}) => {
+        navigate('/project-details', {state: {project: JSON.stringify(item)}});
     }
 
-    const prepareTableData = (data)=>{
+    const prepareTableData = (data) => {
         let tableData = [];
-        for(let i in data){
+        for (let i in data) {
             let item = data[i];
             let sasCode = item.sasCode;
             tableData.push({
-                "name" : item.name,
-                "clientName" : item.clientName,
-                "startDate" : item.startDate,
-                "endDate" : item.endDate,
-                "delete" : <MDTypography component="a" href="#" role="button" onClick={()=>onDelete({sasCode})} color="text">
+                "name": item.name,
+                "clientName": item.clientName,
+                "startDate": item.startDate,
+                "endDate": item.endDate,
+                "delete": <MDTypography component="a" href="#" role="button" onClick={() => onDelete({sasCode})}
+                                        color="text">
                     <Icon>delete</Icon>
                 </MDTypography>,
-                "expand" : <MDTypography component="a" href="#" role="button" onClick={()=>onExpand({item})} color="text">
+                "expand": <MDTypography component="a" href="#" role="button" onClick={() => onExpand({item})}
+                                        color="text">
                     <Icon>arrow_outward</Icon>
                 </MDTypography>
             });
@@ -90,11 +91,11 @@ function Dashboard() {
         axios
             .get(url, {
                 headers: {
-                    'Authorization': 'Bearer '+token
+                    'Authorization': 'Bearer ' + token
                 }
             })
             .then((response) => {
-                if(response.data.length !== 0){
+                if (response.data.length !== 0) {
                     setProjectData(prepareTableData(response.data));
                     setIsDataLoaded(true);
                     setTotalRunningProject(getTotalRunningProject(response.data))
@@ -108,7 +109,6 @@ function Dashboard() {
     useEffect(() => {
         loadData();
     }, []);
-
 
 
     return (
@@ -136,7 +136,7 @@ function Dashboard() {
                                 icon="folder"
                                 title="Total Running Projects"
                                 description="Running projects can still take answers"
-                                value={totalRunningProject+""}
+                                value={totalRunningProject + ""}
                             />
                         </MDBox>
                     </Grid>
@@ -161,7 +161,7 @@ function Dashboard() {
                                             ],
                                             rows: projectData
                                         }}/>
-                                </Card> :null
+                                </Card> : null
                             }
                         </Grid>
                     </Grid>

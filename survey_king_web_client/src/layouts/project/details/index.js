@@ -1,31 +1,33 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 // react-router-dom components
-
 //axios to call apis
-
 // @mui material components
-import Card from "@mui/material/Card";
-
 // @mui icons
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-import MDInput from "components/MDInput";
 
 import DashboardLayout from "../../../examples/LayoutContainers/DashboardLayout";
-import {DatePicker} from "@mui/x-date-pickers";
+import {useMaterialUIController} from "../../../context";
 import {useLocation} from "react-router-dom";
+import Card from "@mui/material/Card";
+import Information from "../components/Information";
+import Grid from "@mui/material/Grid";
+import SimpleBlogCard from "../../../examples/Cards/BlogCards/SimpleBlogCard";
 
 
 function ProjectDetails() {
+    const [controller] = useMaterialUIController();
+    const { darkMode } = controller;
     const location = useLocation();
-    const [project, setProject] = useState(null);
 
-    useEffect(() => {
-        //if(!project){
-            setProject(location.state);
-        //}
-    }, []);
+    if(location.state != null){
+        localStorage.setItem("project", location.state.project);
+    }
+
+    console.log(localStorage.getItem('project'));
+    const project = JSON.parse(localStorage.getItem('project'));
+    const user = localStorage.getItem('user');
 
     const handleOnClick = async () => {
 
@@ -33,59 +35,50 @@ function ProjectDetails() {
 
     return (
         <DashboardLayout>
-            <MDBox
-                my={3}
-                mt={15}
-                mx={15}
-            >
-                <Card>
-                    <MDBox
-                        variant="gradient"
-                        bgColor="info"
-                        borderRadius="lg"
-                        coloredShadow="info"
-                        mx={2}
-                        mt={-3}
-                        p={2}
-                        mb={1}
-                        textAlign="center"
-                    >
-                        <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                            Project
-                        </MDTypography>
-                    </MDBox>
-                    <MDBox pt={4} pb={5} px={6}>
-                        <MDBox component="form" role="form">
-                            <MDBox mb={2}>
-                                <MDTypography type="email" label="Project Name"  fullWidth>
-
+            <MDBox py={3}>
+                <Grid container spacing={3}>
+                    <Grid item xs={12} md={6} lg={3}>
+                        <MDBox mb={1.5}>
+                            <SimpleBlogCard
+                                title="Add Question"
+                                description="Add a question to the project"
+                                action={{
+                                    type: "internal",
+                                    route: "/project-create",
+                                    color: "info",
+                                    label: "Add"
+                                }}
+                            />
+                        </MDBox>
+                    </Grid>
+                </Grid>
+            </MDBox>
+            <MDBox>
+                <Grid container spacing={3}>
+                    <Grid item xs={12} md={6} lg={8}>
+                        <Card>
+                            <MDBox pt={3} px={2}>
+                                <MDTypography variant="h6" fontWeight="medium">
+                                    Project Information
                                 </MDTypography>
                             </MDBox>
-                            <MDBox mb={2}>
-                                <MDInput type="email" label="Project Type"  fullWidth/>
+                            <MDBox pt={1} pb={2} px={2}>
+                                <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
+                                    <Information
+                                        name={project.name}
+                                        projectType={project.type}
+                                        clientName={project.clientName}
+                                        status={project.status}
+                                        sasCode={project.sasCode}
+                                        jobNumber={project.jobNumber}
+                                        startDate={project.startDate}
+                                        endDate={project.endDate}
+                                    />
+                                </MDBox>
                             </MDBox>
-                            <MDBox mb={2}>
-                                <MDInput type="email" label="Client Name"  fullWidth/>
-                            </MDBox>
-                            <MDBox mb={2}>
-                                <MDInput type="email" label="Status"  fullWidth/>
-                            </MDBox>
-                            <MDBox mb={2}>
-                                <MDInput type="email" label="Sas-Code"  fullWidth/>
-                            </MDBox>
-                            <MDBox mb={2}>
-                                <MDInput type="email" label="Job Number"  fullWidth/>
-                            </MDBox>
-                            <MDBox mb={2}>
-                                <DatePicker label='Start Date' />
-                            </MDBox>
-                            <MDBox mb={2}>
-                                <DatePicker label='End Date' />
-                            </MDBox>
-                        </MDBox>
-                    </MDBox>
-                </Card>
-
+                        </Card>
+                    </Grid>
+                </Grid>
             </MDBox>
 
         </DashboardLayout>
