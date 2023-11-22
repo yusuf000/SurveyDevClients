@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 // react-router-dom components
 //axios to call apis
 // @mui material components
@@ -19,10 +19,14 @@ import Icon from "@mui/material/Icon";
 import axios from "axios";
 
 
+const url = `http://localhost:8080/api/v1/project`
+
 function ProjectDetails() {
     const [controller] = useMaterialUIController();
     const { darkMode } = controller;
     const location = useLocation();
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
+    const [tableData, setTableData] = useState(null);
 
     if(location.state != null){
         localStorage.setItem("project", location.state.project);
@@ -32,30 +36,76 @@ function ProjectDetails() {
     const project = JSON.parse(localStorage.getItem('project'));
     const user = localStorage.getItem('user');
 
-    const onDelete = ({sasCode}) => {
+    const onDelete = ({memberId}) => {
         const token = localStorage.getItem('token');
+        axios
+            .post(url + "/remove-member", {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                params: {
+                    sasCode: project.sasCode,
+                    memberId: memberId
+                }
+            })
+            .then((response) => {
 
+            })
+            .catch((e) => {
+                console.log(e);
+            })
     }
 
-    let tableData = [];
-    for (let i in project.members) {
-        let member = project.members[i];
+    const prepareTableData = (members)=>{
+        let data = []
+        for (let i in members) {
+            let member = members[i];
 
-        if(member !== user){
-            tableData.push({
-                "name": member,
-                "delete": <MDTypography component="a" href="#" role="button" onClick={() => onDelete({member})}
-                                        color="error">
-                    <Icon>delete</Icon>
-                </MDTypography>
-            });
-        }else{
-            tableData.push({
-                "name": member,
-            });
+            if(member !== user){
+                data.push({
+                    "name": member,
+                    "delete": <MDTypography component="a" href="#" role="button" onClick={() => onDelete({member})}
+                                            color="error">
+                        <Icon>delete</Icon>
+                    </MDTypography>
+                });
+            }else{
+                data.push({
+                    "name": member,
+                });
+            }
         }
-
+        return data;
     }
+
+    const loadData = async () => {
+        const token = localStorage.getItem('token');
+        axios
+            .get(url + "/member", {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                params: {
+                    sasCode: project.sasCode
+                }
+            })
+            .then((response) => {
+                console.log(response.data)
+                if (response.data.length !== 0) {
+                    setTableData(prepareTableData(response.data));
+                    setIsDataLoaded(true);
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }
+
+    useEffect(() => {
+        loadData();
+    }, []);
+
+
 
     const handleOnClick = async () => {
 
@@ -108,27 +158,29 @@ function ProjectDetails() {
                     </Grid>
                 </Grid>
             </MDBox>
-            <MDBox py={3}>
-                <Grid container spacing={3}>
-                    <Grid item xs={12} md={6} lg={5}>
-                        {
-                            <Card>
-                                <MDTypography variant="h5" fontWeight="medium" color="dark" mt={1} my={3} mx={3}>
-                                    Members
-                                </MDTypography>
-                                <DataTable
-                                    table={{
-                                        columns: [
-                                            {Header: "Name", accessor: "name", width: "85%"},
-                                            {Header: "delete", accessor: "delete"}
-                                        ],
-                                        rows: tableData
-                                    }}/>
-                            </Card>
-                        }
-                    </Grid>
-                </Grid>
-            </MDBox>
+            {
+              isDataLoaded ? <MDBox py={3}>
+                  <Grid container spacing={3}>
+                      <Grid item xs={12} md={6} lg={5}>
+                          {
+                              <Card>
+                                  <MDTypography variant="h5" fontWeight="medium" color="dark" mt={1} my={3} mx={3}>
+                                      Members
+                                  </MDTypography>
+                                  <DataTable
+                                      table={{
+                                          columns: [
+                                              {Header: "Name", accessor: "name", width: "85%"},
+                                              {Header: "delete", accessor: "delete"}
+                                          ],
+                                          rows: tableData
+                                      }}/>
+                              </Card>
+                          }
+                      </Grid>
+                  </Grid>
+              </MDBox>: null
+            }
 
         </DashboardLayout>
     );
