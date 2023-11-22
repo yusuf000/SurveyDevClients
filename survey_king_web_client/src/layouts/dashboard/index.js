@@ -18,7 +18,7 @@ import DefaultInfoCard from "../../examples/Cards/InfoCards/DefaultInfoCard";
 import axios from "axios";
 import Icon from "@mui/material/Icon";
 
-import {createSearchParams, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 const url = `http://localhost:8080/api/v1/project`
 
@@ -28,7 +28,6 @@ function Dashboard() {
     const [totalRunningProject, setTotalRunningProject] = useState(0);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const navigate = useNavigate();
-    const data = {name: "John", age: 30};
 
     const getTotalRunningProject = (data) => {
         let count = 0;
@@ -74,11 +73,11 @@ function Dashboard() {
                 "startDate": item.startDate,
                 "endDate": item.endDate,
                 "delete": <MDTypography component="a" href="#" role="button" onClick={() => onDelete({sasCode})}
-                                        color="text">
+                                        color="error">
                     <Icon>delete</Icon>
                 </MDTypography>,
                 "expand": <MDTypography component="a" href="#" role="button" onClick={() => onExpand({item})}
-                                        color="text">
+                                        color="info">
                     <Icon>arrow_outward</Icon>
                 </MDTypography>
             });
