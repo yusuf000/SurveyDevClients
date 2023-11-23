@@ -85,7 +85,7 @@ function Dashboard() {
         return tableData;
     }
 
-    const loadData = () => {
+    const loadData = async () => {
         const token = localStorage.getItem('token');
         axios
             .get(url, {

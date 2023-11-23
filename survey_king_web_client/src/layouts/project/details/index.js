@@ -22,8 +22,6 @@ import axios from "axios";
 const url = `http://localhost:8080/api/v1/project`
 
 function ProjectDetails() {
-    const [controller] = useMaterialUIController();
-    const { darkMode } = controller;
     const location = useLocation();
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [tableData, setTableData] = useState(null);
@@ -32,24 +30,24 @@ function ProjectDetails() {
         localStorage.setItem("project", location.state.project);
     }
 
-    console.log(localStorage.getItem('project'));
     const project = JSON.parse(localStorage.getItem('project'));
     const user = localStorage.getItem('user');
 
     const onDelete = ({memberId}) => {
+        console.log(memberId)
         const token = localStorage.getItem('token');
         axios
-            .post(url + "/remove-member", {
+            .post(url + "/remove-member", {},{
                 headers: {
                     'Authorization': 'Bearer ' + token
                 },
                 params: {
-                    sasCode: project.sasCode,
-                    memberId: memberId
+                    'sasCode': project.sasCode,
+                    'memberId': memberId
                 }
             })
-            .then((response) => {
-
+            .then(() => {
+                loadMemberData();
             })
             .catch((e) => {
                 console.log(e);
@@ -60,14 +58,13 @@ function ProjectDetails() {
         let data = []
         for (let i in members) {
             let member = members[i];
-
             if(member !== user){
                 data.push({
                     "name": member,
                     "delete": <MDTypography component="a" href="#" role="button" onClick={() => onDelete({member})}
                                             color="error">
                         <Icon>delete</Icon>
-                    </MDTypography>
+                    </MDTypography>,
                 });
             }else{
                 data.push({
@@ -78,7 +75,7 @@ function ProjectDetails() {
         return data;
     }
 
-    const loadData = async () => {
+    const loadMemberData = () => {
         const token = localStorage.getItem('token');
         axios
             .get(url + "/member", {
@@ -90,7 +87,6 @@ function ProjectDetails() {
                 }
             })
             .then((response) => {
-                console.log(response.data)
                 if (response.data.length !== 0) {
                     setTableData(prepareTableData(response.data));
                     setIsDataLoaded(true);
@@ -102,7 +98,7 @@ function ProjectDetails() {
     }
 
     useEffect(() => {
-        loadData();
+        loadMemberData();
     }, []);
 
 
@@ -133,7 +129,7 @@ function ProjectDetails() {
             </MDBox>
             <MDBox py={3}>
                 <Grid container spacing={3}>
-                    <Grid item xs={12} md={6} lg={8}>
+                    <Grid item xs={12} md={6} lg={5}>
                         <Card>
                             <MDBox pt={3} px={2}>
                                 <MDTypography variant="h6" fontWeight="medium">

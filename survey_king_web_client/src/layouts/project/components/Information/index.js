@@ -124,9 +124,9 @@ Information.defaultProps = {
 // Typechecking props for the Bill
 Information.propTypes = {
   name: PropTypes.string.isRequired,
-  company: PropTypes.string.isRequired,
-  email: PropTypes.string.isRequired,
-  vat: PropTypes.string.isRequired,
+  company: PropTypes.string,
+  email: PropTypes.string,
+  vat: PropTypes.string,
   noGutter: PropTypes.bool,
 };
 
