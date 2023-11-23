@@ -45,7 +45,7 @@ function ProjectDetails() {
                 }
             })
             .then(() => {
-
+                loadMemberData();
             })
             .catch((e) => {
                 console.log(e);
@@ -99,7 +99,7 @@ function ProjectDetails() {
 
     useEffect(() => {
         loadMemberData();
-    });
+    },[]);
 
 
     return (

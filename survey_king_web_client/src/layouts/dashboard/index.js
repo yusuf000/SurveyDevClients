@@ -50,7 +50,7 @@ function Dashboard() {
                 }
             })
             .then(() => {
-
+                loadData();
             })
             .catch((e) => {
                 console.log(e);
@@ -105,7 +105,7 @@ function Dashboard() {
 
     useEffect(() => {
         loadData();
-    });
+    },[]);
 
 
     return (
