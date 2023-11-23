@@ -8,7 +8,6 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 
 import DashboardLayout from "../../../examples/LayoutContainers/DashboardLayout";
-import {useMaterialUIController} from "../../../context";
 import {useLocation} from "react-router-dom";
 import Card from "@mui/material/Card";
 import Information from "../components/Information";
@@ -34,7 +33,6 @@ function ProjectDetails() {
     const user = localStorage.getItem('user');
 
     const onDelete = ({memberId}) => {
-        console.log(memberId)
         const token = localStorage.getItem('token');
         axios
             .post(url + "/remove-member", {},{
@@ -47,7 +45,7 @@ function ProjectDetails() {
                 }
             })
             .then(() => {
-                loadMemberData();
+
             })
             .catch((e) => {
                 console.log(e);
@@ -58,17 +56,19 @@ function ProjectDetails() {
         let data = []
         for (let i in members) {
             let member = members[i];
+            let memberId = member;
+
             if(member !== user){
                 data.push({
                     "name": member,
-                    "delete": <MDTypography component="a" href="#" role="button" onClick={() => onDelete({member})}
+                    "delete": <MDTypography component="a" href="#" role="button" onClick={() => onDelete({memberId})}
                                             color="error">
                         <Icon>delete</Icon>
-                    </MDTypography>,
+                    </MDTypography>
                 });
             }else{
                 data.push({
-                    "name": member,
+                    "name": member
                 });
             }
         }
@@ -99,13 +99,8 @@ function ProjectDetails() {
 
     useEffect(() => {
         loadMemberData();
-    }, []);
+    });
 
-
-
-    const handleOnClick = async () => {
-
-    }
 
     return (
         <DashboardLayout>

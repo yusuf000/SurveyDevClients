@@ -26,7 +26,6 @@ const url = `http://localhost:8080/api/v1/project`
 function Dashboard() {
     const [projectData, setProjectData] = useState(null);
     const [totalRunningProject, setTotalRunningProject] = useState(0);
-    const [isDataLoaded, setIsDataLoaded] = useState(false);
     const navigate = useNavigate();
 
     const getTotalRunningProject = (data) => {
@@ -51,7 +50,7 @@ function Dashboard() {
                 }
             })
             .then(() => {
-                loadData()
+
             })
             .catch((e) => {
                 console.log(e);
@@ -85,7 +84,7 @@ function Dashboard() {
         return tableData;
     }
 
-    const loadData = async () => {
+    const loadData =  () => {
         const token = localStorage.getItem('token');
         axios
             .get(url, {
@@ -96,7 +95,6 @@ function Dashboard() {
             .then((response) => {
                 if (response.data.length !== 0) {
                     setProjectData(prepareTableData(response.data));
-                    setIsDataLoaded(true);
                     setTotalRunningProject(getTotalRunningProject(response.data))
                 }
             })
@@ -107,7 +105,7 @@ function Dashboard() {
 
     useEffect(() => {
         loadData();
-    }, []);
+    });
 
 
     return (
@@ -144,7 +142,7 @@ function Dashboard() {
                     <Grid container spacing={3}>
                         <Grid item xs={12} md={6} lg={8}>
                             {
-                                isDataLoaded ? <Card>
+                                projectData ? <Card>
                                     <MDTypography variant="h5" fontWeight="medium" color="dark" mt={1} my={3} mx={3}>
                                         Your Projects
                                     </MDTypography>
