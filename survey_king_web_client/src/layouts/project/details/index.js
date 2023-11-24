@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 // react-router-dom components
 //axios to call apis
 // @mui material components
@@ -16,6 +16,14 @@ import SimpleBlogCard from "../../../examples/Cards/BlogCards/SimpleBlogCard";
 import DataTable from "../../../examples/Tables/DataTable";
 import Icon from "@mui/material/Icon";
 import axios from "axios";
+import SimpleActionCard from "../components/SimpleActionCard";
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 
 const url = `http://localhost:8080/api/v1/project`
@@ -24,6 +32,40 @@ function ProjectDetails() {
     const location = useLocation();
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [tableData, setTableData] = useState(null);
+    const [openAddMemberDialog, setOpenAddMemberDialog] = React.useState(false);
+    const newMemberIdRef = useRef(null);
+    const handleClickOpenAddMemberDialog = () => {
+        setOpenAddMemberDialog(true);
+    };
+
+    const handleCloseAddMemberDialog = () => {
+        setOpenAddMemberDialog(false);
+    };
+
+    const onAdd = () => {
+        const memberId = newMemberIdRef.current.value;
+        if(memberId){
+            const token = localStorage.getItem('token');
+            axios
+                .post(url + "/add-member", {},{
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    params: {
+                        'sasCode': project.sasCode,
+                        'memberId': memberId
+                    }
+                })
+                .then(() => {
+                    loadMemberData();
+                })
+                .catch((e) => {
+                    console.log(e);
+                })
+        }
+
+        setOpenAddMemberDialog(false);
+    };
 
     if(location.state != null){
         localStorage.setItem("project", location.state.project);
@@ -101,21 +143,76 @@ function ProjectDetails() {
         loadMemberData();
     },[]);
 
+    const handleOnAddQuestionClick = ()=>{
+      console.log("clicked")
+    };
 
     return (
         <DashboardLayout>
             <MDBox py={3}>
+                <Dialog open={openAddMemberDialog} onClose={handleCloseAddMemberDialog}>
+                    <DialogTitle>Add Member</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            To add a member to this project please type the email address of the member here.
+                        </DialogContentText>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Email Address"
+                            type="email"
+                            fullWidth
+                            variant="standard"
+                            inputRef={newMemberIdRef}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseAddMemberDialog}>Cancel</Button>
+                        <Button onClick={onAdd}>Add</Button>
+                    </DialogActions>
+                </Dialog>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={6} lg={3}>
                         <MDBox mb={1.5}>
-                            <SimpleBlogCard
+                            <SimpleActionCard
                                 title="Add Question"
                                 description="Add a question to the project"
+                                click={handleOnAddQuestionClick}
                                 action={{
                                     type: "internal",
                                     route: "/project-create",
                                     color: "info",
                                     label: "Add"
+                                }}
+                            />
+                        </MDBox>
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={3}>
+                        <MDBox mb={1.5}>
+                            <SimpleActionCard
+                                title="Add Member"
+                                description="Add a member to the project"
+                                click={handleClickOpenAddMemberDialog}
+                                action={{
+                                    type: "internal",
+                                    route: "/project-create",
+                                    color: "info",
+                                    label: "Add"
+                                }}
+                            />
+                        </MDBox>
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={3}>
+                        <MDBox mb={1.5}>
+                            <SimpleBlogCard
+                                title="Take Survey"
+                                description="Complete the survey"
+                                action={{
+                                    type: "internal",
+                                    route: "/project-create",
+                                    color: "info",
+                                    label: "Start"
                                 }}
                             />
                         </MDBox>

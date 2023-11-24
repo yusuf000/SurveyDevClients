@@ -28,7 +28,7 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 
-function SimpleBlogCard({title, description, action }) {
+function SimpleBlogCard({title, description, click, action }) {
   return (
     <Card>
       <MDBox position="relative" borderRadius="lg" mt={-3.0} mx={5.5}>
@@ -52,15 +52,7 @@ function SimpleBlogCard({title, description, action }) {
             {description}
           </MDTypography>
         </MDBox>
-        {action.type === "external" ? (
-          <MuiLink href={action.route} target="_blank" rel="noreferrer">
-            <MDButton color={action.color ? action.color : "dark" }>{action.label}</MDButton>
-          </MuiLink>
-        ) : (
-          <Link to={action.route}>
-            <MDButton color={action.color ? action.color : "dark"}>{action.label}</MDButton>
-          </Link>
-        )}
+        <MDButton color={action.color ? action.color : "dark"} onClick={click}>{action.label}</MDButton>
       </MDBox>
     </Card>
   );
@@ -70,6 +62,7 @@ function SimpleBlogCard({title, description, action }) {
 SimpleBlogCard.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
+  click: PropTypes.func.isRequired,
   action: PropTypes.shape({
     type: PropTypes.oneOf(["external", "internal"]).isRequired,
     route: PropTypes.string.isRequired,
