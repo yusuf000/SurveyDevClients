@@ -11,20 +11,33 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 // Dashboard components
 import React, {useEffect, useState} from "react";
 import DefaultInfoCard from "../../examples/Cards/InfoCards/DefaultInfoCard";
-
-import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 const url = `http://localhost:8080/api/v1/project`
 
 
 function Dashboard() {
     const [totalRunningProject, setTotalRunningProject] = useState(0);
-    const navigate = useNavigate();
 
 
+    function loadData() {
+        const token = localStorage.getItem('token');
+        axios
+            .get(url + "/running", {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+            .then((response) => {
+                setTotalRunningProject(response.data);
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }
 
     useEffect(() => {
-
+        loadData();
     },[]);
 
 
