@@ -147,31 +147,37 @@ function ProjectDetails() {
       console.log("clicked")
     };
 
+    function AddMember(){
+        return (
+            <Dialog open={openAddMemberDialog} onClose={handleCloseAddMemberDialog}>
+                <DialogTitle>Add Member</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        To add a member to this project please type the email address of the member here.
+                    </DialogContentText>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        label="Email Address"
+                        type="email"
+                        fullWidth
+                        variant="standard"
+                        inputRef={newMemberIdRef}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseAddMemberDialog}>Cancel</Button>
+                    <Button onClick={onAdd}>Add</Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
+
     return (
         <DashboardLayout>
             <MDBox py={3}>
-                <Dialog open={openAddMemberDialog} onClose={handleCloseAddMemberDialog}>
-                    <DialogTitle>Add Member</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            To add a member to this project please type the email address of the member here.
-                        </DialogContentText>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            label="Email Address"
-                            type="email"
-                            fullWidth
-                            variant="standard"
-                            inputRef={newMemberIdRef}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleCloseAddMemberDialog}>Cancel</Button>
-                        <Button onClick={onAdd}>Add</Button>
-                    </DialogActions>
-                </Dialog>
+                <AddMember/>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={6} lg={3}>
                         <MDBox mb={1.5}>
