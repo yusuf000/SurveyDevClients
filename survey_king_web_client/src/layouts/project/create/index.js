@@ -20,29 +20,31 @@ import MDButton from "../../../components/MDButton";
 import {DatePicker} from "@mui/x-date-pickers";
 import MDAlert from "../../../components/MDAlert";
 import Icon from "@mui/material/Icon";
+import {FormControl, InputLabel, Select} from "@mui/material";
+import MenuItem from "@mui/material/MenuItem";
 
 const url = `http://localhost:8080/api/v1/project/add`
 
 function ProjectCreate() {
     const [errorMessage, setErrorMessage] = useState("");
     const projectNameRef = useRef(null);
-
-    const projectTypeRef = useRef(null);
     const clientNameRef = useRef(null);
     const statusRef = useRef(null);
     const sasCodeRef = useRef(null);
     const jobNumberRef = useRef(null);
+    const [projectType, setProjectType] = useState(null);
     const [startDate_, setStartDate_] = useState("");
     const [endDate_, setEndDate_] = useState("");
     const navigate = useNavigate();
 
 
-    const doCreateProject = ({projectName, projectType, clientName, startDate, endDate, status, sasCode, jobNumber}) => {
+    const doCreateProject = ({projectName, projectTypeSelected, clientName, startDate, endDate, status, sasCode, jobNumber}) => {
         const token = localStorage.getItem('token');
+
         axios
             .post(url, {
                 name: projectName,
-                type: projectType,
+                projectType: projectTypeSelected,
                 clientName: clientName,
                 startDate: startDate,
                 endDate: endDate,
@@ -65,8 +67,8 @@ function ProjectCreate() {
 
     }
 
-    const isValidInput = ({projectName, projectType, clientName, status, sasCode, jobNumber, startDate, endDate}) => {
-        if (projectName === "" || projectType === "" || clientName === "" || status === "" || sasCode === "" || jobNumber === "" || startDate === "" || endDate === "") {
+    const isValidInput = ({projectName, projectTypeSelected, clientName, status, sasCode, jobNumber, startDate, endDate}) => {
+        if (projectName === "" || projectTypeSelected === null || clientName === "" || status === "" || sasCode === "" || jobNumber === "" || startDate === "" || endDate === "") {
             setErrorMessage("Please give necessary information to create a project")
             return false;
         } else if (startDate > endDate) {
@@ -80,24 +82,29 @@ function ProjectCreate() {
     const handleOnClick = async () => {
         console.log('create clicked');
         const projectName = projectNameRef.current.value;
-        const projectType = projectTypeRef.current.value;
+        const projectTypeSelected = projectType;
         const clientName = clientNameRef.current.value;
         const status = statusRef.current.value;
         const sasCode = sasCodeRef.current.value;
         const jobNumber = jobNumberRef.current.value;
         const startDate = startDate_;
         const endDate = endDate_;
+
         if(isValidInput({
             projectName,
-            projectType,
+            projectTypeSelected,
             clientName,
             status,
             sasCode,
             jobNumber,
             startDate,
             endDate})){
-            doCreateProject({projectName, projectType, clientName, startDate, endDate, status, sasCode, jobNumber});
+            doCreateProject({projectName, projectTypeSelected, clientName, startDate, endDate, status, sasCode, jobNumber});
         }
+    }
+
+    const handleProjectTypeChange = (event) => {
+        setProjectType(event.target.value);
     }
 
     return (
@@ -132,7 +139,22 @@ function ProjectCreate() {
                                 <MDInput type="email" label="Project Name" inputRef={projectNameRef} fullWidth/>
                             </MDBox>
                             <MDBox mb={2}>
-                                <MDInput type="email" label="Project Type" inputRef={projectTypeRef} fullWidth/>
+
+
+                                <FormControl fullWidth>
+                                    <InputLabel id="project-type-label">Project Type</InputLabel>
+                                    <Select
+                                        labelId="project-type-label"
+                                        id="project-type-select"
+                                        value={projectType}
+                                        label="Project Type"
+                                        onChange={handleProjectTypeChange}
+                                        sx={{ minHeight: 45 }}
+                                    >
+                                        <MenuItem value={"0"}>Single Phase</MenuItem>
+                                        <MenuItem value={"1"}>Multi Phase</MenuItem>
+                                    </Select>
+                                </FormControl>
                             </MDBox>
                             <MDBox mb={2}>
                                 <MDInput type="email" label="Client Name" inputRef={clientNameRef} fullWidth/>
@@ -157,6 +179,7 @@ function ProjectCreate() {
                                     Create
                                 </MDButton>
                             </MDBox>
+
                         </MDBox>
                     </MDBox>
                 </Card>
