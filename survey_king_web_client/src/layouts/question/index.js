@@ -83,9 +83,9 @@ function Question(){
     function ErrorDialogue(){
         return (
             <Dialog open={openCreateProjectDialog} onClose={handleCloseCreateProjectDialog}>
-                <DialogTitle color="red">Error</DialogTitle>
+                <DialogTitle color="red"><Icon fontSize="small">error</Icon> &nbsp; Wrong Question Type</DialogTitle>
                 <DialogContent>
-                    <MDTypography fontSize="small" color="error" > <Icon fontSize="medium">error</Icon>&nbsp; Can't add choice in a descriptive type question</MDTypography>
+                    <MDTypography fontSize="small" color="error" > Can't add choice in a descriptive type question</MDTypography>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseCreateProjectDialog}>Close</Button>
