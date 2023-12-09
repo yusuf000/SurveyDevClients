@@ -44,6 +44,7 @@ import SignUp from "layouts/authentication/sign-up";
 import Icon from "@mui/material/Icon";
 import ProjectDetails from "./layouts/project/details"
 import Projects from "./layouts/project";
+import Question from "./layouts/question";
 
 const routes = [
   {
@@ -69,46 +70,14 @@ const routes = [
     route: "/project-details",
     component: <ProjectDetails />,
   },
-  /*{
-    type: "collapse",
-    name: "Tables",
-    key: "tables",
-    icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/tables",
-    component: <Tables />,
-  },
   {
-    type: "collapse",
-    name: "Billing",
-    key: "billing",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/billing",
-    component: <Billing />,
-  },*/
-  /*{
-    type: "collapse",
-    name: "RTL",
-    key: "rtl",
-    icon: <Icon fontSize="small">format_textdirection_r_to_l</Icon>,
-    route: "/rtl",
-    component: <RTL />,
-  },*/
-  /*{
-    type: "collapse",
-    name: "Notifications",
-    key: "notifications",
-    icon: <Icon fontSize="small">notifications</Icon>,
-    route: "/notifications",
-    component: <Notifications />,
+    type: "",
+    name: "Question Add",
+    key: "question_add",
+    icon: <Icon fontSize="small">folder</Icon>,
+    route: "/question-add",
+    component: <Question />,
   },
-  {
-    type: "collapse",
-    name: "Profile",
-    key: "profile",
-    icon: <Icon fontSize="small">person</Icon>,
-    route: "/profile",
-    component: <Profile />,
-  },*/
   {
     type: "collapse",
     name: "Sign In",

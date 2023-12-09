@@ -8,7 +8,7 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 
 import DashboardLayout from "../../../examples/LayoutContainers/DashboardLayout";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import Card from "@mui/material/Card";
 import Information from "../components/Information";
 import Grid from "@mui/material/Grid";
@@ -34,6 +34,8 @@ function ProjectDetails() {
     const [tableData, setTableData] = useState(null);
     const [openAddMemberDialog, setOpenAddMemberDialog] = React.useState(false);
     const newMemberIdRef = useRef(null);
+    const navigate = useNavigate();
+
     const handleClickOpenAddMemberDialog = () => {
         setOpenAddMemberDialog(true);
     };
@@ -144,7 +146,7 @@ function ProjectDetails() {
     },[]);
 
     const handleOnAddQuestionClick = ()=>{
-      console.log("clicked")
+        navigate('/question-add');
     };
 
     function AddMember(){
@@ -275,7 +277,6 @@ function ProjectDetails() {
                   </Grid>
               </MDBox>: null
             }
-
         </DashboardLayout>
     );
 }
