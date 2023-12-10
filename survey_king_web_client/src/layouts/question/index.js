@@ -40,7 +40,7 @@ function Question() {
         axios
             .post(url + "/api/v1/question/add", {
                 description: questionDescriptionRef.current.value,
-                language: language,
+                languageCode: language,
                 questionType: questionType,
                 phaseId: phase
             }, {
