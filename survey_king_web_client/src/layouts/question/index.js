@@ -33,6 +33,7 @@ function Question() {
     const [questionTypeData, setQuestionTypeData] = useState();
     const [isQuestionTypeDataLoaded, setIsQuestionTypeDataDataLoaded] = useState(false);
     const [phaseData, setPhaseData] = useState();
+    const [choiceData, setChoiceData] = useState([]);
     const [isPhaseDataLoaded, setIsPhaseDataLoaded] = useState(false);
     const [isChoiceAdded, setIsChoiceAdded] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -147,10 +148,6 @@ function Question() {
         setPhase(event.target.value);
     };
 
-    function addChoiceCard() {
-
-    }
-
     const handleOnAddChoiceClick = () => {
         if (questionType === "descriptive") {
             handleClickOpenCreateProjectDialog();
@@ -162,6 +159,7 @@ function Question() {
     function handleAddChoice() {
         const choiceValue = choiceValueRef.current.value;
         if(choiceValue){
+            setChoiceData([...choiceData, choiceValue]);
             setIsChoiceAdded(true)
         }
         handleCloseAddChoiceDialog()
@@ -175,8 +173,15 @@ function Question() {
         console.log("edit clicked");
     }
 
-    const onDeleteChoiceClick = () => {
-        console.log("delete clicked");
+    const onDeleteChoiceClick = (value) => {
+        const newChoiceData = choiceData.filter(function (element) {
+            return element !== value;
+        })
+        setChoiceData(newChoiceData);
+        if(choiceData.length === 0){
+            setIsChoiceAdded(false)
+        }
+        console.log("delete clicked "+ value);
     }
 
     useEffect(() => {
@@ -344,11 +349,18 @@ function Question() {
                 </MDBox>
                 <MDBox pt={1} pb={2} px={2}>
                     <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
-                        <Choice
-                            name="oliver liam"
-                            onDeleteClick={onDeleteChoiceClick}
-                            onEditClick={onEditChoiceClick}
-                        />
+                        {
+                            choiceData.map(option => {
+                                    return (
+                                        <Choice
+                                            name={option}
+                                            onDeleteClick={onDeleteChoiceClick}
+                                            onEditClick={onEditChoiceClick}
+                                        />
+                                    )
+                                }
+                            )
+                        }
                     </MDBox>
                 </MDBox>
             </Card>
