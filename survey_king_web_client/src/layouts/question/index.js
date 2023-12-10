@@ -23,6 +23,7 @@ function Question() {
     const [openCreateProjectDialog, setOpenCreateProjectDialog] = React.useState(false);
     const [questionType, setQuestionType] = useState("descriptive");
     const [language, setLanguage] = useState();
+    const [phase, setPhase] = useState();
     const questionDescriptionRef = useRef(null);
     const [languageData, setLanguageData] = useState();
     const [isLanguageDataLoaded, setIsLanguageDataLoaded] = useState(false);
@@ -37,10 +38,11 @@ function Question() {
     const doCreateQuestion = () => {
 
         axios
-            .post(url + "/add", {
+            .post(url + "/api/v1/question/add", {
                 description: questionDescriptionRef.current.value,
                 language: language,
                 questionType: questionType,
+                phaseId: phase
             }, {
                 headers: {
                     'Authorization': 'Bearer ' + token
@@ -127,6 +129,10 @@ function Question() {
         setQuestionType(event.target.value);
     };
 
+    const handleOnPhaseSelect = (event) => {
+        setPhase(event.target.value);
+    };
+
     function addChoiceCard() {
 
     }
@@ -141,7 +147,7 @@ function Question() {
     };
 
     const handleOnCreateClick = () => {
-        //doCreateQuestion();
+        doCreateQuestion();
     };
 
 
@@ -238,6 +244,7 @@ function Question() {
                                     labelId="phase-label"
                                     id="phase-select"
                                     label="Phase"
+                                    onChange={handleOnPhaseSelect}
                                     sx={{minHeight: 45}}
                                 >
                                     {
