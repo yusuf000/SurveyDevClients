@@ -15,12 +15,15 @@ import Icon from "@mui/material/Icon";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import axios from "axios";
+import Choice from "./Components/Choice";
+import DialogContentText from "@mui/material/DialogContentText";
 
 const url = `http://localhost:8080`
 
 function Question() {
 
     const [openCreateProjectDialog, setOpenCreateProjectDialog] = React.useState(false);
+    const [openAddChoiceDialog, setOpenAddChoiceDialog] = React.useState(false);
     const [questionType, setQuestionType] = useState("descriptive");
     const [language, setLanguage] = useState();
     const [phase, setPhase] = useState();
@@ -31,6 +34,9 @@ function Question() {
     const [isQuestionTypeDataLoaded, setIsQuestionTypeDataDataLoaded] = useState(false);
     const [phaseData, setPhaseData] = useState();
     const [isPhaseDataLoaded, setIsPhaseDataLoaded] = useState(false);
+    const [isChoiceAdded, setIsChoiceAdded] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    const choiceValueRef = useRef(null);
     const token = localStorage.getItem('token');
     const project = JSON.parse(localStorage.getItem('project'));
 
@@ -117,6 +123,14 @@ function Question() {
         setOpenCreateProjectDialog(true);
     };
 
+    const handleCloseAddChoiceDialog = () => {
+        setOpenAddChoiceDialog(false);
+    };
+
+    const handleClickOpenAddChoiceDialog = () => {
+        setOpenAddChoiceDialog(true);
+    };
+
     const handleCloseCreateProjectDialog = () => {
         setOpenCreateProjectDialog(false);
     };
@@ -138,18 +152,32 @@ function Question() {
     }
 
     const handleOnAddChoiceClick = () => {
-
         if (questionType === "descriptive") {
             handleClickOpenCreateProjectDialog();
         } else {
-            addChoiceCard();
+            handleClickOpenAddChoiceDialog();
         }
     };
+
+    function handleAddChoice() {
+        const choiceValue = choiceValueRef.current.value;
+        if(choiceValue){
+            setIsChoiceAdded(true)
+        }
+        handleCloseAddChoiceDialog()
+    }
 
     const handleOnCreateClick = () => {
         doCreateQuestion();
     };
 
+    const onEditChoiceClick = () => {
+        console.log("edit clicked");
+    }
+
+    const onDeleteChoiceClick = () => {
+        console.log("delete clicked");
+    }
 
     useEffect(() => {
         loadData();
@@ -170,9 +198,32 @@ function Question() {
         );
     }
 
-    return (
-        <DashboardLayout>
-            <ErrorDialogue/>
+    function AddChoiceDialog() {
+        return (
+            <Dialog open={openAddChoiceDialog} onClose={handleCloseAddChoiceDialog}>
+                <DialogTitle>Add Choice</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        To add a choice fill up the necessary details below.
+                    </DialogContentText>
+                    <MDBox mb={2}></MDBox>
+                    <MDBox mb={2}>
+                        <MDInput type="email" label="value" inputRef={choiceValueRef} fullWidth/>
+                    </MDBox>
+                    {
+                        errorMessage ? <MDTypography fontSize="small" color="error" > <Icon fontSize="small">error</Icon>&nbsp; {errorMessage} </MDTypography> : null
+                    }
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseAddChoiceDialog}>Cancel</Button>
+                    <Button onClick={handleAddChoice}>Add</Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
+
+    function QuestionBox(){
+        return (
             <Card>
                 <MDBox mb={2} mt={2} ml={2} mr={2}>
                     <MDBox mb={2}>
@@ -280,6 +331,42 @@ function Question() {
                     </Grid>
                 </MDBox>
             </Card>
+        );
+    }
+
+    function ChoiceBox(){
+        return (
+            <Card id="delete-account">
+                <MDBox pt={3} px={2}>
+                    <MDTypography variant="h6" fontWeight="medium">
+                        Choices
+                    </MDTypography>
+                </MDBox>
+                <MDBox pt={1} pb={2} px={2}>
+                    <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
+                        <Choice
+                            name="oliver liam"
+                            onDeleteClick={onDeleteChoiceClick}
+                            onEditClick={onEditChoiceClick}
+                        />
+                    </MDBox>
+                </MDBox>
+            </Card>
+        );
+    }
+
+    return (
+        <DashboardLayout>
+            <ErrorDialogue/>
+            <AddChoiceDialog/>
+            <MDBox mb={2}>
+                <QuestionBox/>
+            </MDBox>
+            {
+                isChoiceAdded ? <MDBox mb={2}>
+                    <ChoiceBox/>
+                </MDBox> : null
+            }
         </DashboardLayout>
     );
 }
