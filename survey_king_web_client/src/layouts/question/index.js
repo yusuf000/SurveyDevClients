@@ -5,7 +5,7 @@ import Card from "@mui/material/Card";
 import MDButton from "../../components/MDButton";
 import Grid from "@mui/material/Grid";
 import MDTypography from "../../components/MDTypography";
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {FormControl, InputLabel, Select} from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -16,13 +16,100 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import axios from "axios";
 
-const url = `http://localhost:8080/api/v1/question`
-function Question(){
+const url = `http://localhost:8080`
+
+function Question() {
 
     const [openCreateProjectDialog, setOpenCreateProjectDialog] = React.useState(false);
     const [questionType, setQuestionType] = useState("descriptive");
-    const [language, setLanguage] = useState("eng");
+    const [language, setLanguage] = useState();
     const questionDescriptionRef = useRef(null);
+    const [languageData, setLanguageData] = useState();
+    const [isLanguageDataLoaded, setIsLanguageDataLoaded] = useState(false);
+    const [questionTypeData, setQuestionTypeData] = useState();
+    const [isQuestionTypeDataLoaded, setIsQuestionTypeDataDataLoaded] = useState(false);
+    const [phaseData, setPhaseData] = useState();
+    const [isPhaseDataLoaded, setIsPhaseDataLoaded] = useState(false);
+    const token = localStorage.getItem('token');
+    const project = JSON.parse(localStorage.getItem('project'));
+
+
+    const doCreateQuestion = () => {
+
+        axios
+            .post(url + "/add", {
+                description: questionDescriptionRef.current.value,
+                language: language,
+                questionType: questionType,
+            }, {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+            .then(() => {
+                console.log("question created");
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+
+    }
+
+    const loadLanguages = () => {
+        axios
+            .get(url + "/api/v1/language", {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+            .then((response) => {
+                setLanguageData(response.data);
+                setIsLanguageDataLoaded(true);
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
+    const loadQuestionTypes = () => {
+        axios
+            .get(url + "/api/v1/question-type", {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+            .then((response) => {
+                setQuestionTypeData(response.data);
+                setIsQuestionTypeDataDataLoaded(true);
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+    const loadPhases = () => {
+        axios
+            .get(url + "/api/v1/phase", {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                params: {
+                    sasCode: project.sasCode
+                }
+            })
+            .then((response) => {
+                setPhaseData(response.data);
+                setIsPhaseDataLoaded(true);
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
+    const loadData = () => {
+        loadLanguages();
+        loadQuestionTypes();
+        loadPhases();
+    }
 
     const handleClickOpenCreateProjectDialog = () => {
         setOpenCreateProjectDialog(true);
@@ -46,46 +133,29 @@ function Question(){
 
     const handleOnAddChoiceClick = () => {
 
-        if(questionType === "descriptive"){
+        if (questionType === "descriptive") {
             handleClickOpenCreateProjectDialog();
-        }else{
+        } else {
             addChoiceCard();
         }
     };
-
-    const doCreateQuestion = () => {
-        const token = localStorage.getItem('token');
-        const project = JSON.parse(localStorage.getItem('project'))
-
-        axios
-            .post(url + "/add", {
-                description: questionDescriptionRef.current.value,
-                language: language,
-                questionType: questionType,
-            },{
-                headers: {
-                    'Authorization': 'Bearer '+token
-                }
-            })
-            .then(() => {
-                console.log("question created");
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-
-    }
 
     const handleOnCreateClick = () => {
         //doCreateQuestion();
     };
 
-    function ErrorDialogue(){
+
+    useEffect(() => {
+        loadData();
+    }, []);
+
+    function ErrorDialogue() {
         return (
             <Dialog open={openCreateProjectDialog} onClose={handleCloseCreateProjectDialog}>
                 <DialogTitle color="red"><Icon fontSize="small">error</Icon> &nbsp; Wrong Question Type</DialogTitle>
                 <DialogContent>
-                    <MDTypography fontSize="small" color="error" > Can't add choice in a descriptive type question</MDTypography>
+                    <MDTypography fontSize="small" color="error"> Can't add choice in a descriptive type
+                        question</MDTypography>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseCreateProjectDialog}>Close</Button>
@@ -100,68 +170,100 @@ function Question(){
             <Card>
                 <MDBox mb={2} mt={2} ml={2} mr={2}>
                     <MDBox mb={2}>
-                        <MDTypography variant="h5" fontWeight="medium" color="dark" >
+                        <MDTypography variant="h5" fontWeight="medium" color="dark">
                             Please give the necessary information to add a question
                         </MDTypography>
                     </MDBox>
                     <MDBox mb={2}>
-                        <MDInput type="text" label="Description"  inputRef={questionDescriptionRef} fullWidth />
+                        <MDInput type="text" label="Description" inputRef={questionDescriptionRef} fullWidth/>
                     </MDBox>
                     <MDBox mb={2}>
                         <FormControl fullWidth>
                             <InputLabel id="language-label">Language</InputLabel>
-                            <Select
-                                labelId="language-label"
-                                id="language-select"
-                                value={language}
-                                label="Language"
-                                onChange={handleOnLanguageSelect}
-                                sx={{ minHeight: 45 }}
-                            >
-                                <MenuItem value={"eng"}>English</MenuItem>
-                                <MenuItem value={"ban"}>Bangla</MenuItem>
-                            </Select>
+                            {
+                                isLanguageDataLoaded ? <Select
+                                    labelId="language-label"
+                                    id="language-select"
+                                    value={language}
+                                    label="Language"
+                                    onChange={handleOnLanguageSelect}
+                                    sx={{minHeight: 45}}
+                                >
+                                    {
+                                        languageData.map(option => {
+                                                return (
+                                                    <MenuItem
+                                                        value={option.code}>
+                                                        {option.name}
+                                                    </MenuItem>
+                                                )
+                                            }
+                                        )
+                                    }
+                                </Select> : null
+                            }
                         </FormControl>
                     </MDBox>
                     <MDBox mb={2}>
                         <FormControl fullWidth>
                             <InputLabel id="question-type-label">Question Type</InputLabel>
-                            <Select
-                                labelId="question-type-label"
-                                id="question-type-select"
-                                value={questionType}
-                                label="Question type"
-                                onChange={handleOnQuestionTypeSelect}
-                                sx={{ minHeight: 45 }}
-                            >
-                                <MenuItem value={"descriptive"}>Descriptive</MenuItem>
-                                <MenuItem value={"multiple choice"}>Multiple Choice</MenuItem>
-                            </Select>
+                            {
+                                isQuestionTypeDataLoaded ? <Select
+                                    labelId="question-type-label"
+                                    id="question-type-select"
+                                    value={questionType}
+                                    label="Question type"
+                                    onChange={handleOnQuestionTypeSelect}
+                                    sx={{minHeight: 45}}
+                                >
+                                    {
+                                        questionTypeData.map(option => {
+                                            return (
+                                                <MenuItem
+                                                    value={option.name}>
+                                                    {option.name}
+                                                </MenuItem>
+                                            )
+                                        })
+                                    }
+                                </Select> : null
+                            }
                         </FormControl>
                     </MDBox>
                     <MDBox mb={2}>
                         <FormControl fullWidth>
                             <InputLabel id="phase-label">Phase</InputLabel>
-                            <Select
-                                labelId="phase-label"
-                                id="phase-select"
-                                label="Phase"
-                                sx={{ minHeight: 45 }}
-                            >
-                                <MenuItem value={"phase1"}>Phase1</MenuItem>
-                                <MenuItem value={"multiple choice"}>Phase2</MenuItem>
-                            </Select>
+                            {
+                                isPhaseDataLoaded ? <Select
+                                    labelId="phase-label"
+                                    id="phase-select"
+                                    label="Phase"
+                                    sx={{minHeight: 45}}
+                                >
+                                    {
+                                        phaseData.map(option => {
+                                                return (
+                                                    <MenuItem
+                                                        value={option.id}>
+                                                        {option.name}
+                                                    </MenuItem>
+                                                )
+                                            }
+                                        )
+                                    }
+                                </Select> : null
+                            }
                         </FormControl>
                     </MDBox>
                     <Grid container spacing={2}>
-                        <Grid item >
+                        <Grid item>
                             <MDBox mb={2}>
                                 <MDButton variant="gradient" color="light" onClick={handleOnAddChoiceClick}>
                                     Add a choice
                                 </MDButton>
                             </MDBox>
                         </Grid>
-                        <Grid item >
+                        <Grid item>
                             <MDBox mb={2}>
                                 <MDButton variant="gradient" color="info" onClick={handleOnCreateClick}>
                                     Create
