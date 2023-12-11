@@ -39,6 +39,9 @@ function Question() {
     const [errorMessage, setErrorMessage] = useState("");
     const choiceValueRef = useRef(null);
     const token = localStorage.getItem('token');
+    const [choiceSubChoiceMap,setChoiceSubChoiceMap] = useState(new Map());
+    let subChoices = [];
+    const [choiceIdSeq, setChoiceIdSeq] = useState(0);
     const project = JSON.parse(localStorage.getItem('project'));
 
 
@@ -156,10 +159,13 @@ function Question() {
         }
     };
 
-    function handleAddChoice() {
+    function handleAddChoice(e) {
         const choiceValue = choiceValueRef.current.value;
         if(choiceValue){
-            setChoiceData([...choiceData, choiceValue]);
+            setChoiceSubChoiceMap(choiceSubChoiceMap.set(choiceIdSeq, subChoices));
+            setChoiceData([...choiceData, {value: choiceValue, id: choiceIdSeq}]);
+            setChoiceIdSeq(choiceIdSeq + 1);
+            subChoices = [];
             setIsChoiceAdded(true)
         }
         handleCloseAddChoiceDialog()
@@ -173,15 +179,14 @@ function Question() {
         console.log("edit clicked");
     }
 
-    const onDeleteChoiceClick = (value) => {
+    const onDeleteChoiceClick = (id) => {
         const newChoiceData = choiceData.filter(function (element) {
-            return element !== value;
+            return element.id !== id;
         })
         setChoiceData(newChoiceData);
         if(newChoiceData.length === 0){
             setIsChoiceAdded(false)
         }
-        console.log("delete clicked "+ value);
     }
 
     useEffect(() => {
@@ -204,6 +209,52 @@ function Question() {
     }
 
     function AddChoiceDialog() {
+        const subChoiceRef = useRef();
+        const [subChoiceIdSeq, setSubChoiceIdSeq] = useState(0);
+        const [inputMap, setInputMap] = useState({
+            formValues: []
+        });
+
+        const addFormFields = ()=> {
+            setInputMap(({
+                formValues: [...inputMap.formValues, { subChoiceName: subChoiceRef.current.value, subChoiceId: subChoiceIdSeq}]
+            }))
+            subChoices.push({value: subChoiceRef.current.value, id: subChoiceIdSeq});
+            setSubChoiceIdSeq(subChoiceIdSeq + 1);
+            subChoiceRef.current.value = "";
+        }
+
+        function removeFormFields(i) {
+            let formValues = inputMap.formValues;
+            subChoices = subChoices.filter(function (element) {
+                return element.id !== formValues[i].subChoiceId;
+            });
+            formValues.splice(i, 1);
+            setInputMap({ formValues });
+        }
+
+        function SubChoice(){
+            return (
+                <MDBox>
+                    {inputMap.formValues.map((element, index) => (
+                        <MDBox mb={2} key={index}>
+                            <Grid container spacing={3}>
+                                <Grid item >
+                                    <MDInput type="email" label="Subchoice value" value={element.subChoiceName} disabled={true}></MDInput>
+                                </Grid>
+                                <Grid item>
+                                    <MDButton  color="error" onClick={() => removeFormFields(index)}>
+                                        <Icon>delete</Icon>
+                                    </MDButton>
+                                </Grid>
+                            </Grid>
+                        </MDBox>
+                    ))
+                    }
+                </MDBox>
+            );
+        }
+
         return (
             <Dialog open={openAddChoiceDialog} onClose={handleCloseAddChoiceDialog}>
                 <DialogTitle>Add Choice</DialogTitle>
@@ -214,6 +265,15 @@ function Question() {
                     <MDBox mb={2}></MDBox>
                     <MDBox mb={2}>
                         <MDInput type="email" label="value" inputRef={choiceValueRef} fullWidth/>
+                    </MDBox>
+                    <SubChoice/>
+                    <MDBox mb={2}>
+                        <MDInput type="email" label="Optional Subchoice" inputRef={subChoiceRef} fullWidth/>
+                    </MDBox>
+                    <MDBox  mb={2}>
+                        <MDButton  color="info" onClick={addFormFields} fullWidth>
+                             Add Subchoice
+                        </MDButton>
                     </MDBox>
                     {
                         errorMessage ? <MDTypography fontSize="small" color="error" > <Icon fontSize="small">error</Icon>&nbsp; {errorMessage} </MDTypography> : null
@@ -354,9 +414,10 @@ function Question() {
                             choiceData.map(option => {
                                     return (
                                         <Choice
-                                            name={option}
+                                            name={option.value}
+                                            id={option.id}
                                             onDeleteClick={onDeleteChoiceClick}
-                                            onEditClick={onEditChoiceClick}
+                                            subChoices={choiceSubChoiceMap.get(option.id)}
                                         />
                                     )
                                 }
