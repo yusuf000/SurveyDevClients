@@ -26,12 +26,15 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 
-const url = `http://localhost:8080/api/v1/project`
+const url = `http://localhost:8080/`
 
 function ProjectDetails() {
     const location = useLocation();
     const [isDataLoaded, setIsDataLoaded] = useState(false);
-    const [tableData, setTableData] = useState(null);
+    const [phaseData, setPhaseData] = useState(null)
+    const [isPhaseDataLoaded, setIsPhaseDataLoaded] = useState(false);
+    const [tableDataMember, setTableDataMember] = useState(null);
+    const [tableDataPhase, setTableDataPhase] = useState(null);
     const [openAddMemberDialog, setOpenAddMemberDialog] = React.useState(false);
     const newMemberIdRef = useRef(null);
     const navigate = useNavigate();
@@ -46,10 +49,10 @@ function ProjectDetails() {
 
     const onAdd = () => {
         const memberId = newMemberIdRef.current.value;
-        if(memberId){
+        if (memberId) {
             const token = localStorage.getItem('token');
             axios
-                .post(url + "/add-member", {},{
+                .post(url + "api/v1/project/add-member", {}, {
                     headers: {
                         'Authorization': 'Bearer ' + token
                     },
@@ -69,7 +72,7 @@ function ProjectDetails() {
         setOpenAddMemberDialog(false);
     };
 
-    if(location.state != null){
+    if (location.state != null) {
         localStorage.setItem("project", location.state.project);
     }
 
@@ -79,7 +82,7 @@ function ProjectDetails() {
     const onDelete = ({memberId}) => {
         const token = localStorage.getItem('token');
         axios
-            .post(url + "/remove-member", {},{
+            .post(url + "api/v1/project/remove-member", {}, {
                 headers: {
                     'Authorization': 'Bearer ' + token
                 },
@@ -96,13 +99,13 @@ function ProjectDetails() {
             })
     }
 
-    const prepareTableData = (members)=>{
+    const prepareTableDataMember = (members) => {
         let data = []
         for (let i in members) {
             let member = members[i];
             let memberId = member;
 
-            if(member !== user){
+            if (member !== user) {
                 data.push({
                     "name": member,
                     "delete": <MDTypography component="a" href="#" role="button" onClick={() => onDelete({memberId})}
@@ -110,7 +113,7 @@ function ProjectDetails() {
                         <Icon>delete</Icon>
                     </MDTypography>
                 });
-            }else{
+            } else {
                 data.push({
                     "name": member
                 });
@@ -119,10 +122,39 @@ function ProjectDetails() {
         return data;
     }
 
+    function onDeletePhase({phaseId}) {
+
+    }
+
+    function onExpandPhase({phaseId}) {
+
+    }
+
+    const prepareTableDataPhase = (phases) => {
+        let data = []
+        for (let i in phases) {
+            let phaseName = phases[i].name;
+            let phaseId = phases[i].id;
+
+            data.push({
+                "name": phaseName,
+                "delete": <MDTypography component="a" href="" role="button" onClick={() => onDeletePhase({phaseId})}
+                                        color="error">
+                    <Icon>delete</Icon>
+                </MDTypography>,
+                "expand": <MDTypography component="a" href="" role="button" onClick={() => onExpandPhase({phaseId})}
+                                        color="info">
+                    <Icon>arrow_outward</Icon> </MDTypography>
+            });
+
+        }
+        return data;
+    }
+
     const loadMemberData = () => {
         const token = localStorage.getItem('token');
         axios
-            .get(url + "/member", {
+            .get(url + "api/v1/project/member", {
                 headers: {
                     'Authorization': 'Bearer ' + token
                 },
@@ -132,7 +164,7 @@ function ProjectDetails() {
             })
             .then((response) => {
                 if (response.data.length !== 0) {
-                    setTableData(prepareTableData(response.data));
+                    setTableDataMember(prepareTableDataMember(response.data));
                     setIsDataLoaded(true);
                 }
             })
@@ -141,15 +173,36 @@ function ProjectDetails() {
             })
     }
 
+    const loadPhaseData = () => {
+        const token = localStorage.getItem('token');
+        axios
+            .get(url + "api/v1/phase", {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                params: {
+                    sasCode: project.sasCode
+                }
+            })
+            .then((response) => {
+                setTableDataPhase(prepareTableDataPhase(response.data));
+                setIsPhaseDataLoaded(true);
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
     useEffect(() => {
         loadMemberData();
-    },[]);
+        loadPhaseData();
+    }, []);
 
-    const handleOnAddQuestionClick = ()=>{
+    const handleOnAddQuestionClick = () => {
         navigate('/question-add');
     };
 
-    function AddMember(){
+    function AddMember() {
         return (
             <Dialog open={openAddMemberDialog} onClose={handleCloseAddMemberDialog}>
                 <DialogTitle>Add Member</DialogTitle>
@@ -232,7 +285,7 @@ function ProjectDetails() {
                     <Grid item xs={12} md={6} lg={5}>
                         <Card>
                             <MDBox pt={3} px={2}>
-                                <MDTypography variant="h6" fontWeight="medium">
+                                <MDTypography variant="h4" fontWeight="medium">
                                     Project Information
                                 </MDTypography>
                             </MDBox>
@@ -255,27 +308,54 @@ function ProjectDetails() {
                 </Grid>
             </MDBox>
             {
-              isDataLoaded ? <MDBox py={3}>
-                  <Grid container spacing={3}>
-                      <Grid item xs={12} md={6} lg={5}>
-                          {
-                              <Card>
-                                  <MDTypography variant="h5" fontWeight="medium" color="dark" mt={1} my={3} mx={3}>
-                                      Members
-                                  </MDTypography>
-                                  <DataTable
-                                      table={{
-                                          columns: [
-                                              {Header: "Name", accessor: "name", width: "85%"},
-                                              {Header: "delete", accessor: "delete"}
-                                          ],
-                                          rows: tableData
-                                      }}/>
-                              </Card>
-                          }
-                      </Grid>
-                  </Grid>
-              </MDBox>: null
+                isDataLoaded ? <MDBox py={3}>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12} md={6} lg={5}>
+                            {
+                                <Card>
+                                    <MDTypography variant="h4" fontWeight="medium" color="dark" mt={1} my={3} mx={3}>
+                                        Members
+                                    </MDTypography>
+                                    <DataTable
+                                        table={{
+                                            columns: [
+                                                {Header: "Name", accessor: "name", width: "85%"},
+                                                {Header: "delete", accessor: "delete"}
+                                            ],
+                                            rows: tableDataMember
+                                        }}/>
+                                </Card>
+                            }
+                        </Grid>
+                    </Grid>
+                </MDBox> : null
+            }
+            {
+                isPhaseDataLoaded ? <MDBox py={3}>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12} md={6} lg={5}>
+                            {
+                                <Card>
+                                    <MDTypography variant="h4" fontWeight="medium" color="dark" mt={1} my={3} mx={3}>
+                                        Phases
+                                    </MDTypography>
+                                    <MDTypography variant="h6" fontWeight="light" color="dark" mt={1} my={3} mx={3}>
+                                        Expand a phase to see questions under it
+                                    </MDTypography>
+                                    <DataTable
+                                        table={{
+                                            columns: [
+                                                {Header: "Name", accessor: "name", width: "85%"},
+                                                {Header: "delete", accessor: "delete"},
+                                                {Header: "expand", accessor: "expand"}
+                                            ],
+                                            rows: tableDataPhase
+                                        }}/>
+                                </Card>
+                            }
+                        </Grid>
+                    </Grid>
+                </MDBox> : null
             }
         </DashboardLayout>
     );
