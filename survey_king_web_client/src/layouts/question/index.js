@@ -32,7 +32,7 @@ function Question() {
     const [isLanguageDataLoaded, setIsLanguageDataLoaded] = useState(false);
     const [questionTypeData, setQuestionTypeData] = useState();
     const [isQuestionTypeDataLoaded, setIsQuestionTypeDataDataLoaded] = useState(false);
-    const [phaseData, setPhaseData] = useState();
+    const [phaseData, setPhaseData] = useState(null);
     const [choiceData, setChoiceData] = useState([]);
     const [isPhaseDataLoaded, setIsPhaseDataLoaded] = useState(false);
     const [isChoiceAdded, setIsChoiceAdded] = useState(false);
@@ -178,7 +178,7 @@ function Question() {
             return element !== value;
         })
         setChoiceData(newChoiceData);
-        if(choiceData.length === 0){
+        if(newChoiceData.length === 0){
             setIsChoiceAdded(false)
         }
         console.log("delete clicked "+ value);
@@ -300,6 +300,7 @@ function Question() {
                                     labelId="phase-label"
                                     id="phase-select"
                                     label="Phase"
+                                    value={phase}
                                     onChange={handleOnPhaseSelect}
                                     sx={{minHeight: 45}}
                                 >
