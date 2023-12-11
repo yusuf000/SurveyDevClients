@@ -22,7 +22,8 @@ const url = `http://localhost:8080`
 
 function Question() {
 
-    const [openCreateProjectDialog, setOpenCreateProjectDialog] = React.useState(false);
+    const [openErrorDialog, setOpenErrorDialog] = React.useState(false);
+    const [openSuccessDialog, setOpenSuccessDialog] = React.useState(false);
     const [openAddChoiceDialog, setOpenAddChoiceDialog] = React.useState(false);
     const [questionType, setQuestionType] = useState("descriptive");
     const [language, setLanguage] = useState();
@@ -40,26 +41,40 @@ function Question() {
     const choiceValueRef = useRef(null);
     const token = localStorage.getItem('token');
     const [choiceSubChoiceMap,setChoiceSubChoiceMap] = useState(new Map());
-    let subChoices = [];
+    let currentSubChoices = [];
     const [choiceIdSeq, setChoiceIdSeq] = useState(0);
     const project = JSON.parse(localStorage.getItem('project'));
 
 
-    const doCreateQuestion = () => {
+    function prepareChoices() {
+        const choices = [];
+        for (let i = 0; i < choiceData.length; i++) {
+            const subChoices = [];
+            const subChoicesForChoice =  choiceSubChoiceMap.get(choiceData[i].id);
+            for (let j = 0; j < subChoicesForChoice.length; j++) {
+                subChoices.push({serial: subChoicesForChoice[j].id, value: subChoicesForChoice[j].value});
+            }
+            choices.push({serial: choiceData[i].id, value: choiceData[i].value, choices: subChoices})
+        }
+        return choices;
+    }
 
+    const doCreateQuestion = () => {
+        const choices = prepareChoices();
         axios
             .post(url + "/api/v1/question/add", {
                 description: questionDescriptionRef.current.value,
                 languageCode: language,
                 questionType: questionType,
-                phaseId: phase
+                phaseId: phase,
+                choices: choices
             }, {
                 headers: {
                     'Authorization': 'Bearer ' + token
                 }
             })
             .then(() => {
-                console.log("question created");
+                handleClickOpenSuccessDialog();
             })
             .catch((error) => {
                 console.log(error)
@@ -123,8 +138,21 @@ function Question() {
         loadPhases();
     }
 
-    const handleClickOpenCreateProjectDialog = () => {
-        setOpenCreateProjectDialog(true);
+    const handleClickOpenSuccessDialog = () => {
+        setOpenSuccessDialog(true);
+    };
+
+    const handleClickCloseSuccessDialog = () => {
+        questionDescriptionRef.current.value = "";
+        setChoiceData([])
+        setIsChoiceAdded(false)
+        setChoiceSubChoiceMap(new Map())
+        setChoiceIdSeq(0)
+        setOpenSuccessDialog(false);
+    };
+
+    const handleClickOpenErrorDialog = () => {
+        setOpenErrorDialog(true);
     };
 
     const handleCloseAddChoiceDialog = () => {
@@ -135,8 +163,8 @@ function Question() {
         setOpenAddChoiceDialog(true);
     };
 
-    const handleCloseCreateProjectDialog = () => {
-        setOpenCreateProjectDialog(false);
+    const handleCloseErrorDialog = () => {
+        setOpenErrorDialog(false);
     };
 
     const handleOnLanguageSelect = (event) => {
@@ -153,31 +181,46 @@ function Question() {
 
     const handleOnAddChoiceClick = () => {
         if (questionType === "descriptive") {
-            handleClickOpenCreateProjectDialog();
+            setErrorMessage("Can't add choice in a descriptive type question");
+            handleClickOpenErrorDialog();
         } else {
             handleClickOpenAddChoiceDialog();
         }
     };
 
-    function handleAddChoice(e) {
+    function handleAddChoice() {
         const choiceValue = choiceValueRef.current.value;
         if(choiceValue){
-            setChoiceSubChoiceMap(choiceSubChoiceMap.set(choiceIdSeq, subChoices));
+            setChoiceSubChoiceMap(choiceSubChoiceMap.set(choiceIdSeq, currentSubChoices));
             setChoiceData([...choiceData, {value: choiceValue, id: choiceIdSeq}]);
             setChoiceIdSeq(choiceIdSeq + 1);
-            subChoices = [];
+            currentSubChoices = [];
             setIsChoiceAdded(true)
         }
         handleCloseAddChoiceDialog()
     }
 
+    const validInput = () => {
+        if(!questionDescriptionRef.current.value || !language || !questionType || !phase){
+            setErrorMessage("Please fill up all the details to create question");
+            return false;
+        }else if(questionType !== "descriptive" && choiceData.length === 0){
+            setErrorMessage("Non descriptive type question should have choices to select");
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+
     const handleOnCreateClick = () => {
-        doCreateQuestion();
+        if(validInput()){
+            doCreateQuestion();
+        }else{
+            handleClickOpenErrorDialog();
+        }
     };
 
-    const onEditChoiceClick = () => {
-        console.log("edit clicked");
-    }
 
     const onDeleteChoiceClick = (id) => {
         const newChoiceData = choiceData.filter(function (element) {
@@ -193,16 +236,29 @@ function Question() {
         loadData();
     }, []);
 
-    function ErrorDialogue() {
+    function SuccessDialog() {
         return (
-            <Dialog open={openCreateProjectDialog} onClose={handleCloseCreateProjectDialog}>
-                <DialogTitle color="red"><Icon fontSize="small">error</Icon> &nbsp; Wrong Question Type</DialogTitle>
+            <Dialog open={openSuccessDialog} onClose={handleClickCloseSuccessDialog}>
+                <DialogTitle color="green"><Icon fontSize="medium">check_circle_outline</Icon> &nbsp; Success</DialogTitle>
                 <DialogContent>
-                    <MDTypography fontSize="small" color="error"> Can't add choice in a descriptive type
-                        question</MDTypography>
+                    <MDTypography fontSize="small" color="success"> Question created successfully</MDTypography>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseCreateProjectDialog}>Close</Button>
+                    <Button onClick={handleClickCloseSuccessDialog}>Close</Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
+
+    function ErrorDialogue() {
+        return (
+            <Dialog open={openErrorDialog} onClose={handleCloseErrorDialog}>
+                <DialogTitle color="red"><Icon fontSize="small">error</Icon> &nbsp; Error</DialogTitle>
+                <DialogContent>
+                    <MDTypography fontSize="small" color="error"> {errorMessage}</MDTypography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseErrorDialog}>Close</Button>
                 </DialogActions>
             </Dialog>
         );
@@ -219,14 +275,14 @@ function Question() {
             setInputMap(({
                 formValues: [...inputMap.formValues, { subChoiceName: subChoiceRef.current.value, subChoiceId: subChoiceIdSeq}]
             }))
-            subChoices.push({value: subChoiceRef.current.value, id: subChoiceIdSeq});
+            currentSubChoices.push({value: subChoiceRef.current.value, id: subChoiceIdSeq});
             setSubChoiceIdSeq(subChoiceIdSeq + 1);
             subChoiceRef.current.value = "";
         }
 
         function removeFormFields(i) {
             let formValues = inputMap.formValues;
-            subChoices = subChoices.filter(function (element) {
+            currentSubChoices = currentSubChoices.filter(function (element) {
                 return element.id !== formValues[i].subChoiceId;
             });
             formValues.splice(i, 1);
@@ -275,9 +331,6 @@ function Question() {
                              Add Subchoice
                         </MDButton>
                     </MDBox>
-                    {
-                        errorMessage ? <MDTypography fontSize="small" color="error" > <Icon fontSize="small">error</Icon>&nbsp; {errorMessage} </MDTypography> : null
-                    }
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseAddChoiceDialog}>Cancel</Button>
@@ -287,118 +340,6 @@ function Question() {
         );
     }
 
-    function QuestionBox(){
-        return (
-            <Card>
-                <MDBox mb={2} mt={2} ml={2} mr={2}>
-                    <MDBox mb={2}>
-                        <MDTypography variant="h5" fontWeight="medium" color="dark">
-                            Please give the necessary information to add a question
-                        </MDTypography>
-                    </MDBox>
-                    <MDBox mb={2}>
-                        <MDInput type="text" label="Description" inputRef={questionDescriptionRef} fullWidth/>
-                    </MDBox>
-                    <MDBox mb={2}>
-                        <FormControl fullWidth>
-                            <InputLabel id="language-label">Language</InputLabel>
-                            {
-                                isLanguageDataLoaded ? <Select
-                                    labelId="language-label"
-                                    id="language-select"
-                                    value={language}
-                                    label="Language"
-                                    onChange={handleOnLanguageSelect}
-                                    sx={{minHeight: 45}}
-                                >
-                                    {
-                                        languageData.map(option => {
-                                                return (
-                                                    <MenuItem
-                                                        value={option.code}>
-                                                        {option.name}
-                                                    </MenuItem>
-                                                )
-                                            }
-                                        )
-                                    }
-                                </Select> : null
-                            }
-                        </FormControl>
-                    </MDBox>
-                    <MDBox mb={2}>
-                        <FormControl fullWidth>
-                            <InputLabel id="question-type-label">Question Type</InputLabel>
-                            {
-                                isQuestionTypeDataLoaded ? <Select
-                                    labelId="question-type-label"
-                                    id="question-type-select"
-                                    value={questionType}
-                                    label="Question type"
-                                    onChange={handleOnQuestionTypeSelect}
-                                    sx={{minHeight: 45}}
-                                >
-                                    {
-                                        questionTypeData.map(option => {
-                                            return (
-                                                <MenuItem
-                                                    value={option.name}>
-                                                    {option.name}
-                                                </MenuItem>
-                                            )
-                                        })
-                                    }
-                                </Select> : null
-                            }
-                        </FormControl>
-                    </MDBox>
-                    <MDBox mb={2}>
-                        <FormControl fullWidth>
-                            <InputLabel id="phase-label">Phase</InputLabel>
-                            {
-                                isPhaseDataLoaded ? <Select
-                                    labelId="phase-label"
-                                    id="phase-select"
-                                    label="Phase"
-                                    value={phase}
-                                    onChange={handleOnPhaseSelect}
-                                    sx={{minHeight: 45}}
-                                >
-                                    {
-                                        phaseData.map(option => {
-                                                return (
-                                                    <MenuItem
-                                                        value={option.id}>
-                                                        {option.name}
-                                                    </MenuItem>
-                                                )
-                                            }
-                                        )
-                                    }
-                                </Select> : null
-                            }
-                        </FormControl>
-                    </MDBox>
-                    <Grid container spacing={2}>
-                        <Grid item>
-                            <MDBox mb={2}>
-                                <MDButton variant="gradient" color="light" onClick={handleOnAddChoiceClick}>
-                                    Add a choice
-                                </MDButton>
-                            </MDBox>
-                        </Grid>
-                        <Grid item>
-                            <MDBox mb={2}>
-                                <MDButton variant="gradient" color="info" onClick={handleOnCreateClick}>
-                                    Create
-                                </MDButton>
-                            </MDBox>
-                        </Grid>
-                    </Grid>
-                </MDBox>
-            </Card>
-        );
-    }
 
     function ChoiceBox(){
         return (
@@ -432,9 +373,117 @@ function Question() {
     return (
         <DashboardLayout>
             <ErrorDialogue/>
+            <SuccessDialog/>
             <AddChoiceDialog/>
             <MDBox mb={2}>
-                <QuestionBox/>
+                <Card>
+                    <MDBox mb={2} mt={2} ml={2} mr={2}>
+                        <MDBox mb={2}>
+                            <MDTypography variant="h5" fontWeight="medium" color="dark">
+                                Please give the necessary information to add a question
+                            </MDTypography>
+                        </MDBox>
+                        <MDBox mb={2}>
+                            <MDInput type="text" label="Description" inputRef={questionDescriptionRef} fullWidth/>
+                        </MDBox>
+                        <MDBox mb={2}>
+                            <FormControl fullWidth>
+                                <InputLabel id="language-label">Language</InputLabel>
+                                {
+                                    isLanguageDataLoaded ? <Select
+                                        labelId="language-label"
+                                        id="language-select"
+                                        value={language}
+                                        label="Language"
+                                        onChange={handleOnLanguageSelect}
+                                        sx={{minHeight: 45}}
+                                    >
+                                        {
+                                            languageData.map(option => {
+                                                    return (
+                                                        <MenuItem
+                                                            value={option.code}>
+                                                            {option.name}
+                                                        </MenuItem>
+                                                    )
+                                                }
+                                            )
+                                        }
+                                    </Select> : null
+                                }
+                            </FormControl>
+                        </MDBox>
+                        <MDBox mb={2}>
+                            <FormControl fullWidth>
+                                <InputLabel id="question-type-label">Question Type</InputLabel>
+                                {
+                                    isQuestionTypeDataLoaded ? <Select
+                                        labelId="question-type-label"
+                                        id="question-type-select"
+                                        value={questionType}
+                                        label="Question type"
+                                        onChange={handleOnQuestionTypeSelect}
+                                        sx={{minHeight: 45}}
+                                    >
+                                        {
+                                            questionTypeData.map(option => {
+                                                return (
+                                                    <MenuItem
+                                                        value={option.name}>
+                                                        {option.name}
+                                                    </MenuItem>
+                                                )
+                                            })
+                                        }
+                                    </Select> : null
+                                }
+                            </FormControl>
+                        </MDBox>
+                        <MDBox mb={2}>
+                            <FormControl fullWidth>
+                                <InputLabel id="phase-label">Phase</InputLabel>
+                                {
+                                    isPhaseDataLoaded ? <Select
+                                        labelId="phase-label"
+                                        id="phase-select"
+                                        label="Phase"
+                                        value={phase}
+                                        onChange={handleOnPhaseSelect}
+                                        sx={{minHeight: 45}}
+                                    >
+                                        {
+                                            phaseData.map(option => {
+                                                    return (
+                                                        <MenuItem
+                                                            value={option.id}>
+                                                            {option.name}
+                                                        </MenuItem>
+                                                    )
+                                                }
+                                            )
+                                        }
+                                    </Select> : null
+                                }
+                            </FormControl>
+                        </MDBox>
+                        <Grid container spacing={2}>
+                            <Grid item>
+                                <MDBox mb={2}>
+                                    <MDButton variant="gradient" color="light" onClick={handleOnAddChoiceClick}>
+                                        Add a choice
+                                    </MDButton>
+                                </MDBox>
+                            </Grid>
+                            <Grid item>
+                                <MDBox mb={2}>
+                                    <MDButton variant="gradient" color="info" onClick={handleOnCreateClick}>
+                                        Create
+                                    </MDButton>
+                                </MDBox>
+                            </Grid>
+                        </Grid>
+                    </MDBox>
+                </Card>
             </MDBox>
             {
                 isChoiceAdded ? <MDBox mb={2}>
