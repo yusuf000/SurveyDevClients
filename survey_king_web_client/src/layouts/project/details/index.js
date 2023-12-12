@@ -30,11 +30,13 @@ const url = `http://localhost:8080/`
 
 function ProjectDetails() {
     const location = useLocation();
+    const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [phaseData, setPhaseData] = useState(null)
     const [isPhaseDataLoaded, setIsPhaseDataLoaded] = useState(false);
     const [tableDataMember, setTableDataMember] = useState(null);
     const [tableDataPhase, setTableDataPhase] = useState(null);
+    const [selectedPhase, setSelectedPhase] = useState(null);
     const [openAddMemberDialog, setOpenAddMemberDialog] = React.useState(false);
     const newMemberIdRef = useRef(null);
     const navigate = useNavigate();
@@ -62,9 +64,11 @@ function ProjectDetails() {
                     }
                 })
                 .then(() => {
+                    handleClickCloseConfirmationDialog()
                     loadMemberData();
                 })
                 .catch((e) => {
+                    handleClickCloseConfirmationDialog()
                     console.log(e);
                 })
         }
@@ -99,6 +103,25 @@ function ProjectDetails() {
             })
     }
 
+    function onDeletePhase() {
+        const token = localStorage.getItem('token');
+        axios
+            .post(url + "api/v1/phase/delete", {}, {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                params: {
+                    'phaseId': selectedPhase
+                }
+            })
+            .then(() => {
+                loadPhaseData();
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }
+
     const prepareTableDataMember = (members) => {
         let data = []
         for (let i in members) {
@@ -122,10 +145,6 @@ function ProjectDetails() {
         return data;
     }
 
-    function onDeletePhase({phaseId}) {
-
-    }
-
     function onExpandPhase({phaseId}) {
 
     }
@@ -138,7 +157,7 @@ function ProjectDetails() {
 
             data.push({
                 "name": phaseName,
-                "delete": <MDTypography component="a" href="" role="button" onClick={() => onDeletePhase({phaseId})}
+                "delete": <MDTypography component="a" href="" role="button" onClick={(event) => handleClickOpenConfirmationDialog({event, phaseId})}
                                         color="error">
                     <Icon>delete</Icon>
                 </MDTypography>,
@@ -198,9 +217,34 @@ function ProjectDetails() {
         loadPhaseData();
     }, []);
 
+    const handleClickOpenConfirmationDialog = ({event, phaseId}) => {
+        event.preventDefault()
+        setSelectedPhase(phaseId)
+        setOpenConfirmationDialog(true)
+    }
+
+    const handleClickCloseConfirmationDialog = () => {
+        setOpenConfirmationDialog(false)
+    }
+
     const handleOnAddQuestionClick = () => {
         navigate('/question-add');
     };
+
+    function ConfirmationDialog() {
+        return (
+            <Dialog open={openConfirmationDialog} onClose={handleClickCloseConfirmationDialog}>
+                <DialogTitle color="info"><Icon fontSize="medium">info</Icon> &nbsp; Confirm</DialogTitle>
+                <DialogContent>
+                    <MDTypography fontSize="small" color="info"> Deleting the phase will delete the related questions also</MDTypography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClickCloseConfirmationDialog}>Cancel</Button>
+                    <Button onClick={() => {onDeletePhase()}}>Confirm</Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
 
     function AddMember() {
         return (
@@ -231,6 +275,7 @@ function ProjectDetails() {
 
     return (
         <DashboardLayout>
+            <ConfirmationDialog/>
             <AddMember/>
             <MDBox py={3}>
                 <Grid container spacing={3}>

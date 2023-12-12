@@ -232,6 +232,7 @@ function Question() {
         }
     }
 
+
     useEffect(() => {
         loadData();
     }, []);
