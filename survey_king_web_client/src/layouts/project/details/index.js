@@ -24,6 +24,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import MDButton from "../../../components/MDButton";
 
 
 const url = `http://localhost:8080/`
@@ -227,10 +228,6 @@ function ProjectDetails() {
         setOpenConfirmationDialog(false)
     }
 
-    const handleOnAddQuestionClick = () => {
-        navigate('/question-add');
-    };
-
     function ConfirmationDialog() {
         return (
             <Dialog open={openConfirmationDialog} onClose={handleClickCloseConfirmationDialog}>
@@ -281,36 +278,6 @@ function ProjectDetails() {
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={6} lg={3}>
                         <MDBox mb={1.5}>
-                            <SimpleActionCard
-                                title="Add Question"
-                                description="Add a question to the project"
-                                click={handleOnAddQuestionClick}
-                                action={{
-                                    type: "internal",
-                                    route: "/project-create",
-                                    color: "info",
-                                    label: "Add"
-                                }}
-                            />
-                        </MDBox>
-                    </Grid>
-                    <Grid item xs={12} md={6} lg={3}>
-                        <MDBox mb={1.5}>
-                            <SimpleActionCard
-                                title="Add Member"
-                                description="Add a member to the project"
-                                click={handleClickOpenAddMemberDialog}
-                                action={{
-                                    type: "internal",
-                                    route: "/project-create",
-                                    color: "info",
-                                    label: "Add"
-                                }}
-                            />
-                        </MDBox>
-                    </Grid>
-                    <Grid item xs={12} md={6} lg={3}>
-                        <MDBox mb={1.5}>
                             <SimpleBlogCard
                                 title="Take Survey"
                                 description="Complete the survey"
@@ -359,9 +326,16 @@ function ProjectDetails() {
                         {
                             isDataLoaded ?
                                 <Card sx={{ height: '100%' }}>
-                                    <MDTypography variant="h4" fontWeight="medium" color="dark" mt={1} my={3} mx={3}>
-                                        Members
-                                    </MDTypography>
+                                    <MDBox mt={1} my={3} mx={3}>
+                                        <MDTypography variant="h4" fontWeight="medium" color="dark">
+                                            Members
+                                        </MDTypography>
+                                    </MDBox>
+                                    <MDBox mt={1} my={3} mx={3}>
+                                        <MDButton variant="gradient" onClick={handleClickOpenAddMemberDialog} color="info">
+                                            Add New
+                                        </MDButton>
+                                    </MDBox>
                                     <DataTable
                                         table={{
                                             columns: [

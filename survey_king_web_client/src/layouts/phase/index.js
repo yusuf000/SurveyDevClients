@@ -1,7 +1,7 @@
 import MDBox from "../../components/MDBox";
 import MDTypography from "../../components/MDTypography";
 import React, {useEffect, useRef, useState} from "react";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import axios from "axios";
 import Card from "@mui/material/Card";
@@ -13,6 +13,8 @@ import Icon from "@mui/material/Icon";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import SimpleActionCard from "../project/components/SimpleActionCard";
 
 const url = `http://localhost:8080/`
 function PhaseDetails(){
@@ -20,6 +22,7 @@ function PhaseDetails(){
     const [isQuestionsLoaded, setIsQuestionsLoaded] = useState(false)
     const [questionData, setQuestionData] = useState([])
     const location = useLocation();
+    const navigate = useNavigate();
 
     if (location.state != null) {
         localStorage.setItem("phaseId", location.state.phaseId)
@@ -87,6 +90,9 @@ function PhaseDetails(){
             })
     }
 
+    const handleOnAddQuestionClick = () => {
+        navigate('/question-add');
+    };
     useEffect(() => {
         loadQuestions();
     }, []);
@@ -140,7 +146,25 @@ function PhaseDetails(){
 
     return (
        <DashboardLayout>
-           <ErrorDialogue/>
+           <MDBox py={3} mb={3}>
+               <Grid container spacing={3}>
+                   <Grid item xs={12} md={6} lg={3}>
+                       <MDBox mb={1.5}>
+                           <SimpleActionCard
+                               title="Add Question"
+                               description="Add a question to the project"
+                               click={handleOnAddQuestionClick}
+                               action={{
+                                   type: "internal",
+                                   route: "/project-create",
+                                   color: "info",
+                                   label: "Add"
+                               }}
+                           />
+                       </MDBox>
+                   </Grid>
+               </Grid>
+           </MDBox>
            <MDBox>
                {
                    isQuestionsLoaded ? <QuestionBox/> : null
