@@ -7,9 +7,16 @@ import axios from "axios";
 import Card from "@mui/material/Card";
 import Choice from "../question/Components/Choice";
 import Question from "./components/question";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import Icon from "@mui/material/Icon";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
 
 const url = `http://localhost:8080/`
 function PhaseDetails(){
+    const [openErrorDialog, setOpenErrorDialog] = React.useState(false);
     const [isQuestionsLoaded, setIsQuestionsLoaded] = useState(false)
     const [questionData, setQuestionData] = useState([])
     const location = useLocation();
@@ -19,6 +26,14 @@ function PhaseDetails(){
     }
 
     const phaseId = localStorage.getItem("phaseId");
+
+    const handleClickOpenErrorDialog = () => {
+        setOpenErrorDialog(true);
+    };
+
+    const handleCloseErrorDialog = () => {
+        setOpenErrorDialog(false);
+    };
 
     const loadQuestions = () => {
         const token = localStorage.getItem('token');
@@ -36,6 +51,35 @@ function PhaseDetails(){
                     response.data.sort((a,b) => a.serial - b.serial);
                     setQuestionData(response.data)
                     setIsQuestionsLoaded(true)
+                }else{
+                    handleClickOpenErrorDialog();
+                    setIsQuestionsLoaded(false);
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }
+
+    const deleteQuestion = (questionId) => {
+        const token = localStorage.getItem('token');
+        axios
+            .post(url + "api/v1/question/delete", {},{
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                params: {
+                    questionId: questionId
+                }
+            })
+            .then(() => {
+                const newQuestionData = questionData.filter(function (element) {
+                    return element.id !== questionId
+                })
+                setQuestionData(newQuestionData);
+                if(newQuestionData.length === 0){
+                    handleClickOpenErrorDialog();
+                    setIsQuestionsLoaded(false)
                 }
             })
             .catch((e) => {
@@ -46,6 +90,20 @@ function PhaseDetails(){
     useEffect(() => {
         loadQuestions();
     }, []);
+
+    function ErrorDialogue() {
+        return (
+            <Dialog open={openErrorDialog} onClose={handleCloseErrorDialog}>
+                <DialogTitle color="red"><Icon fontSize="small">error</Icon> &nbsp; Error</DialogTitle>
+                <DialogContent>
+                    <MDTypography fontSize="small" color="error"> No questions to display in this phase</MDTypography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseErrorDialog}>Close</Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
 
     function QuestionBox(){
         return (
@@ -68,6 +126,7 @@ function PhaseDetails(){
                                             language={option.language}
                                             questionType={option.questionType}
                                             choices={option.choices}
+                                            onDeleteClick={deleteQuestion}
                                         />
                                     )
                                 }
@@ -81,6 +140,7 @@ function PhaseDetails(){
 
     return (
        <DashboardLayout>
+           <ErrorDialogue/>
            <MDBox>
                {
                    isQuestionsLoaded ? <QuestionBox/> : null
