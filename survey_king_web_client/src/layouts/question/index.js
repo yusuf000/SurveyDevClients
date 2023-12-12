@@ -17,6 +17,7 @@ import Button from "@mui/material/Button";
 import axios from "axios";
 import Choice from "./Components/Choice";
 import DialogContentText from "@mui/material/DialogContentText";
+import {useLocation} from "react-router-dom";
 
 const url = `http://localhost:8080`
 
@@ -27,15 +28,12 @@ function Question() {
     const [openAddChoiceDialog, setOpenAddChoiceDialog] = React.useState(false);
     const [questionType, setQuestionType] = useState("descriptive");
     const [language, setLanguage] = useState();
-    const [phase, setPhase] = useState();
     const questionDescriptionRef = useRef(null);
     const [languageData, setLanguageData] = useState();
     const [isLanguageDataLoaded, setIsLanguageDataLoaded] = useState(false);
     const [questionTypeData, setQuestionTypeData] = useState();
     const [isQuestionTypeDataLoaded, setIsQuestionTypeDataDataLoaded] = useState(false);
-    const [phaseData, setPhaseData] = useState(null);
     const [choiceData, setChoiceData] = useState([]);
-    const [isPhaseDataLoaded, setIsPhaseDataLoaded] = useState(false);
     const [isChoiceAdded, setIsChoiceAdded] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const choiceValueRef = useRef(null);
@@ -43,7 +41,13 @@ function Question() {
     const [choiceSubChoiceMap,setChoiceSubChoiceMap] = useState(new Map());
     let currentSubChoices = [];
     const [choiceIdSeq, setChoiceIdSeq] = useState(0);
-    const project = JSON.parse(localStorage.getItem('project'));
+    const location = useLocation();
+
+    if (location.state != null) {
+        localStorage.setItem("phaseId", location.state.phaseId)
+    }
+
+    const phaseId = localStorage.getItem("phaseId");
 
 
     function prepareChoices() {
@@ -66,7 +70,7 @@ function Question() {
                 description: questionDescriptionRef.current.value,
                 languageCode: language,
                 questionType: questionType,
-                phaseId: phase,
+                phaseId: phaseId,
                 choices: choices
             }, {
                 headers: {
@@ -113,29 +117,10 @@ function Question() {
                 console.log(error)
             })
     }
-    const loadPhases = () => {
-        axios
-            .get(url + "/api/v1/phase", {
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                },
-                params: {
-                    sasCode: project.sasCode
-                }
-            })
-            .then((response) => {
-                setPhaseData(response.data);
-                setIsPhaseDataLoaded(true);
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-    }
 
     const loadData = () => {
         loadLanguages();
         loadQuestionTypes();
-        loadPhases();
     }
 
     const handleClickOpenSuccessDialog = () => {
@@ -175,10 +160,6 @@ function Question() {
         setQuestionType(event.target.value);
     };
 
-    const handleOnPhaseSelect = (event) => {
-        setPhase(event.target.value);
-    };
-
     const handleOnAddChoiceClick = () => {
         if (questionType === "descriptive") {
             setErrorMessage("Can't add choice in a descriptive type question");
@@ -201,7 +182,7 @@ function Question() {
     }
 
     const validInput = () => {
-        if(!questionDescriptionRef.current.value || !language || !questionType || !phase){
+        if(!questionDescriptionRef.current.value || !language || !questionType){
             setErrorMessage("Please fill up all the details to create question");
             return false;
         }else if(questionType !== "descriptive" && choiceData.length === 0){
@@ -436,33 +417,6 @@ function Question() {
                                                     </MenuItem>
                                                 )
                                             })
-                                        }
-                                    </Select> : null
-                                }
-                            </FormControl>
-                        </MDBox>
-                        <MDBox mb={2}>
-                            <FormControl fullWidth>
-                                <InputLabel id="phase-label">Phase</InputLabel>
-                                {
-                                    isPhaseDataLoaded ? <Select
-                                        labelId="phase-label"
-                                        id="phase-select"
-                                        label="Phase"
-                                        value={phase}
-                                        onChange={handleOnPhaseSelect}
-                                        sx={{minHeight: 45}}
-                                    >
-                                        {
-                                            phaseData.map(option => {
-                                                    return (
-                                                        <MenuItem
-                                                            value={option.id}>
-                                                            {option.name}
-                                                        </MenuItem>
-                                                    )
-                                                }
-                                            )
                                         }
                                     </Select> : null
                                 }

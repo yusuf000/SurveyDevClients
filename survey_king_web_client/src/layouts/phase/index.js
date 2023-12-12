@@ -152,7 +152,7 @@ function PhaseDetails(){
                        <MDBox mb={1.5}>
                            <SimpleActionCard
                                title="Add Question"
-                               description="Add a question to the project"
+                               description="Add a question to this phase"
                                click={handleOnAddQuestionClick}
                                action={{
                                    type: "internal",
