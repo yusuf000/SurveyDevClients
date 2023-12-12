@@ -231,8 +231,8 @@ function ProjectDetails() {
 
     return (
         <DashboardLayout>
+            <AddMember/>
             <MDBox py={3}>
-                <AddMember/>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={6} lg={3}>
                         <MDBox mb={1.5}>
@@ -281,16 +281,21 @@ function ProjectDetails() {
                 </Grid>
             </MDBox>
             <MDBox py={3}>
-                <Grid container spacing={3}>
-                    <Grid item xs={12} md={6} lg={5}>
-                        <Card>
-                            <MDBox pt={3} px={2}>
+                <Grid container
+                      direction="row"
+                      justifyContent="flex-start"
+                      alignItems="stretch"
+                      spacing={3}
+                >
+                    <Grid item xs={1} md={6} lg={5} >
+                        <Card sx={{ height: '100%' }}>
+                            <MDBox pt={3} px={2} sx={{ height: '10%' }}>
                                 <MDTypography variant="h4" fontWeight="medium">
                                     Project Information
                                 </MDTypography>
                             </MDBox>
-                            <MDBox pt={1} pb={2} px={2}>
-                                <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
+                            <MDBox pt={1} pb={2} px={2} sx={{ height: '90%' }}>
+                                <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0} sx={{ height: '100%' }}>
                                     <Information
                                         name={project.name}
                                         projectType={project.type}
@@ -305,14 +310,10 @@ function ProjectDetails() {
                             </MDBox>
                         </Card>
                     </Grid>
-                </Grid>
-            </MDBox>
-            {
-                isDataLoaded ? <MDBox py={3}>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12} md={6} lg={5}>
-                            {
-                                <Card>
+                    <Grid item xs={12} md={6} lg={5}>
+                        {
+                            isDataLoaded ?
+                                <Card sx={{ height: '100%' }}>
                                     <MDTypography variant="h4" fontWeight="medium" color="dark" mt={1} my={3} mx={3}>
                                         Members
                                     </MDTypography>
@@ -324,12 +325,11 @@ function ProjectDetails() {
                                             ],
                                             rows: tableDataMember
                                         }}/>
-                                </Card>
-                            }
-                        </Grid>
+                                </Card> : null
+                        }
                     </Grid>
-                </MDBox> : null
-            }
+                </Grid>
+            </MDBox>
             {
                 isPhaseDataLoaded ? <MDBox py={3}>
                     <Grid container spacing={3}>

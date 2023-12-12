@@ -33,6 +33,7 @@ function Information({ name, projectType, clientName, status, sasCode, jobNumber
 
   return (
     <MDBox
+        sx={{ height: '100%' }}
       component="li"
       display="flex"
       justifyContent="space-between"
@@ -55,7 +56,7 @@ function Information({ name, projectType, clientName, status, sasCode, jobNumber
             {name}
           </MDTypography>
         </MDBox>
-        <MDBox mb={1} lineHeight={0}>
+        <MDBox mb={1} lineHeight={0} >
           <MDTypography variant="caption" color="text">
             project Type:&nbsp;&nbsp;&nbsp;
             <MDTypography variant="caption" fontWeight="medium" textTransform="capitalize">
