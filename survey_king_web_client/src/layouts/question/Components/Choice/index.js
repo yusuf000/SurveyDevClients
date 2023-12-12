@@ -27,7 +27,7 @@ import MDButton from "components/MDButton";
 // Material Dashboard 2 React context
 import {useMaterialUIController} from "context";
 
-function Choice({name, id, noGutter, onDeleteClick, subChoices}) {
+function Choice({name, id, serial, noGutter, onDeleteClick, subChoices}) {
     const [controller] = useMaterialUIController();
     const {darkMode} = controller;
 
@@ -51,7 +51,7 @@ function Choice({name, id, noGutter, onDeleteClick, subChoices}) {
                 >
                     <MDBox>
                         <MDTypography variant="button" fontWeight="medium" textTransform="capitalize">
-                            {name}
+                            {serial + ". " +name}
                         </MDTypography>
                     </MDBox>
                     <MDBox display="flex" alignItems="center" mt={{xs: 2, sm: 0}} ml={{xs: -1.5, sm: 0}}>
@@ -65,11 +65,11 @@ function Choice({name, id, noGutter, onDeleteClick, subChoices}) {
             </MDBox>
             <MDBox>
                 {
-                    subChoices.map((option) => {
+                    subChoices.map((option, index) => {
                         return (
                             <MDBox>
                                 <MDTypography variant="button" fontWeight="medium" textTransform="capitalize">
-                                    {(option.id + 1) + ". "+ option.value}
+                                    {(index + 1) + ". "+ option.value}
                                 </MDTypography>
                             </MDBox>
                         )

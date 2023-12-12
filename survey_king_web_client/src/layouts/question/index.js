@@ -52,9 +52,9 @@ function Question() {
             const subChoices = [];
             const subChoicesForChoice =  choiceSubChoiceMap.get(choiceData[i].id);
             for (let j = 0; j < subChoicesForChoice.length; j++) {
-                subChoices.push({serial: subChoicesForChoice[j].id, value: subChoicesForChoice[j].value});
+                subChoices.push({serial: j, value: subChoicesForChoice[j].value});
             }
-            choices.push({serial: choiceData[i].id, value: choiceData[i].value, choices: subChoices})
+            choices.push({serial: i, value: choiceData[i].value, choices: subChoices})
         }
         return choices;
     }
@@ -353,11 +353,12 @@ function Question() {
                 <MDBox pt={1} pb={2} px={2}>
                     <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
                         {
-                            choiceData.map(option => {
+                            choiceData.map((option, index) => {
                                     return (
                                         <Choice
                                             name={option.value}
                                             id={option.id}
+                                            serial={index + 1}
                                             onDeleteClick={onDeleteChoiceClick}
                                             subChoices={choiceSubChoiceMap.get(option.id)}
                                         />
