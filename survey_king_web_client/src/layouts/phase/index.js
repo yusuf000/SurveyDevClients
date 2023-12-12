@@ -33,6 +33,7 @@ function PhaseDetails(){
             })
             .then((response) => {
                 if (response.data.length !== 0) {
+                    response.data.sort((a,b) => a.serial - b.serial);
                     setQuestionData(response.data)
                     setIsQuestionsLoaded(true)
                 }
@@ -58,6 +59,7 @@ function PhaseDetails(){
                     <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
                         {
                             questionData.map(option => {
+                                    option.choices.sort((a,b) => a.serial - b.serial);
                                     return (
                                         <Question
                                             id={option.id}

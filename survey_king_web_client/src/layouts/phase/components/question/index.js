@@ -76,6 +76,7 @@ function Question({id, serial, description, language, questionType,choices, onDe
             <MDBox>
                 {
                     choices.map((option) => {
+                        option.choices.sort((a,b) => a.serial - b.serial);
                         return (
                             <MDBox>
                                 <MDTypography variant="button" fontWeight="medium" textTransform="capitalize">
@@ -83,10 +84,11 @@ function Question({id, serial, description, language, questionType,choices, onDe
                                 </MDTypography>
                                 {
                                     option.choices.map((subOption) => {
+                                        subOption.choices.sort((a,b) => a.serial - b.serial);
                                         return (
                                             <MDBox>
                                                 <MDTypography variant="button" fontWeight="small" textTransform="capitalize">
-                                                    {(subOption.serial + 1) + ". "+ subOption.value}
+                                                    {String.fromCharCode(subOption.serial + 65) + ". "+ subOption.value}
                                                 </MDTypography>
                                             </MDBox>
                                         )
