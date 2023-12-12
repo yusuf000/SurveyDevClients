@@ -52,62 +52,62 @@ function Information({ name, projectType, clientName, status, sasCode, jobNumber
           flexDirection={{ xs: "column", sm: "row" }}
           mb={2}
         >
-          <MDTypography variant="button" fontWeight="medium" textTransform="capitalize">
+          <MDTypography variant="h4" fontWeight="medium" textTransform="capitalize">
             {name}
           </MDTypography>
         </MDBox>
         <MDBox mb={1} lineHeight={0} >
-          <MDTypography variant="caption" color="text">
+          <MDTypography variant="h6" fontWeight="light"  color="text">
             project Type:&nbsp;&nbsp;&nbsp;
-            <MDTypography variant="caption" fontWeight="medium" textTransform="capitalize">
+            <MDTypography variant="h7" fontWeight="medium" textTransform="capitalize">
               {projectType}
             </MDTypography>
           </MDTypography>
         </MDBox>
         <MDBox mb={1} lineHeight={0}>
-          <MDTypography variant="caption" color="text">
+          <MDTypography variant="h6" fontWeight="light" color="text">
             Client Name:&nbsp;&nbsp;&nbsp;
-            <MDTypography variant="caption" fontWeight="medium">
+            <MDTypography variant="h7" fontWeight="medium">
               {clientName}
             </MDTypography>
           </MDTypography>
         </MDBox>
         <MDBox mb={1} lineHeight={0}>
-          <MDTypography variant="caption" color="text">
+          <MDTypography variant="h6" fontWeight="light" color="text">
             Status:&nbsp;&nbsp;&nbsp;
-            <MDTypography variant="caption" fontWeight="medium">
+            <MDTypography variant="h7" fontWeight="medium">
               {status}
             </MDTypography>
           </MDTypography>
         </MDBox>
         <MDBox mb={1} lineHeight={0}>
-          <MDTypography variant="caption" color="text">
+          <MDTypography variant="h6" fontWeight="light" color="text">
             Sas-Code:&nbsp;&nbsp;&nbsp;
-            <MDTypography variant="caption" fontWeight="medium">
+            <MDTypography variant="h7" fontWeight="medium">
               {sasCode}
             </MDTypography>
           </MDTypography>
         </MDBox>
         <MDBox mb={1} lineHeight={0}>
-          <MDTypography variant="caption" color="text">
+          <MDTypography variant="h6" fontWeight="light" color="text">
             Job Number:&nbsp;&nbsp;&nbsp;
-            <MDTypography variant="caption" fontWeight="medium">
+            <MDTypography variant="h7" fontWeight="medium">
               {jobNumber}
             </MDTypography>
           </MDTypography>
         </MDBox>
         <MDBox mb={1} lineHeight={0}>
-          <MDTypography variant="caption" color="text">
+          <MDTypography variant="h6" fontWeight="light" color="text">
             Start Date:&nbsp;&nbsp;&nbsp;
-            <MDTypography variant="caption" fontWeight="medium">
+            <MDTypography variant="h7" fontWeight="medium">
               {startDate}
             </MDTypography>
           </MDTypography>
         </MDBox>
         <MDBox mb={1} lineHeight={0}>
-          <MDTypography variant="caption" color="text">
+          <MDTypography variant="h6" fontWeight="light" color="text">
             End Date:&nbsp;&nbsp;&nbsp;
-            <MDTypography variant="caption" fontWeight="medium">
+            <MDTypography variant="h7" fontWeight="medium">
               {endDate}
             </MDTypography>
           </MDTypography>

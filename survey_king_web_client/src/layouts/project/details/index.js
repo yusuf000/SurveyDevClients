@@ -275,24 +275,6 @@ function ProjectDetails() {
             <ConfirmationDialog/>
             <AddMember/>
             <MDBox py={3}>
-                <Grid container spacing={3}>
-                    <Grid item xs={12} md={6} lg={3}>
-                        <MDBox mb={1.5}>
-                            <SimpleBlogCard
-                                title="Take Survey"
-                                description="Complete the survey"
-                                action={{
-                                    type: "internal",
-                                    route: "/project-create",
-                                    color: "info",
-                                    label: "Start"
-                                }}
-                            />
-                        </MDBox>
-                    </Grid>
-                </Grid>
-            </MDBox>
-            <MDBox py={3}>
                 <Grid container
                       direction="row"
                       justifyContent="flex-start"

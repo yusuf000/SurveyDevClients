@@ -196,7 +196,7 @@ function DataTable({
                   sorted={setSortedValue(column)}
                   value={column.render("Header")}
                 >
-                  {(column.render("Header") !== "delete" && column.render("Header") !== "expand") ? column.render("Header") : ""}
+                  {(column.render("Header") !== "delete" && column.render("Header") !== "expand" && column.render("Header") !== "start") ? column.render("Header") : ""}
                 </DataTableHeadCell>
               ))}
             </TableRow>
