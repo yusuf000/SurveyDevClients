@@ -210,7 +210,7 @@ function Projects() {
                 setErrorMessage("Start date can not be greater than end date")
                 return false;
             } else if(projectTypeSelected === 1 && phaseNamesMap.size === 0){
-                setErrorMessage("Phase names can not be empty")
+                setErrorMessage("phase names can not be empty")
                 return false;
             } else {
                 return true;

@@ -344,7 +344,7 @@ function Question() {
 
     function ChoiceBox(){
         return (
-            <Card id="delete-account">
+            <Card>
                 <MDBox pt={3} px={2}>
                     <MDTypography variant="h6" fontWeight="medium">
                         Choices

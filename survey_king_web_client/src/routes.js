@@ -42,6 +42,7 @@ import SignUp from "layouts/authentication/sign-up";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
+import PhaseDetails from "./layouts/phase"
 import ProjectDetails from "./layouts/project/details"
 import Projects from "./layouts/project";
 import Question from "./layouts/question";
@@ -69,6 +70,14 @@ const routes = [
     icon: <Icon fontSize="small">folder</Icon>,
     route: "/project-details",
     component: <ProjectDetails />,
+  },
+  {
+    type: "",
+    name: "Phase Details",
+    key: "phase_details",
+    icon: <Icon fontSize="small">folder</Icon>,
+    route: "/phase-details",
+    component: <PhaseDetails />,
   },
   {
     type: "",

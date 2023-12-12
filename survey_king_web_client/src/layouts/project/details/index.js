@@ -146,7 +146,7 @@ function ProjectDetails() {
     }
 
     function onExpandPhase({phaseId}) {
-
+        navigate('/phase-details', {state: {phaseId: phaseId}});
     }
 
     const prepareTableDataPhase = (phases) => {
