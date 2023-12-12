@@ -25,6 +25,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import MDButton from "../../../components/MDButton";
+import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 
 
 const url = `http://localhost:8080/`
@@ -272,6 +273,7 @@ function ProjectDetails() {
 
     return (
         <DashboardLayout>
+            <DashboardNavbar/>
             <ConfirmationDialog/>
             <AddMember/>
             <MDBox py={3}>

@@ -15,6 +15,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import SimpleActionCard from "../project/components/SimpleActionCard";
+import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 
 const url = `http://localhost:8080/`
 function PhaseDetails(){
@@ -146,6 +147,7 @@ function PhaseDetails(){
 
     return (
        <DashboardLayout>
+           <DashboardNavbar/>
            <MDBox py={3} mb={3}>
                <Grid container spacing={3}>
                    <Grid item xs={12} md={6} lg={3}>

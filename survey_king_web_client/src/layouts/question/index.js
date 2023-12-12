@@ -18,6 +18,7 @@ import axios from "axios";
 import Choice from "./Components/Choice";
 import DialogContentText from "@mui/material/DialogContentText";
 import {useLocation} from "react-router-dom";
+import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 
 const url = `http://localhost:8080`
 
@@ -355,6 +356,7 @@ function Question() {
 
     return (
         <DashboardLayout>
+            <DashboardNavbar/>
             <ErrorDialogue/>
             <SuccessDialog/>
             <AddChoiceDialog/>
