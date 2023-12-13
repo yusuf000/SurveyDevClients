@@ -16,12 +16,17 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import SimpleActionCard from "../project/components/SimpleActionCard";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
+import DialogContentText from "@mui/material/DialogContentText";
+import TextField from "@mui/material/TextField";
 
 const url = `http://localhost:8080/`
 function PhaseDetails(){
     const [openErrorDialog, setOpenErrorDialog] = React.useState(false);
+    const [openAddFilterLogicDialog, setOpenAddFilterLogicDialog] = React.useState(false);
     const [isQuestionsLoaded, setIsQuestionsLoaded] = useState(false)
     const [questionData, setQuestionData] = useState([])
+    const filterLogicRef = useRef();
+    const [currentQuestionId, setCurrentQuestionId] = useState(0);
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -37,6 +42,15 @@ function PhaseDetails(){
 
     const handleCloseErrorDialog = () => {
         setOpenErrorDialog(false);
+    };
+
+    const handleClickOpenAddFilterLogicDialog = (questionId) => {
+        setCurrentQuestionId(questionId);
+        setOpenAddFilterLogicDialog(true);
+    };
+
+    const handleCloseAddFilterLogicDialog = () => {
+        setOpenAddFilterLogicDialog(false);
     };
 
     const loadQuestions = () => {
@@ -91,12 +105,59 @@ function PhaseDetails(){
             })
     }
 
+    const onAddFilterLogic = () => {
+        const token = localStorage.getItem('token');
+        axios
+            .post(url + "api/v1/question-filter/add-expression", {},{
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                params: {
+                    questionId: currentQuestionId
+                }
+            })
+            .then(() => {
+                handleCloseAddFilterLogicDialog()
+            })
+            .catch((e) => {
+                handleClickOpenErrorDialog();
+            })
+    }
+
     const handleOnAddQuestionClick = () => {
         navigate('/question-add');
     };
+
     useEffect(() => {
         loadQuestions();
     }, []);
+
+    function AddFilterLogic() {
+        return (
+            <Dialog open={openAddFilterLogicDialog} onClose={handleCloseAddFilterLogicDialog}>
+                <DialogTitle>Add Filter Logic</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Filter logic will filter out this question during survey based on the answers given to particular questions added by you here.
+                    </DialogContentText>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        label="Filter Logic Expression"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        inputRef={filterLogicRef}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseAddFilterLogicDialog}>Cancel</Button>
+                    <Button onClick={onAddFilterLogic}>Add</Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
 
     function ErrorDialogue() {
         return (
@@ -135,6 +196,7 @@ function PhaseDetails(){
                                             questionType={option.questionType}
                                             choices={option.choices}
                                             onDeleteClick={deleteQuestion}
+                                            onAddFilterLogic={handleClickOpenAddFilterLogicDialog}
                                         />
                                     )
                                 }
@@ -149,6 +211,7 @@ function PhaseDetails(){
     return (
        <DashboardLayout>
            <DashboardNavbar/>
+           <AddFilterLogic/>
            <MDBox py={3} mb={3}>
                <Grid container spacing={3}>
                    <Grid item xs={12} md={6} lg={3}>

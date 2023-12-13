@@ -27,7 +27,7 @@ import MDButton from "components/MDButton";
 // Material Dashboard 2 React context
 import {useMaterialUIController} from "context";
 
-function Question({id, serial, description, language, questionType,choices, onDeleteClick, noGutter}) {
+function Question({id, serial, description, language, questionType,choices, onDeleteClick, onAddFilterLogic, noGutter}) {
     const [controller] = useMaterialUIController();
     const {darkMode} = controller;
 
@@ -51,23 +51,16 @@ function Question({id, serial, description, language, questionType,choices, onDe
                 >
                     <MDBox>
                         <MDTypography variant="button" fontWeight="medium" textTransform="capitalize">
-                            {serial +". "+ description}
+                            {"Q" + serial +". "+ description}
                         </MDTypography>
                     </MDBox>
-                    {/*<MDBox>
-                        <MDTypography variant="button" fontWeight="medium" textTransform="capitalize">
-                            {language.name}
-                        </MDTypography>
-                    </MDBox>
-                    <MDBox>
-                        <MDTypography variant="button" fontWeight="medium" textTransform="capitalize">
-                            {questionType.name}
-                        </MDTypography>
-                    </MDBox>*/}
                     <MDBox display="flex" alignItems="center" mt={{xs: 2, sm: 0}} ml={{xs: -1.5, sm: 0}}>
                         <MDBox mr={1}>
                             <MDButton variant="text" color="error" onClick={() => onDeleteClick(id)}>
                                 <Icon>delete</Icon>&nbsp;delete
+                            </MDButton>
+                            <MDButton variant="text" color="info" onClick={() => onAddFilterLogic(id)}>
+                                <Icon>filter_list</Icon>&nbsp;Add Filter Logic
                             </MDButton>
                         </MDBox>
                     </MDBox>
@@ -80,7 +73,7 @@ function Question({id, serial, description, language, questionType,choices, onDe
                         return (
                             <MDBox>
                                 <MDTypography variant="button" fontWeight="medium" textTransform="capitalize">
-                                    {(option.serial + 1) + ". "+ option.value}
+                                    {"C"+(option.serial + 1) + ". "+ option.value}
                                 </MDTypography>
                                 {
                                     option.choices.map((subOption) => {
