@@ -52,14 +52,14 @@ function Information({ name, projectType, clientName, status, sasCode, jobNumber
           flexDirection={{ xs: "column", sm: "row" }}
           mb={2}
         >
-          <MDTypography variant="h4" fontWeight="medium" textTransform="capitalize">
+          <MDTypography variant="h5" fontWeight="medium" textTransform="capitalize">
             {name}
           </MDTypography>
         </MDBox>
         <MDBox mb={1} lineHeight={0} >
           <MDTypography variant="h6" fontWeight="light"  color="text">
             project Type:&nbsp;&nbsp;&nbsp;
-            <MDTypography variant="h7" fontWeight="medium" textTransform="capitalize">
+            <MDTypography variant="h7" fontWeight="regular" textTransform="capitalize">
               {projectType}
             </MDTypography>
           </MDTypography>
@@ -67,7 +67,7 @@ function Information({ name, projectType, clientName, status, sasCode, jobNumber
         <MDBox mb={1} lineHeight={0}>
           <MDTypography variant="h6" fontWeight="light" color="text">
             Client Name:&nbsp;&nbsp;&nbsp;
-            <MDTypography variant="h7" fontWeight="medium">
+            <MDTypography variant="h7" fontWeight="regular">
               {clientName}
             </MDTypography>
           </MDTypography>
@@ -75,7 +75,7 @@ function Information({ name, projectType, clientName, status, sasCode, jobNumber
         <MDBox mb={1} lineHeight={0}>
           <MDTypography variant="h6" fontWeight="light" color="text">
             Status:&nbsp;&nbsp;&nbsp;
-            <MDTypography variant="h7" fontWeight="medium">
+            <MDTypography variant="h7" fontWeight="regular">
               {status}
             </MDTypography>
           </MDTypography>
@@ -83,7 +83,7 @@ function Information({ name, projectType, clientName, status, sasCode, jobNumber
         <MDBox mb={1} lineHeight={0}>
           <MDTypography variant="h6" fontWeight="light" color="text">
             Sas-Code:&nbsp;&nbsp;&nbsp;
-            <MDTypography variant="h7" fontWeight="medium">
+            <MDTypography variant="h7" fontWeight="regular">
               {sasCode}
             </MDTypography>
           </MDTypography>
@@ -91,7 +91,7 @@ function Information({ name, projectType, clientName, status, sasCode, jobNumber
         <MDBox mb={1} lineHeight={0}>
           <MDTypography variant="h6" fontWeight="light" color="text">
             Job Number:&nbsp;&nbsp;&nbsp;
-            <MDTypography variant="h7" fontWeight="medium">
+            <MDTypography variant="h7" fontWeight="regular">
               {jobNumber}
             </MDTypography>
           </MDTypography>
@@ -99,7 +99,7 @@ function Information({ name, projectType, clientName, status, sasCode, jobNumber
         <MDBox mb={1} lineHeight={0}>
           <MDTypography variant="h6" fontWeight="light" color="text">
             Start Date:&nbsp;&nbsp;&nbsp;
-            <MDTypography variant="h7" fontWeight="medium">
+            <MDTypography variant="h7" fontWeight="regular">
               {startDate}
             </MDTypography>
           </MDTypography>
@@ -107,7 +107,7 @@ function Information({ name, projectType, clientName, status, sasCode, jobNumber
         <MDBox mb={1} lineHeight={0}>
           <MDTypography variant="h6" fontWeight="light" color="text">
             End Date:&nbsp;&nbsp;&nbsp;
-            <MDTypography variant="h7" fontWeight="medium">
+            <MDTypography variant="h7" fontWeight="regular">
               {endDate}
             </MDTypography>
           </MDTypography>

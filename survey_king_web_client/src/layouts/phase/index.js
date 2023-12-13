@@ -123,12 +123,13 @@ function PhaseDetails(){
                 <MDBox pt={1} pb={2} px={2}>
                     <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
                         {
-                            questionData.map(option => {
+                            questionData.map((option, index) => {
                                     option.choices.sort((a,b) => a.serial - b.serial);
+
                                     return (
                                         <Question
                                             id={option.id}
-                                            serial={option.serial}
+                                            serial={index + 1}
                                             description={option.description}
                                             language={option.language}
                                             questionType={option.questionType}
