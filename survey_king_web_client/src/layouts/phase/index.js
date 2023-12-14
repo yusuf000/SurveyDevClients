@@ -108,12 +108,12 @@ function PhaseDetails(){
     const onAddFilterLogic = () => {
         const token = localStorage.getItem('token');
         axios
-            .post(url + "api/v1/question-filter/add-expression", {},{
+            .post(url + "api/v1/question-filter/add-expression", {
+                questionId: currentQuestionId,
+                expression: filterLogicRef.current.value
+            },{
                 headers: {
                     'Authorization': 'Bearer ' + token
-                },
-                params: {
-                    questionId: currentQuestionId
                 }
             })
             .then(() => {
