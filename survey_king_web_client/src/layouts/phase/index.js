@@ -5,7 +5,6 @@ import {useLocation, useNavigate} from "react-router-dom";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import axios from "axios";
 import Card from "@mui/material/Card";
-import Choice from "../question/Components/Choice";
 import Question from "./components/question";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -28,6 +27,7 @@ function PhaseDetails(){
     const filterLogicRef = useRef();
     const [currentQuestionId, setCurrentQuestionId] = useState(0);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [errorMessage, setErrorMessage] = useState("")
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -97,11 +97,12 @@ function PhaseDetails(){
                 })
                 setQuestionData(newQuestionData);
                 if(newQuestionData.length === 0){
-                    handleClickOpenErrorDialog();
                     setIsQuestionsLoaded(false)
                 }
             })
             .catch((e) => {
+                setErrorMessage("Unable to delete question, please check if you have added this question in a filter of another question. Delete that filter and try again.")
+                handleClickOpenErrorDialog()
                 console.log(e);
             })
     }
@@ -171,6 +172,7 @@ function PhaseDetails(){
         const parsedExpression = parseExpression(filterLogicRef.current.value);
         if(!parsedExpression){
             handleCloseAddFilterLogicDialog()
+            setErrorMessage("Error adding filter. Expression is not valid")
             handleClickOpenErrorDialog();
         }else{
             const token = localStorage.getItem('token');
@@ -187,6 +189,7 @@ function PhaseDetails(){
                 .then((response) => {
                     handleCloseAddFilterLogicDialog()
                     if(response.data === false){
+                        setErrorMessage("Error adding filter. Expression is not valid")
                         handleClickOpenErrorDialog();
                     }else{
                         questionData[currentQuestionIndex].questionFilterExpression = filterLogicRef.current.value
@@ -194,6 +197,7 @@ function PhaseDetails(){
                 })
                 .catch((e) => {
                     handleCloseAddFilterLogicDialog();
+                    setErrorMessage("Error adding filter. Expression is not valid")
                     handleClickOpenErrorDialog();
                 })
         }
@@ -244,7 +248,7 @@ function PhaseDetails(){
             <Dialog open={openErrorDialog} onClose={handleCloseErrorDialog}>
                 <DialogTitle color="red"><Icon fontSize="small">error</Icon> &nbsp; Error</DialogTitle>
                 <DialogContent>
-                    <MDTypography fontSize="small" color="error"> Error adding filter. Expression is not valid</MDTypography>
+                    <MDTypography fontSize="small" color="error"> {errorMessage}</MDTypography>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseErrorDialog}>Close</Button>
