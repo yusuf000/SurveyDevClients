@@ -27,6 +27,7 @@ function PhaseDetails(){
     const [questionData, setQuestionData] = useState([])
     const filterLogicRef = useRef();
     const [currentQuestionId, setCurrentQuestionId] = useState(0);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -44,8 +45,9 @@ function PhaseDetails(){
         setOpenErrorDialog(false);
     };
 
-    const handleClickOpenAddFilterLogicDialog = (questionId) => {
-        setCurrentQuestionId(questionId);
+    const handleClickOpenAddFilterLogicDialog = (questionIndex) => {
+        setCurrentQuestionId(questionData[questionIndex].id);
+        setCurrentQuestionIndex(questionIndex);
         setOpenAddFilterLogicDialog(true);
     };
 
@@ -70,7 +72,6 @@ function PhaseDetails(){
                     setQuestionData(response.data)
                     setIsQuestionsLoaded(true)
                 }else{
-                    handleClickOpenErrorDialog();
                     setIsQuestionsLoaded(false);
                 }
             })
@@ -105,23 +106,97 @@ function PhaseDetails(){
             })
     }
 
-    const onAddFilterLogic = () => {
-        const token = localStorage.getItem('token');
-        axios
-            .post(url + "api/v1/question-filter/add-expression", {
-                questionId: currentQuestionId,
-                expression: filterLogicRef.current.value
-            },{
-                headers: {
-                    'Authorization': 'Bearer ' + token
+    function parseExpression(expression) {
+        const getQuestionIndex = (expression, index) =>{
+            if(expression[index.val] !== 'Q') return -1;
+            else{
+                index.val++;
+                let val = 0;
+                while(index.val < expression.length && expression[index.val] >= '0' && expression[index.val] <= '9'){
+                    val = val * 10 + (expression[index.val] - '0');
+                    index.val++;
                 }
-            })
-            .then(() => {
-                handleCloseAddFilterLogicDialog()
-            })
-            .catch((e) => {
-                handleClickOpenErrorDialog();
-            })
+                return val - 1;
+            }
+        }
+
+        const getChoiceId = (expression, index, qIndex) =>{
+            if(expression[index.val] !== 'C') return -1;
+            else{
+                index.val++;
+                let val = 0;
+                while(index.val < expression.length && expression[index.val] >= '0' && expression[index.val] <= '9'){
+                    val = val * 10 + (expression[index.val] - '0');
+                    index.val++;
+                }
+                val = val - 1;
+                if(index.val < expression.length && expression[index.val] !== 'Q'){
+                    let subVal = expression.charCodeAt(index.val) - 65;
+                    index.val++;
+                    if(val >= questionData[qIndex].choices.length || val < 0) return -1;
+                    else{
+                        if(questionData[qIndex].choices[val].choices && subVal < questionData[qIndex].choices[val].choices.length) return questionData[qIndex].choices[val].choices[subVal].id;
+                        else return -1;
+                    }
+
+                }else{
+                    if(val >= questionData[qIndex].choices.length) return -1;
+                    else return questionData[qIndex].choices[val].id;
+                }
+
+            }
+        }
+
+        let index = {
+            val: 0
+        };
+        let parsedExpression = "";
+        while(index.val < expression.length){
+            if(expression[index.val] !== 'Q'){
+                parsedExpression = parsedExpression + expression[index.val];
+                index.val++;
+            }else{
+                let qIndex = getQuestionIndex(expression, index);
+                if(qIndex === -1 || qIndex >= questionData.length) return null;
+                let qId = questionData[qIndex].id;
+                let cId = getChoiceId(expression, index, qIndex);
+                if(cId === -1) return null;
+                parsedExpression = parsedExpression + "Q" + qId + "C" + cId;
+            }
+        }
+        return parsedExpression;
+    }
+
+    const onAddFilterLogic = () => {
+        const parsedExpression = parseExpression(filterLogicRef.current.value);
+        if(!parsedExpression){
+            handleCloseAddFilterLogicDialog()
+            handleClickOpenErrorDialog();
+        }else{
+            const token = localStorage.getItem('token');
+            axios
+                .post(url + "api/v1/question-filter/add-expression", {
+                    questionId: currentQuestionId,
+                    expressionToEvaluate: parsedExpression,
+                    expressionToShow: filterLogicRef.current.value
+                },{
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                })
+                .then((response) => {
+                    handleCloseAddFilterLogicDialog()
+                    if(response.data === false){
+                        handleClickOpenErrorDialog();
+                    }else{
+                        questionData[currentQuestionIndex].questionFilterExpression = filterLogicRef.current.value
+                    }
+                })
+                .catch((e) => {
+                    handleCloseAddFilterLogicDialog();
+                    handleClickOpenErrorDialog();
+                })
+        }
     }
 
     const handleOnAddQuestionClick = () => {
@@ -140,6 +215,11 @@ function PhaseDetails(){
                     <DialogContentText>
                         Filter logic will filter out this question during survey based on the answers given to particular questions added by you here.
                     </DialogContentText>
+                    <MDBox mt={2} mb={2}>
+                        {
+                            currentQuestionIndex < questionData.length ? <MDTypography fontSize="small" color="info"> Curren Filter: {questionData[currentQuestionIndex].questionFilterExpression}</MDTypography> : null
+                        }
+                    </MDBox>
                     <TextField
                         autoFocus
                         margin="dense"
@@ -164,7 +244,7 @@ function PhaseDetails(){
             <Dialog open={openErrorDialog} onClose={handleCloseErrorDialog}>
                 <DialogTitle color="red"><Icon fontSize="small">error</Icon> &nbsp; Error</DialogTitle>
                 <DialogContent>
-                    <MDTypography fontSize="small" color="error"> No questions to display in this phase</MDTypography>
+                    <MDTypography fontSize="small" color="error"> Error adding filter. Expression is not valid</MDTypography>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseErrorDialog}>Close</Button>
@@ -190,7 +270,7 @@ function PhaseDetails(){
                                     return (
                                         <Question
                                             id={option.id}
-                                            serial={index + 1}
+                                            serial={index}
                                             description={option.description}
                                             language={option.language}
                                             questionType={option.questionType}
@@ -211,6 +291,7 @@ function PhaseDetails(){
     return (
        <DashboardLayout>
            <DashboardNavbar/>
+           <ErrorDialogue/>
            <AddFilterLogic/>
            <MDBox py={3} mb={3}>
                <Grid container spacing={3}>

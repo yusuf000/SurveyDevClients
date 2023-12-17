@@ -51,7 +51,7 @@ function Question({id, serial, description, language, questionType,choices, onDe
                 >
                     <MDBox>
                         <MDTypography variant="button" fontWeight="medium" textTransform="capitalize">
-                            {"Q" + serial +". "+ description}
+                            {"Q" + (serial + 1) +". "+ description}
                         </MDTypography>
                     </MDBox>
                     <MDBox display="flex" alignItems="center" mt={{xs: 2, sm: 0}} ml={{xs: -1.5, sm: 0}}>
@@ -59,7 +59,7 @@ function Question({id, serial, description, language, questionType,choices, onDe
                             <MDButton variant="text" color="error" onClick={() => onDeleteClick(id)}>
                                 <Icon>delete</Icon>&nbsp;delete
                             </MDButton>
-                            <MDButton variant="text" color="info" onClick={() => onAddFilterLogic(id)}>
+                            <MDButton variant="text" color="info" onClick={() => onAddFilterLogic(serial)}>
                                 <Icon>filter_list</Icon>&nbsp;Add Filter Logic
                             </MDButton>
                         </MDBox>
