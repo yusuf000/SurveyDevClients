@@ -362,7 +362,7 @@ function PhaseDetails() {
     function AddChoiceFilterLogicDialog() {
         return (
             <Dialog open={openAddChoiceFilterLogicDialog} onClose={handleCloseAddChoiceFilterLogicDialog}>
-                <DialogTitle>Add Filter Logic</DialogTitle>
+                <DialogTitle>Add Filter Logic In C{currentChoiceIndex + 1} of Q{currentQuestionIndex + 1}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Filter logic will filter out this choice during survey based on the answers given to
@@ -397,7 +397,7 @@ function PhaseDetails() {
     function DeleteChoiceFilterLogicDialog() {
         return (
             <Dialog open={openDeleteChoiceFilterLogicDialog} onClose={handleCloseDeleteChoiceFilterLogicDialog}>
-                <DialogTitle>Delete Filter Logic</DialogTitle>
+                <DialogTitle>Delete Filter Logic From C{currentChoiceIndex + 1} of Q{currentQuestionIndex + 1}</DialogTitle>
                 <DialogContent>
                     {
                         currentQuestionIndex < questionData.length && currentChoiceIndex < questionData[currentQuestionIndex].choices.length && questionData[currentQuestionIndex].choices && questionData[currentQuestionIndex].choices[currentChoiceIndex].choiceFilterExpression ?
@@ -430,7 +430,7 @@ function PhaseDetails() {
     function AddFilterLogicDialog() {
         return (
             <Dialog open={openAddFilterLogicDialog} onClose={handleCloseAddFilterLogicDialog}>
-                <DialogTitle>Add Filter Logic</DialogTitle>
+                <DialogTitle>Add Filter Logic In Q{currentQuestionIndex + 1}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Filter logic will filter out this question during survey based on the answers given to
@@ -465,7 +465,7 @@ function PhaseDetails() {
     function DeleteFilterLogicDialog() {
         return (
             <Dialog open={openDeleteFilterLogicDialog} onClose={handleCloseDeleteFilterLogicDialog}>
-                <DialogTitle>Delete Filter Logic</DialogTitle>
+                <DialogTitle>Delete Filter Logic From Q{currentQuestionIndex + 1}</DialogTitle>
                 <DialogContent>
                     {
                         currentQuestionIndex < questionData.length && questionData[currentQuestionIndex].questionFilterExpression ?
