@@ -27,7 +27,7 @@ import MDButton from "components/MDButton";
 // Material Dashboard 2 React context
 import {useMaterialUIController} from "context";
 
-function Question({id, serial, description, language, questionType,choices, onDeleteClick, onAddFilterLogic, noGutter}) {
+function Question({id, serial, description, language, questionType,choices, onDeleteClick, onAddFilterLogic, onDeleteFilterLogic, noGutter}) {
     const [controller] = useMaterialUIController();
     const {darkMode} = controller;
 
@@ -61,6 +61,9 @@ function Question({id, serial, description, language, questionType,choices, onDe
                             </MDButton>
                             <MDButton variant="text" color="info" onClick={() => onAddFilterLogic(serial)}>
                                 <Icon>filter_list</Icon>&nbsp;Add Filter Logic
+                            </MDButton>
+                            <MDButton variant="text" color="primary" onClick={() => onDeleteFilterLogic(serial)}>
+                                <Icon>remove_circle_outline</Icon>&nbsp;Remove Filter
                             </MDButton>
                         </MDBox>
                     </MDBox>

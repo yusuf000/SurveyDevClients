@@ -19,9 +19,11 @@ import DialogContentText from "@mui/material/DialogContentText";
 import TextField from "@mui/material/TextField";
 
 const url = `http://localhost:8080/`
-function PhaseDetails(){
+
+function PhaseDetails() {
     const [openErrorDialog, setOpenErrorDialog] = React.useState(false);
     const [openAddFilterLogicDialog, setOpenAddFilterLogicDialog] = React.useState(false);
+    const [openDeleteFilterLogicDialog, setDeleteFilterLogicDialog] = React.useState(false);
     const [isQuestionsLoaded, setIsQuestionsLoaded] = useState(false)
     const [questionData, setQuestionData] = useState([])
     const filterLogicRef = useRef();
@@ -65,6 +67,16 @@ function PhaseDetails(){
         setOpenAddFilterLogicDialog(false);
     };
 
+    const handleClickOpenDeleteFilterLogicDialog = (questionIndex) => {
+        setCurrentQuestionId(questionData[questionIndex].id);
+        setCurrentQuestionIndex(questionIndex);
+        setDeleteFilterLogicDialog(true);
+    };
+
+    const handleCloseDeleteFilterLogicDialog = () => {
+        setDeleteFilterLogicDialog(false);
+    };
+
     const loadQuestions = () => {
         const token = localStorage.getItem('token');
         axios
@@ -78,10 +90,10 @@ function PhaseDetails(){
             })
             .then((response) => {
                 if (response.data.length !== 0) {
-                    response.data.sort((a,b) => a.serial - b.serial);
+                    response.data.sort((a, b) => a.serial - b.serial);
                     setQuestionData(response.data)
                     setIsQuestionsLoaded(true)
-                }else{
+                } else {
                     setIsQuestionsLoaded(false);
                 }
             })
@@ -93,7 +105,7 @@ function PhaseDetails(){
     const deleteQuestion = () => {
         const token = localStorage.getItem('token');
         axios
-            .post(url + "api/v1/question/delete", {},{
+            .post(url + "api/v1/question/delete", {}, {
                 headers: {
                     'Authorization': 'Bearer ' + token
                 },
@@ -107,7 +119,7 @@ function PhaseDetails(){
                     return element.id !== currentQuestionId
                 })
                 setQuestionData(newQuestionData);
-                if(newQuestionData.length === 0){
+                if (newQuestionData.length === 0) {
                     setIsQuestionsLoaded(false)
                 }
             })
@@ -120,12 +132,12 @@ function PhaseDetails(){
     }
 
     function parseExpression(expression) {
-        const getQuestionIndex = (expression, index) =>{
-            if(expression[index.val] !== 'Q') return -1;
-            else{
+        const getQuestionIndex = (expression, index) => {
+            if (expression[index.val] !== 'Q') return -1;
+            else {
                 index.val++;
                 let val = 0;
-                while(index.val < expression.length && expression[index.val] >= '0' && expression[index.val] <= '9'){
+                while (index.val < expression.length && expression[index.val] >= '0' && expression[index.val] <= '9') {
                     val = val * 10 + (expression[index.val] - '0');
                     index.val++;
                 }
@@ -133,27 +145,27 @@ function PhaseDetails(){
             }
         }
 
-        const getChoiceId = (expression, index, qIndex) =>{
-            if(expression[index.val] !== 'C') return -1;
-            else{
+        const getChoiceId = (expression, index, qIndex) => {
+            if (expression[index.val] !== 'C') return -1;
+            else {
                 index.val++;
                 let val = 0;
-                while(index.val < expression.length && expression[index.val] >= '0' && expression[index.val] <= '9'){
+                while (index.val < expression.length && expression[index.val] >= '0' && expression[index.val] <= '9') {
                     val = val * 10 + (expression[index.val] - '0');
                     index.val++;
                 }
                 val = val - 1;
-                if(index.val < expression.length && expression[index.val] !== 'Q'){
+                if (index.val < expression.length && expression[index.val] !== 'Q') {
                     let subVal = expression.charCodeAt(index.val) - 65;
                     index.val++;
-                    if(val >= questionData[qIndex].choices.length || val < 0) return -1;
-                    else{
-                        if(questionData[qIndex].choices[val].choices && subVal < questionData[qIndex].choices[val].choices.length) return questionData[qIndex].choices[val].choices[subVal].id;
+                    if (val >= questionData[qIndex].choices.length || val < 0) return -1;
+                    else {
+                        if (questionData[qIndex].choices[val].choices && subVal < questionData[qIndex].choices[val].choices.length) return questionData[qIndex].choices[val].choices[subVal].id;
                         else return -1;
                     }
 
-                }else{
-                    if(val >= questionData[qIndex].choices.length) return -1;
+                } else {
+                    if (val >= questionData[qIndex].choices.length) return -1;
                     else return questionData[qIndex].choices[val].id;
                 }
 
@@ -164,17 +176,17 @@ function PhaseDetails(){
             val: 0
         };
         let parsedExpression = "";
-        while(index.val < expression.length){
-            if(expression[index.val] !== 'Q'){
+        while (index.val < expression.length) {
+            if (expression[index.val] !== 'Q') {
                 parsedExpression = parsedExpression + expression[index.val];
                 index.val++;
-            }else{
+            } else {
                 let qIndex = getQuestionIndex(expression, index);
-                if(qIndex === -1 || qIndex >= questionData.length) return null;
+                if (qIndex === -1 || qIndex >= questionData.length) return null;
                 let qId = questionData[qIndex].id;
                 let cId = getChoiceId(expression, index, qIndex);
-                if(cId === -1) return null;
-                if(qId === currentQuestionId) return null;
+                if (cId === -1) return null;
+                if(questionData[qIndex].serial >= questionData[currentQuestionIndex].serial) return null;
                 parsedExpression = parsedExpression + "Q" + qId + "C" + cId;
             }
         }
@@ -183,28 +195,28 @@ function PhaseDetails(){
 
     const onAddFilterLogic = () => {
         const parsedExpression = parseExpression(filterLogicRef.current.value);
-        if(!parsedExpression){
+        if (!parsedExpression) {
             handleCloseAddFilterLogicDialog()
             setErrorMessage("Error adding filter. Expression is not valid")
             handleClickOpenErrorDialog();
-        }else{
+        } else {
             const token = localStorage.getItem('token');
             axios
                 .post(url + "api/v1/question-filter/add-expression", {
                     questionId: currentQuestionId,
                     expressionToEvaluate: parsedExpression,
                     expressionToShow: filterLogicRef.current.value
-                },{
+                }, {
                     headers: {
                         'Authorization': 'Bearer ' + token
                     }
                 })
                 .then((response) => {
                     handleCloseAddFilterLogicDialog()
-                    if(response.data === false){
+                    if (response.data === false) {
                         setErrorMessage("Error adding filter. Expression is not valid")
                         handleClickOpenErrorDialog();
-                    }else{
+                    } else {
                         questionData[currentQuestionIndex].questionFilterExpression = filterLogicRef.current.value
                     }
                 })
@@ -214,6 +226,29 @@ function PhaseDetails(){
                     handleClickOpenErrorDialog();
                 })
         }
+    }
+
+    const onDeleteFilterLogic = () => {
+        const token = localStorage.getItem('token');
+        axios
+            .post(url + "api/v1/question-filter/delete", {}, {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                params: {
+                    questionId: currentQuestionId
+                }
+            })
+            .then((response) => {
+                handleCloseDeleteFilterLogicDialog();
+                questionData[currentQuestionIndex].questionFilterExpression = "";
+            })
+            .catch((e) => {
+                handleCloseDeleteFilterLogicDialog();
+                setErrorMessage("Error deleting filter.Try again.")
+                handleClickOpenErrorDialog();
+            })
+
     }
 
     const handleOnAddQuestionClick = () => {
@@ -229,11 +264,14 @@ function PhaseDetails(){
             <Dialog open={openConfirmationDialog} onClose={handleClickCloseConfirmationDialog}>
                 <DialogTitle color="info"><Icon fontSize="medium">info</Icon> &nbsp; Confirm</DialogTitle>
                 <DialogContent>
-                    <MDTypography fontSize="small" color="info"> Are you sure you want to delete this question?</MDTypography>
+                    <MDTypography fontSize="small" color="info"> Are you sure you want to delete this
+                        question?</MDTypography>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClickCloseConfirmationDialog}>Cancel</Button>
-                    <Button onClick={() => {deleteQuestion()}}>Yes</Button>
+                    <Button onClick={() => {
+                        deleteQuestion()
+                    }}>Yes</Button>
                 </DialogActions>
             </Dialog>
         );
@@ -245,11 +283,14 @@ function PhaseDetails(){
                 <DialogTitle>Add Filter Logic</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Filter logic will filter out this question during survey based on the answers given to particular questions added by you here.
+                        Filter logic will filter out this question during survey based on the answers given to
+                        particular questions added by you here. Adding a new filter will delete existing one.
                     </DialogContentText>
                     <MDBox mt={2} mb={2}>
                         {
-                            currentQuestionIndex < questionData.length ? <MDTypography fontSize="small" color="info"> Curren Filter: {questionData[currentQuestionIndex].questionFilterExpression}</MDTypography> : null
+                            currentQuestionIndex < questionData.length && questionData[currentQuestionIndex].questionFilterExpression ?
+                                <MDTypography fontSize="small" color="info"> Curren
+                                    Filter: {questionData[currentQuestionIndex].questionFilterExpression}</MDTypography> : null
                         }
                     </MDBox>
                     <TextField
@@ -271,6 +312,38 @@ function PhaseDetails(){
         );
     }
 
+    function DeleteFilterLogicDialog() {
+        return (
+            <Dialog open={openDeleteFilterLogicDialog} onClose={handleCloseDeleteFilterLogicDialog}>
+                <DialogTitle>Delete Filter Logic</DialogTitle>
+                <DialogContent>
+                    {
+                        currentQuestionIndex < questionData.length && questionData[currentQuestionIndex].questionFilterExpression ?
+                            <MDBox>
+                                <DialogContentText>
+                                    Are you sure you want to delete this filter logic?
+                                </DialogContentText>
+                                <MDBox mt={2} mb={2}>
+                                    <MDTypography fontSize="medium" color="info"> Curren
+                                        Filter: {questionData[currentQuestionIndex].questionFilterExpression}</MDTypography>
+                                </MDBox>
+                            </MDBox> : <MDBox>
+                                <DialogContentText>
+                                    This question doesn't have any filter
+                                </DialogContentText>
+                            </MDBox>
+                    }
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDeleteFilterLogicDialog}>Cancel</Button>
+                    {
+                        currentQuestionIndex < questionData.length && questionData[currentQuestionIndex].questionFilterExpression ? <Button onClick={onDeleteFilterLogic}>Yes</Button> : null
+                    }
+                </DialogActions>
+            </Dialog>
+        );
+    }
+
     function ErrorDialogue() {
         return (
             <Dialog open={openErrorDialog} onClose={handleCloseErrorDialog}>
@@ -285,7 +358,7 @@ function PhaseDetails(){
         );
     }
 
-    function QuestionBox(){
+    function QuestionBox() {
         return (
             <Card>
                 <MDBox pt={3} px={2}>
@@ -297,7 +370,7 @@ function PhaseDetails(){
                     <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
                         {
                             questionData.map((option, index) => {
-                                    option.choices.sort((a,b) => a.serial - b.serial);
+                                    option.choices.sort((a, b) => a.serial - b.serial);
 
                                     return (
                                         <Question
@@ -309,6 +382,7 @@ function PhaseDetails(){
                                             choices={option.choices}
                                             onDeleteClick={handleClickOpenConfirmationDialog}
                                             onAddFilterLogic={handleClickOpenAddFilterLogicDialog}
+                                            onDeleteFilterLogic={handleClickOpenDeleteFilterLogicDialog}
                                         />
                                     )
                                 }
@@ -321,36 +395,37 @@ function PhaseDetails(){
     }
 
     return (
-       <DashboardLayout>
-           <DashboardNavbar/>
-           <ErrorDialogue/>
-           <ConfirmationDialog/>
-           <AddFilterLogicDialog/>
-           <MDBox py={3} mb={3}>
-               <Grid container spacing={3}>
-                   <Grid item xs={12} md={6} lg={3}>
-                       <MDBox mb={1.5}>
-                           <SimpleActionCard
-                               title="Add Question"
-                               description="Add a question to this phase"
-                               click={handleOnAddQuestionClick}
-                               action={{
-                                   type: "internal",
-                                   route: "/project-create",
-                                   color: "info",
-                                   label: "Add"
-                               }}
-                           />
-                       </MDBox>
-                   </Grid>
-               </Grid>
-           </MDBox>
-           <MDBox>
-               {
-                   isQuestionsLoaded ? <QuestionBox/> : null
-               }
-           </MDBox>
-       </DashboardLayout>
+        <DashboardLayout>
+            <DashboardNavbar/>
+            <ErrorDialogue/>
+            <ConfirmationDialog/>
+            <AddFilterLogicDialog/>
+            <DeleteFilterLogicDialog/>
+            <MDBox py={3} mb={3}>
+                <Grid container spacing={3}>
+                    <Grid item xs={12} md={6} lg={3}>
+                        <MDBox mb={1.5}>
+                            <SimpleActionCard
+                                title="Add Question"
+                                description="Add a question to this phase"
+                                click={handleOnAddQuestionClick}
+                                action={{
+                                    type: "internal",
+                                    route: "/project-create",
+                                    color: "info",
+                                    label: "Add"
+                                }}
+                            />
+                        </MDBox>
+                    </Grid>
+                </Grid>
+            </MDBox>
+            <MDBox>
+                {
+                    isQuestionsLoaded ? <QuestionBox/> : null
+                }
+            </MDBox>
+        </DashboardLayout>
     );
 }
 
