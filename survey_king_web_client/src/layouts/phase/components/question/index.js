@@ -89,14 +89,14 @@ function Question({
                     choices.map((option, index) => {
                         option.choices.sort((a, b) => a.serial - b.serial);
                         return (
-                            <Card>
-                                <MDBox m={2}>
+                            <MDBox m={2}>
+                                <Card>
                                     <MDBox
                                         display="flex"
                                         justifyContent="space-between"
                                         alignItems={{xs: "flex-start", sm: "center"}}
                                         flexDirection={{xs: "column", sm: "row"}}
-                                        mb={2}
+                                        m={2}
                                     >
                                         <MDTypography variant="button" fontWeight="medium" textTransform="capitalize">
                                             {"C" + (option.serial + 1) + ". " + option.value}
@@ -114,12 +114,13 @@ function Question({
                                         </MDBox>
                                     </MDBox>
 
-                                    <hr/>
+
                                     {
                                         option.choices.map((subOption) => {
                                             subOption.choices.sort((a, b) => a.serial - b.serial);
                                             return (
-                                                <MDBox>
+                                                <MDBox m={1.5}>
+                                                    <hr/>
                                                     <MDBox display="flex"
                                                            justifyContent="space-between"
                                                            alignItems={{xs: "flex-start", sm: "center"}}
@@ -141,13 +142,12 @@ function Question({
                                                             </MDButton>
                                                         </MDBox>
                                                     </MDBox>
-                                                    <hr />
                                                 </MDBox>
                                             )
                                         })
                                     }
-                                </MDBox>
-                            </Card>
+                                </Card>
+                            </MDBox>
                         )
                     })
                 }
