@@ -27,6 +27,7 @@ function PhaseDetails(){
     const filterLogicRef = useRef();
     const [currentQuestionId, setCurrentQuestionId] = useState(0);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
     const [errorMessage, setErrorMessage] = useState("")
     const location = useLocation();
     const navigate = useNavigate();
@@ -44,6 +45,15 @@ function PhaseDetails(){
     const handleCloseErrorDialog = () => {
         setOpenErrorDialog(false);
     };
+
+    const handleClickOpenConfirmationDialog = (questionId) => {
+        setCurrentQuestionId(questionId)
+        setOpenConfirmationDialog(true)
+    }
+
+    const handleClickCloseConfirmationDialog = () => {
+        setOpenConfirmationDialog(false)
+    }
 
     const handleClickOpenAddFilterLogicDialog = (questionIndex) => {
         setCurrentQuestionId(questionData[questionIndex].id);
@@ -80,7 +90,7 @@ function PhaseDetails(){
             })
     }
 
-    const deleteQuestion = (questionId) => {
+    const deleteQuestion = () => {
         const token = localStorage.getItem('token');
         axios
             .post(url + "api/v1/question/delete", {},{
@@ -88,12 +98,13 @@ function PhaseDetails(){
                     'Authorization': 'Bearer ' + token
                 },
                 params: {
-                    questionId: questionId
+                    questionId: currentQuestionId
                 }
             })
             .then(() => {
+                handleClickCloseConfirmationDialog();
                 const newQuestionData = questionData.filter(function (element) {
-                    return element.id !== questionId
+                    return element.id !== currentQuestionId
                 })
                 setQuestionData(newQuestionData);
                 if(newQuestionData.length === 0){
@@ -101,6 +112,7 @@ function PhaseDetails(){
                 }
             })
             .catch((e) => {
+                handleClickCloseConfirmationDialog();
                 setErrorMessage("Unable to delete question, please check if you have added this question in a filter of another question. Delete that filter and try again.")
                 handleClickOpenErrorDialog()
                 console.log(e);
@@ -162,6 +174,7 @@ function PhaseDetails(){
                 let qId = questionData[qIndex].id;
                 let cId = getChoiceId(expression, index, qIndex);
                 if(cId === -1) return null;
+                if(qId === currentQuestionId) return null;
                 parsedExpression = parsedExpression + "Q" + qId + "C" + cId;
             }
         }
@@ -211,7 +224,22 @@ function PhaseDetails(){
         loadQuestions();
     }, []);
 
-    function AddFilterLogic() {
+    function ConfirmationDialog() {
+        return (
+            <Dialog open={openConfirmationDialog} onClose={handleClickCloseConfirmationDialog}>
+                <DialogTitle color="info"><Icon fontSize="medium">info</Icon> &nbsp; Confirm</DialogTitle>
+                <DialogContent>
+                    <MDTypography fontSize="small" color="info"> Are you sure you want to delete this question?</MDTypography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClickCloseConfirmationDialog}>Cancel</Button>
+                    <Button onClick={() => {deleteQuestion()}}>Yes</Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
+
+    function AddFilterLogicDialog() {
         return (
             <Dialog open={openAddFilterLogicDialog} onClose={handleCloseAddFilterLogicDialog}>
                 <DialogTitle>Add Filter Logic</DialogTitle>
@@ -279,7 +307,7 @@ function PhaseDetails(){
                                             language={option.language}
                                             questionType={option.questionType}
                                             choices={option.choices}
-                                            onDeleteClick={deleteQuestion}
+                                            onDeleteClick={handleClickOpenConfirmationDialog}
                                             onAddFilterLogic={handleClickOpenAddFilterLogicDialog}
                                         />
                                     )
@@ -296,7 +324,8 @@ function PhaseDetails(){
        <DashboardLayout>
            <DashboardNavbar/>
            <ErrorDialogue/>
-           <AddFilterLogic/>
+           <ConfirmationDialog/>
+           <AddFilterLogicDialog/>
            <MDBox py={3} mb={3}>
                <Grid container spacing={3}>
                    <Grid item xs={12} md={6} lg={3}>
