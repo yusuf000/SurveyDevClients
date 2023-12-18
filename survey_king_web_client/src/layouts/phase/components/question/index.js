@@ -27,7 +27,7 @@ import MDButton from "components/MDButton";
 // Material Dashboard 2 React context
 import {useMaterialUIController} from "context";
 
-function Question({id, serial, description, language, questionType,choices, onDeleteClick, onAddFilterLogic, onDeleteFilterLogic, noGutter}) {
+function Question({id, serial, description, language, questionType,choices, onDeleteClick, onAddFilterLogic, onDeleteFilterLogic, onAddChoiceFilterLogic, onDeleteChoiceFilterLogic, noGutter}) {
     const [controller] = useMaterialUIController();
     const {darkMode} = controller;
 
@@ -60,7 +60,7 @@ function Question({id, serial, description, language, questionType,choices, onDe
                                 <Icon>delete</Icon>&nbsp;delete
                             </MDButton>
                             <MDButton variant="text" color="info" onClick={() => onAddFilterLogic(serial)}>
-                                <Icon>filter_list</Icon>&nbsp;Add Filter Logic
+                                <Icon>add_circle_outline</Icon>&nbsp;Add Filter Logic
                             </MDButton>
                             <MDButton variant="text" color="primary" onClick={() => onDeleteFilterLogic(serial)}>
                                 <Icon>remove_circle_outline</Icon>&nbsp;Remove Filter
@@ -71,13 +71,21 @@ function Question({id, serial, description, language, questionType,choices, onDe
             </MDBox>
             <MDBox>
                 {
-                    choices.map((option) => {
+                    choices.map((option,index) => {
                         option.choices.sort((a,b) => a.serial - b.serial);
                         return (
                             <MDBox>
-                                <MDTypography variant="button" fontWeight="medium" textTransform="capitalize">
-                                    {"C"+(option.serial + 1) + ". "+ option.value}
-                                </MDTypography>
+                                <MDBox>
+                                    <MDTypography variant="button" fontWeight="medium" textTransform="capitalize">
+                                        {"C"+(option.serial + 1) + ". "+ option.value}
+                                    </MDTypography>
+                                    <MDButton variant="text" size={"small"} color="info" onClick={() => onAddChoiceFilterLogic(serial, index)}>
+                                        <Icon>add_circle_outline</Icon>
+                                    </MDButton>
+                                    <MDButton variant="text" size={"small"} color="primary" onClick={() => onDeleteChoiceFilterLogic(serial, index)}>
+                                        <Icon>remove_circle_outline</Icon>
+                                    </MDButton>
+                                </MDBox>
                                 {
                                     option.choices.map((subOption) => {
                                         subOption.choices.sort((a,b) => a.serial - b.serial);
@@ -86,6 +94,12 @@ function Question({id, serial, description, language, questionType,choices, onDe
                                                 <MDTypography variant="button" fontWeight="small" textTransform="capitalize">
                                                     {String.fromCharCode(subOption.serial + 65) + ". "+ subOption.value}
                                                 </MDTypography>
+                                                <MDButton variant="text" size={"small"} color="info" onClick={() => onAddChoiceFilterLogic(serial)}>
+                                                    <Icon>add_circle_outline</Icon>
+                                                </MDButton>
+                                                <MDButton variant="text" size={"small"} color="primary" onClick={() => onDeleteChoiceFilterLogic(serial)}>
+                                                    <Icon>remove_circle_outline</Icon>
+                                                </MDButton>
                                             </MDBox>
                                         )
                                     })

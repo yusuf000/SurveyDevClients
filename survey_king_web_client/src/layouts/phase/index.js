@@ -24,10 +24,14 @@ function PhaseDetails() {
     const [openErrorDialog, setOpenErrorDialog] = React.useState(false);
     const [openAddFilterLogicDialog, setOpenAddFilterLogicDialog] = React.useState(false);
     const [openDeleteFilterLogicDialog, setDeleteFilterLogicDialog] = React.useState(false);
+    const [openAddChoiceFilterLogicDialog, setOpenAddChoiceFilterLogicDialog] = React.useState(false);
+    const [openDeleteChoiceFilterLogicDialog, setDeleteChoiceFilterLogicDialog] = React.useState(false);
     const [isQuestionsLoaded, setIsQuestionsLoaded] = useState(false)
     const [questionData, setQuestionData] = useState([])
     const filterLogicRef = useRef();
     const [currentQuestionId, setCurrentQuestionId] = useState(0);
+    const [currentChoiceIndex, setCurrentChoiceIndex] = useState(0);
+    const [currentChoiceId, setCurrentChoiceId] = useState(0);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
     const [errorMessage, setErrorMessage] = useState("")
@@ -66,6 +70,16 @@ function PhaseDetails() {
     const handleCloseAddFilterLogicDialog = () => {
         setOpenAddFilterLogicDialog(false);
     };
+    const handleClickOpenAddChoiceFilterLogicDialog = (questionIndex, choiceIndex) => {
+        setCurrentQuestionIndex(questionIndex)
+        setCurrentChoiceIndex(choiceIndex);
+        setOpenAddChoiceFilterLogicDialog(true);
+    };
+
+    const handleCloseAddChoiceFilterLogicDialog = () => {
+        setOpenAddChoiceFilterLogicDialog(false);
+    };
+
 
     const handleClickOpenDeleteFilterLogicDialog = (questionIndex) => {
         setCurrentQuestionId(questionData[questionIndex].id);
@@ -77,6 +91,16 @@ function PhaseDetails() {
         setDeleteFilterLogicDialog(false);
     };
 
+    const handleClickOpenDeleteChoiceFilterLogicDialog = (questionIndex, choiceIndex) => {
+        setCurrentQuestionIndex(questionIndex);
+        setCurrentChoiceIndex(choiceIndex);
+        setCurrentChoiceId(questionData[questionIndex].choices[choiceIndex].id);
+        setDeleteChoiceFilterLogicDialog(true);
+    };
+
+    const handleCloseDeleteChoiceFilterLogicDialog = () => {
+        setDeleteChoiceFilterLogicDialog(false);
+    };
     const loadQuestions = () => {
         const token = localStorage.getItem('token');
         axios
@@ -228,6 +252,41 @@ function PhaseDetails() {
         }
     }
 
+    const onAddChoiceFilterLogic = () => {
+        const parsedExpression = parseExpression(filterLogicRef.current.value);
+        if (!parsedExpression) {
+            handleCloseAddChoiceFilterLogicDialog()
+            setErrorMessage("Error adding filter. Expression is not valid")
+            handleClickOpenErrorDialog();
+        } else {
+            const token = localStorage.getItem('token');
+            axios
+                .post(url + "api/v1/choice-filter/add", {
+                    choiceId: questionData[currentQuestionIndex].choices[currentChoiceIndex].id,
+                    expressionToEvaluate: parsedExpression,
+                    expressionToShow: filterLogicRef.current.value
+                }, {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                })
+                .then((response) => {
+                    handleCloseAddChoiceFilterLogicDialog()
+                    if (response.data === false) {
+                        setErrorMessage("Error adding filter. Expression is not valid")
+                        handleClickOpenErrorDialog();
+                    } else {
+                        questionData[currentQuestionIndex].choices[currentChoiceIndex].choiceFilterExpression = filterLogicRef.current.value
+                    }
+                })
+                .catch((e) => {
+                    handleCloseAddChoiceFilterLogicDialog();
+                    setErrorMessage("Error adding filter. Expression is not valid")
+                    handleClickOpenErrorDialog();
+                })
+        }
+    }
+
     const onDeleteFilterLogic = () => {
         const token = localStorage.getItem('token');
         axios
@@ -245,6 +304,29 @@ function PhaseDetails() {
             })
             .catch((e) => {
                 handleCloseDeleteFilterLogicDialog();
+                setErrorMessage("Error deleting filter.Try again.")
+                handleClickOpenErrorDialog();
+            })
+
+    }
+
+    const onDeleteChoiceFilterLogic = () => {
+        const token = localStorage.getItem('token');
+        axios
+            .post(url + "api/v1/choice-filter/delete", {}, {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                params: {
+                    choiceId: currentChoiceId
+                }
+            })
+            .then((response) => {
+                handleCloseDeleteChoiceFilterLogicDialog();
+                questionData[currentQuestionIndex].choices[currentChoiceIndex].choiceFilterExpression = "";
+            })
+            .catch((e) => {
+                handleCloseDeleteChoiceFilterLogicDialog();
                 setErrorMessage("Error deleting filter.Try again.")
                 handleClickOpenErrorDialog();
             })
@@ -277,6 +359,74 @@ function PhaseDetails() {
         );
     }
 
+    function AddChoiceFilterLogicDialog() {
+        return (
+            <Dialog open={openAddChoiceFilterLogicDialog} onClose={handleCloseAddChoiceFilterLogicDialog}>
+                <DialogTitle>Add Filter Logic</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Filter logic will filter out this choice during survey based on the answers given to
+                        particular questions added by you here. Adding a new filter will delete existing one.
+                    </DialogContentText>
+                    <MDBox mt={2} mb={2}>
+                        {
+                            currentQuestionIndex < questionData.length && currentChoiceIndex < questionData[currentQuestionIndex].choices.length && questionData[currentQuestionIndex].choices && questionData[currentQuestionIndex].choices[currentChoiceIndex].choiceFilterExpression ?
+                                <MDTypography fontSize="small" color="info"> Current
+                                    Filter: {questionData[currentQuestionIndex].choices[currentChoiceIndex].choiceFilterExpression }</MDTypography> : null
+                        }
+                    </MDBox>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        label="Filter Logic Expression"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        inputRef={filterLogicRef}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseAddChoiceFilterLogicDialog}>Cancel</Button>
+                    <Button onClick={onAddChoiceFilterLogic}>Add</Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
+
+    function DeleteChoiceFilterLogicDialog() {
+        return (
+            <Dialog open={openDeleteChoiceFilterLogicDialog} onClose={handleCloseDeleteChoiceFilterLogicDialog}>
+                <DialogTitle>Delete Filter Logic</DialogTitle>
+                <DialogContent>
+                    {
+                        currentQuestionIndex < questionData.length && currentChoiceIndex < questionData[currentQuestionIndex].choices.length && questionData[currentQuestionIndex].choices && questionData[currentQuestionIndex].choices[currentChoiceIndex].choiceFilterExpression ?
+                            <MDBox>
+                                <DialogContentText>
+                                    Are you sure you want to delete this filter logic?
+                                </DialogContentText>
+                                <MDBox mt={2} mb={2}>
+                                    <MDTypography fontSize="medium" color="info"> Curren
+                                        Filter: {questionData[currentQuestionIndex].choices[currentChoiceIndex].choiceFilterExpression }</MDTypography>
+                                </MDBox>
+                            </MDBox> : <MDBox>
+                                <DialogContentText>
+                                    This Choice doesn't have any filter
+                                </DialogContentText>
+                            </MDBox>
+                    }
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDeleteChoiceFilterLogicDialog}>Cancel</Button>
+                    {
+                        currentQuestionIndex < questionData.length && currentChoiceIndex < questionData[currentQuestionIndex].choices.length && questionData[currentQuestionIndex].choices && questionData[currentQuestionIndex].choices[currentChoiceIndex].choiceFilterExpression ?
+                            <Button onClick={onDeleteChoiceFilterLogic}>Yes</Button> : null
+                    }
+                </DialogActions>
+            </Dialog>
+        );
+    }
+
     function AddFilterLogicDialog() {
         return (
             <Dialog open={openAddFilterLogicDialog} onClose={handleCloseAddFilterLogicDialog}>
@@ -289,7 +439,7 @@ function PhaseDetails() {
                     <MDBox mt={2} mb={2}>
                         {
                             currentQuestionIndex < questionData.length && questionData[currentQuestionIndex].questionFilterExpression ?
-                                <MDTypography fontSize="small" color="info"> Curren
+                                <MDTypography fontSize="small" color="info"> Current
                                     Filter: {questionData[currentQuestionIndex].questionFilterExpression}</MDTypography> : null
                         }
                     </MDBox>
@@ -383,6 +533,8 @@ function PhaseDetails() {
                                             onDeleteClick={handleClickOpenConfirmationDialog}
                                             onAddFilterLogic={handleClickOpenAddFilterLogicDialog}
                                             onDeleteFilterLogic={handleClickOpenDeleteFilterLogicDialog}
+                                            onAddChoiceFilterLogic={handleClickOpenAddChoiceFilterLogicDialog}
+                                            onDeleteChoiceFilterLogic={handleClickOpenDeleteChoiceFilterLogicDialog}
                                         />
                                     )
                                 }
@@ -401,6 +553,8 @@ function PhaseDetails() {
             <ConfirmationDialog/>
             <AddFilterLogicDialog/>
             <DeleteFilterLogicDialog/>
+            <AddChoiceFilterLogicDialog/>
+            <DeleteChoiceFilterLogicDialog/>
             <MDBox py={3} mb={3}>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={6} lg={3}>
