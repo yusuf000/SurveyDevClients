@@ -26,8 +26,23 @@ import MDButton from "components/MDButton";
 
 // Material Dashboard 2 React context
 import {useMaterialUIController} from "context";
+import Card from "@mui/material/Card";
+import Divider from "@mui/material/Divider";
 
-function Question({id, serial, description, language, questionType,choices, onDeleteClick, onAddFilterLogic, onDeleteFilterLogic, onAddChoiceFilterLogic, onDeleteChoiceFilterLogic, noGutter}) {
+function Question({
+                      id,
+                      serial,
+                      description,
+                      language,
+                      questionType,
+                      choices,
+                      onDeleteClick,
+                      onAddFilterLogic,
+                      onDeleteFilterLogic,
+                      onAddChoiceFilterLogic,
+                      onDeleteChoiceFilterLogic,
+                      noGutter
+                  }) {
     const [controller] = useMaterialUIController();
     const {darkMode} = controller;
 
@@ -51,7 +66,7 @@ function Question({id, serial, description, language, questionType,choices, onDe
                 >
                     <MDBox>
                         <MDTypography variant="button" fontWeight="medium" textTransform="capitalize">
-                            {"Q" + (serial + 1) +". "+ description}
+                            {"Q" + (serial + 1) + ". " + description}
                         </MDTypography>
                     </MDBox>
                     <MDBox display="flex" alignItems="center" mt={{xs: 2, sm: 0}} ml={{xs: -1.5, sm: 0}}>
@@ -71,40 +86,68 @@ function Question({id, serial, description, language, questionType,choices, onDe
             </MDBox>
             <MDBox>
                 {
-                    choices.map((option,index) => {
-                        option.choices.sort((a,b) => a.serial - b.serial);
+                    choices.map((option, index) => {
+                        option.choices.sort((a, b) => a.serial - b.serial);
                         return (
-                            <MDBox>
-                                <MDBox>
-                                    <MDTypography variant="button" fontWeight="medium" textTransform="capitalize">
-                                        {"C"+(option.serial + 1) + ". "+ option.value}
-                                    </MDTypography>
-                                    <MDButton variant="text" size={"small"} color="info" onClick={() => onAddChoiceFilterLogic(serial, index)}>
-                                        <Icon>add_circle_outline</Icon>
-                                    </MDButton>
-                                    <MDButton variant="text" size={"small"} color="primary" onClick={() => onDeleteChoiceFilterLogic(serial, index)}>
-                                        <Icon>remove_circle_outline</Icon>
-                                    </MDButton>
+                            <Card>
+                                <MDBox m={2}>
+                                    <MDBox
+                                        display="flex"
+                                        justifyContent="space-between"
+                                        alignItems={{xs: "flex-start", sm: "center"}}
+                                        flexDirection={{xs: "column", sm: "row"}}
+                                        mb={2}
+                                    >
+                                        <MDTypography variant="button" fontWeight="medium" textTransform="capitalize">
+                                            {"C" + (option.serial + 1) + ". " + option.value}
+                                        </MDTypography>
+                                        <MDBox display="flex" alignItems="center" mt={{xs: 2, sm: 0}}
+                                               ml={{xs: -1.5, sm: 0}}>
+                                            <MDButton variant="text" size={"small"} color="info"
+                                                      onClick={() => onAddChoiceFilterLogic(serial, index)}>
+                                                <Icon>add_circle_outline</Icon>
+                                            </MDButton>
+                                            <MDButton variant="text" size={"small"} color="primary"
+                                                      onClick={() => onDeleteChoiceFilterLogic(serial, index)}>
+                                                <Icon>remove_circle_outline</Icon>
+                                            </MDButton>
+                                        </MDBox>
+                                    </MDBox>
+
+                                    <hr/>
+                                    {
+                                        option.choices.map((subOption) => {
+                                            subOption.choices.sort((a, b) => a.serial - b.serial);
+                                            return (
+                                                <MDBox>
+                                                    <MDBox display="flex"
+                                                           justifyContent="space-between"
+                                                           alignItems={{xs: "flex-start", sm: "center"}}
+                                                           flexDirection={{xs: "column", sm: "row"}}
+                                                           mb={2}>
+                                                        <MDTypography variant="button" fontWeight="small"
+                                                                      textTransform="capitalize">
+                                                            {String.fromCharCode(subOption.serial + 65) + ". " + subOption.value}
+                                                        </MDTypography>
+                                                        <MDBox display="flex" alignItems="center" mt={{xs: 2, sm: 0}}
+                                                               ml={{xs: -1.5, sm: 0}}>
+                                                            <MDButton variant="text" size={"small"} color="info"
+                                                                      onClick={() => onAddChoiceFilterLogic(serial)}>
+                                                                <Icon>add_circle_outline</Icon>
+                                                            </MDButton>
+                                                            <MDButton variant="text" size={"small"} color="primary"
+                                                                      onClick={() => onDeleteChoiceFilterLogic(serial)}>
+                                                                <Icon>remove_circle_outline</Icon>
+                                                            </MDButton>
+                                                        </MDBox>
+                                                    </MDBox>
+                                                    <hr />
+                                                </MDBox>
+                                            )
+                                        })
+                                    }
                                 </MDBox>
-                                {
-                                    option.choices.map((subOption) => {
-                                        subOption.choices.sort((a,b) => a.serial - b.serial);
-                                        return (
-                                            <MDBox>
-                                                <MDTypography variant="button" fontWeight="small" textTransform="capitalize">
-                                                    {String.fromCharCode(subOption.serial + 65) + ". "+ subOption.value}
-                                                </MDTypography>
-                                                <MDButton variant="text" size={"small"} color="info" onClick={() => onAddChoiceFilterLogic(serial)}>
-                                                    <Icon>add_circle_outline</Icon>
-                                                </MDButton>
-                                                <MDButton variant="text" size={"small"} color="primary" onClick={() => onDeleteChoiceFilterLogic(serial)}>
-                                                    <Icon>remove_circle_outline</Icon>
-                                                </MDButton>
-                                            </MDBox>
-                                        )
-                                    })
-                                }
-                            </MDBox>
+                            </Card>
                         )
                     })
                 }
