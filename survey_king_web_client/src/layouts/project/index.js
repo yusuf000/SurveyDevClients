@@ -38,7 +38,9 @@ function Projects() {
 
     const [projectData, setProjectData] = useState(null);
     const [currentSasCode, setCurrentSasCode] = useState(null);
+    const [currentItem, setCurrentItem] = useState(null);
     const [openDeleteConfirmationDialog, setOpenDeleteConfirmationDialog] = useState(false);
+    const [openStartConfirmationDialog, setOpenStartConfirmationDialog] = useState(false);
     const [openCreateProjectDialog, setOpenCreateProjectDialog] = useState(false);
     const phaseNamesMap = new Map();
     const navigate = useNavigate();
@@ -72,8 +74,8 @@ function Projects() {
         navigate('/project-details', {state: {project: JSON.stringify(item)}});
     }
 
-    const onStart = ({item}) => {
-        navigate('/survey', {state: {project: JSON.stringify(item)}});
+    const onStart = () => {
+        navigate('/survey', {state: {project: JSON.stringify(currentItem)}});
     }
 
     const prepareTableData = (data) => {
@@ -94,7 +96,7 @@ function Projects() {
                                         color="info">
                     <Icon>arrow_outward</Icon>
                 </MDTypography>,
-                "start": <MDTypography component="a" href="" role="button" onClick={() => onStart({item})}
+                "start": <MDTypography component="a" href="" role="button" onClick={(e) => handleClickOpenStartConfirmationDialog(e, item)}
                                        color="info">
                     <Icon>play_arrow</Icon>
                 </MDTypography>
@@ -374,6 +376,16 @@ function Projects() {
         setOpenDeleteConfirmationDialog(false)
     }
 
+    const handleClickOpenStartConfirmationDialog = (e, item) => {
+        e.preventDefault();
+        setCurrentItem(item)
+        setOpenStartConfirmationDialog(true)
+    }
+
+    const handleClickCloseStartConfirmationDialog = () => {
+        setOpenStartConfirmationDialog(false)
+    }
+
 
     function DeleteConfirmationDialog() {
         return (
@@ -393,11 +405,29 @@ function Projects() {
         );
     }
 
+    function StartConfirmationDialog() {
+        return (
+            <Dialog open={openStartConfirmationDialog} onClose={handleClickCloseStartConfirmationDialog}>
+                <DialogTitle color="info"><Icon fontSize="medium">info</Icon> &nbsp; Confirm</DialogTitle>
+                <DialogContent>
+                    <MDTypography fontSize="small" color="info"> Do you want to start completing the survey now ?</MDTypography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClickCloseStartConfirmationDialog}>Cancel</Button>
+                    <Button onClick={() => {
+                        onStart()
+                    }}>Yes</Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
+
     return (
         <DashboardLayout>
             <DashboardNavbar/>
             <CreateProject/>
             <DeleteConfirmationDialog/>
+            <StartConfirmationDialog/>
             <MDBox py={3}>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={6} lg={3}>
