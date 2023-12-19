@@ -4,6 +4,9 @@ import React, {useEffect, useState} from "react";
 import DashboardLayout from "../../examples/LayoutContainers/DashboardLayout";
 import {useLocation, useNavigate} from "react-router-dom";
 import axios from "axios";
+import MDBox from "../../components/MDBox";
+import Card from "@mui/material/Card";
+import MDTypography from "../../components/MDTypography";
 
 const url = `http://localhost:8080/`
 
@@ -11,7 +14,7 @@ function Survey(){
     const navigate = useNavigate();
     const project = JSON.parse(localStorage.getItem('project'));
     const phase = JSON.parse(localStorage.getItem('phase'));
-    const isStarted = localStorage.getItem('isStarted');
+    const qIndex = localStorage.getItem('qIndex');
     const previousQuestion = JSON.parse(localStorage.getItem('previousQuestion'));
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const user = localStorage.getItem('user');
@@ -55,16 +58,37 @@ function Survey(){
     }
 
     useEffect(() => {
-        if(isStarted){
+        if(qIndex !== "1"){
             //getNextQuestion();
         }else{
             startPhase();
         }
     }, []);
 
+    function Question(){
+        return (
+            <MDBox>
+                <Card>
+                    <MDBox m={2}>
+                        <MDTypography>Q{qIndex}. {currentQuestion.description} </MDTypography>
+                    </MDBox>
+
+                </Card>
+            </MDBox>
+        );
+    }
+
     return (
         <DashboardLayout>
             <DashboardNavbar/>
+            <MDBox m={2}>
+                <MDTypography color={"info"}>{phase.name}</MDTypography>
+            </MDBox>
+            {
+                currentQuestion ? <MDBox>
+                    <Question/>
+                </MDBox>: null
+            }
         </DashboardLayout>
     )
 }

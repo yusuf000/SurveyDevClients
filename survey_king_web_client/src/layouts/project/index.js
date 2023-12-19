@@ -77,7 +77,7 @@ function Projects() {
     const onStart = () => {
         localStorage.setItem('project', JSON.stringify(currentItem));
         localStorage.setItem('phase', JSON.stringify(currentItem.phases[0]));
-        localStorage.setItem('isStarted', "");
+        localStorage.setItem('qIndex', "1");
         navigate('/survey');
     }
 
