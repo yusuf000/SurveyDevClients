@@ -37,7 +37,9 @@ function Projects() {
 
 
     const [projectData, setProjectData] = useState(null);
-    const [openCreateProjectDialog, setOpenCreateProjectDialog] = React.useState(false);
+    const [currentSasCode, setCurrentSasCode] = useState(null);
+    const [openDeleteConfirmationDialog, setOpenDeleteConfirmationDialog] = useState(false);
+    const [openCreateProjectDialog, setOpenCreateProjectDialog] = useState(false);
     const phaseNamesMap = new Map();
     const navigate = useNavigate();
 
@@ -45,7 +47,7 @@ function Projects() {
         setOpenCreateProjectDialog(true);
     };
 
-    const onDelete = ({sasCode}) => {
+    const onDelete = () => {
         const token = localStorage.getItem('token');
         axios
             .post(url + "/delete", {}, {
@@ -53,13 +55,15 @@ function Projects() {
                     'Authorization': 'Bearer ' + token
                 },
                 params: {
-                    'sasCode': sasCode
+                    'sasCode': currentSasCode
                 }
             })
             .then(() => {
+                handleClickCloseDeleteConfirmationDialog();
                 loadData();
             })
             .catch((e) => {
+                handleClickCloseDeleteConfirmationDialog();
                 console.log(e);
             })
     }
@@ -82,7 +86,7 @@ function Projects() {
                 "clientName": item.clientName,
                 "startDate": item.startDate,
                 "endDate": item.endDate,
-                "delete": <MDTypography component="a" href="" role="button" onClick={() => onDelete({sasCode})}
+                "delete": <MDTypography component="a" href="" role="button" onClick={(e) => handleClickOpenDeleteConfirmationDialog(e,sasCode)}
                                         color="error">
                     <Icon>delete</Icon>
                 </MDTypography>,
@@ -360,11 +364,40 @@ function Projects() {
         );
     }
 
+    const handleClickOpenDeleteConfirmationDialog = (e, sasCode) => {
+        e.preventDefault();
+        setCurrentSasCode(sasCode)
+        setOpenDeleteConfirmationDialog(true)
+    }
+
+    const handleClickCloseDeleteConfirmationDialog = () => {
+        setOpenDeleteConfirmationDialog(false)
+    }
+
+
+    function DeleteConfirmationDialog() {
+        return (
+            <Dialog open={openDeleteConfirmationDialog} onClose={handleClickCloseDeleteConfirmationDialog}>
+                <DialogTitle color="info"><Icon fontSize="medium">info</Icon> &nbsp; Confirm</DialogTitle>
+                <DialogContent>
+                    <MDTypography fontSize="small" color="info"> Are you sure you want to delete this
+                        Project?</MDTypography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClickCloseDeleteConfirmationDialog}>Cancel</Button>
+                    <Button onClick={() => {
+                        onDelete()
+                    }}>Yes</Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
 
     return (
         <DashboardLayout>
             <DashboardNavbar/>
             <CreateProject/>
+            <DeleteConfirmationDialog/>
             <MDBox py={3}>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={6} lg={3}>
