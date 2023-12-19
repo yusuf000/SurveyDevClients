@@ -46,6 +46,7 @@ import PhaseDetails from "./layouts/phase"
 import ProjectDetails from "./layouts/project/details"
 import Projects from "./layouts/project";
 import Question from "./layouts/question";
+import Survey from "./layouts/survey";
 
 const routes = [
   {
@@ -103,6 +104,14 @@ const routes = [
     route: "/authentication/sign-up",
     component: <SignUp />,
   },
+  {
+    type: "collapse",
+    name: "Survey",
+    key: "survey",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/survey",
+    component: <Survey />,
+  }
 ];
 
 export default routes;

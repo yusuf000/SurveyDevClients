@@ -68,6 +68,10 @@ function Projects() {
         navigate('/project-details', {state: {project: JSON.stringify(item)}});
     }
 
+    const onStart = ({item}) => {
+        navigate('/survey', {state: {project: JSON.stringify(item)}});
+    }
+
     const prepareTableData = (data) => {
         let tableData = [];
         for (let i in data) {
@@ -86,7 +90,7 @@ function Projects() {
                                         color="info">
                     <Icon>arrow_outward</Icon>
                 </MDTypography>,
-                "start": <MDTypography component="a" href="" role="button" onClick={() => onExpand({item})}
+                "start": <MDTypography component="a" href="" role="button" onClick={() => onStart({item})}
                                        color="info">
                     <Icon>play_arrow</Icon>
                 </MDTypography>
