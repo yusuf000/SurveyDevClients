@@ -75,7 +75,10 @@ function Projects() {
     }
 
     const onStart = () => {
-        navigate('/survey', {state: {project: JSON.stringify(currentItem)}});
+        localStorage.setItem('project', JSON.stringify(currentItem));
+        localStorage.setItem('phase', JSON.stringify(currentItem.phases[0]));
+        localStorage.setItem('isStarted', "");
+        navigate('/survey');
     }
 
     const prepareTableData = (data) => {
