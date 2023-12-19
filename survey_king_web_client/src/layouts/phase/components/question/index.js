@@ -41,6 +41,8 @@ function Question({
                       onDeleteFilterLogic,
                       onAddChoiceFilterLogic,
                       onDeleteChoiceFilterLogic,
+                      onAddSubChoiceFilterLogic,
+                      onDeleteSubChoiceFilterLogic,
                       noGutter
                   }) {
     const [controller] = useMaterialUIController();
@@ -116,7 +118,7 @@ function Question({
 
 
                                     {
-                                        option.choices.map((subOption) => {
+                                        option.choices.map((subOption, index2) => {
                                             subOption.choices.sort((a, b) => a.serial - b.serial);
                                             return (
                                                 <MDBox m={1.5}>
@@ -133,11 +135,11 @@ function Question({
                                                         <MDBox display="flex" alignItems="center" mt={{xs: 2, sm: 0}}
                                                                ml={{xs: -1.5, sm: 0}}>
                                                             <MDButton variant="text" size={"small"} color="info"
-                                                                      onClick={() => onAddChoiceFilterLogic(serial)}>
+                                                                      onClick={() => onAddSubChoiceFilterLogic(serial,index, index2)}>
                                                                 <Icon>add_circle_outline</Icon>
                                                             </MDButton>
                                                             <MDButton variant="text" size={"small"} color="primary"
-                                                                      onClick={() => onDeleteChoiceFilterLogic(serial)}>
+                                                                      onClick={() => onDeleteSubChoiceFilterLogic(serial, index, index2)}>
                                                                 <Icon>remove_circle_outline</Icon>
                                                             </MDButton>
                                                         </MDBox>
