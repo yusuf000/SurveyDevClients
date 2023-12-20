@@ -503,7 +503,7 @@ function PhaseDetails() {
 
                     <MDBox mt={2} mb={2}>
                         {
-                            currentQuestionIndex < questionData.length && currentChoiceIndex < questionData[currentQuestionIndex].choices.length && questionData[currentQuestionIndex].choices && questionData[currentQuestionIndex].choices[currentChoiceIndex].choices && questionData[currentQuestionIndex].choices[currentChoiceIndex].choices[currentSubChoiceIndex].choiceFilterExpression ?
+                            currentQuestionIndex < questionData.length && questionData[currentQuestionIndex].choices && currentChoiceIndex < questionData[currentQuestionIndex].choices.length && questionData[currentQuestionIndex].choices[currentChoiceIndex].choices && currentSubChoiceIndex< questionData[currentQuestionIndex].choices[currentChoiceIndex].choices.length && questionData[currentQuestionIndex].choices[currentChoiceIndex].choices[currentSubChoiceIndex].choiceFilterExpression ?
                                 <MDTypography fontSize="small" color="info"> Current
                                     Filter: {questionData[currentQuestionIndex].choices[currentChoiceIndex].choices[currentSubChoiceIndex].choiceFilterExpression}</MDTypography> : null
                         }
@@ -535,7 +535,7 @@ function PhaseDetails() {
                     Q{currentQuestionIndex + 1}</DialogTitle>
                 <DialogContent>
                     {
-                        currentQuestionIndex < questionData.length && currentChoiceIndex < questionData[currentQuestionIndex].choices.length && questionData[currentQuestionIndex].choices && questionData[currentQuestionIndex].choices[currentChoiceIndex].choices && questionData[currentQuestionIndex].choices[currentChoiceIndex].choices[currentSubChoiceIndex].choiceFilterExpression ?
+                        currentQuestionIndex < questionData.length && questionData[currentQuestionIndex].choices && currentChoiceIndex < questionData[currentQuestionIndex].choices.length && questionData[currentQuestionIndex].choices[currentChoiceIndex].choices && currentSubChoiceIndex< questionData[currentQuestionIndex].choices[currentChoiceIndex].choices.length && questionData[currentQuestionIndex].choices[currentChoiceIndex].choices[currentSubChoiceIndex].choiceFilterExpression ?
                             <MDBox>
                                 <DialogContentText>
                                     Are you sure you want to delete this filter logic?
@@ -554,7 +554,7 @@ function PhaseDetails() {
                 <DialogActions>
                     <Button onClick={handleCloseDeleteSubChoiceFilterLogicDialog}>Cancel</Button>
                     {
-                        currentQuestionIndex < questionData.length && currentChoiceIndex < questionData[currentQuestionIndex].choices.length && questionData[currentQuestionIndex].choices && questionData[currentQuestionIndex].choices[currentChoiceIndex].choices && questionData[currentQuestionIndex].choices[currentChoiceIndex].choices[currentSubChoiceIndex].choiceFilterExpression ?
+                        currentQuestionIndex < questionData.length && questionData[currentQuestionIndex].choices && currentChoiceIndex < questionData[currentQuestionIndex].choices.length && questionData[currentQuestionIndex].choices[currentChoiceIndex].choices && currentSubChoiceIndex< questionData[currentQuestionIndex].choices[currentChoiceIndex].choices.length && questionData[currentQuestionIndex].choices[currentChoiceIndex].choices[currentSubChoiceIndex].choiceFilterExpression ?
                             <Button onClick={onDeleteChoiceFilterLogic}>Yes</Button> : null
                     }
                 </DialogActions>
