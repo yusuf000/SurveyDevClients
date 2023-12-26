@@ -63,8 +63,7 @@ function Survey() {
                 if(response.data === true){
                     const nextIndex = parseInt(qIndex) + 1;
                     localStorage.setItem('qIndex', nextIndex+"");
-                    localStorage.setItem('previousQuestion',JSON.stringify(currentQuestion));
-                    navigate('/survey');
+                    getNextQuestion();
                 }
             })
             .catch((e) => {
@@ -80,11 +79,17 @@ function Survey() {
                     'Authorization': 'Bearer ' + token
                 },
                 params: {
-                    questionId: previousQuestion.id
+                    questionId: currentQuestion.id
                 }
             })
             .then((response) => {
-                setCurrentQuestion(response.data);
+                if(response.data){
+                    localStorage.setItem('previousQuestion',JSON.stringify(currentQuestion));
+                    setCurrentQuestion(response.data);
+                    navigate('/survey');
+                }else{
+                    navigate('/projects');
+                }
             })
             .catch((e) => {
                 console.log(e);
@@ -92,11 +97,7 @@ function Survey() {
     }
 
     useEffect(() => {
-        if (qIndex !== "1") {
-            getNextQuestion();
-        } else {
-            startPhase();
-        }
+        startPhase();
     }, []);
 
     function Question() {
