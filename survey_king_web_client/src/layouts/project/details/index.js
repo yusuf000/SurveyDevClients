@@ -34,7 +34,6 @@ function ProjectDetails() {
     const location = useLocation();
     const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
-    const [phaseData, setPhaseData] = useState(null)
     const [isPhaseDataLoaded, setIsPhaseDataLoaded] = useState(false);
     const [tableDataMember, setTableDataMember] = useState(null);
     const [tableDataPhase, setTableDataPhase] = useState(null);

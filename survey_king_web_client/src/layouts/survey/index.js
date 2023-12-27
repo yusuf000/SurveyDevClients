@@ -11,21 +11,28 @@ import TextField from "@mui/material/TextField";
 import MDButton from "../../components/MDButton";
 import {FormControl, FormControlLabel, FormLabel, Radio, RadioGroup} from "@mui/material";
 import Choice from "../question/Components/Choice";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import Icon from "@mui/material/Icon";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
 
 const url = `http://localhost:8080/`
 
 function Survey() {
     const navigate = useNavigate();
     const project = JSON.parse(localStorage.getItem('project'));
-    const phase = JSON.parse(localStorage.getItem('phase'));
-    const qIndex = localStorage.getItem('qIndex');
-    const previousQuestion = JSON.parse(localStorage.getItem('previousQuestion'));
+    let phase = JSON.parse(localStorage.getItem('phase'));
+    let qIndex = localStorage.getItem('qIndex');
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [currentChoiceId, setCurrentChoiceId] = useState();
+    const [openSuccessDialog, setOpenSuccessDialog] = React.useState(false);
+    const [openErrorDialog, setOpenErrorDialog] = React.useState(false);
     const answerDescription = useRef(null);
-    const user = localStorage.getItem('user');
 
     function startPhase() {
+        phase = JSON.parse(localStorage.getItem('phase'));
         const token = localStorage.getItem('token');
         axios
             .get(url + 'api/v1/question/start', {
@@ -44,30 +51,28 @@ function Survey() {
             })
     }
 
-    function submitAnswer(){
+    function submitAnswer() {
         const token = localStorage.getItem('token');
         let description = null;
-        if(answerDescription.current !== null) description = answerDescription.current.value;
+        if (answerDescription.current !== null) description = answerDescription.current.value;
         axios
             .post(url + 'api/v1/answer/submit', {
                 questionId: currentQuestion.id,
                 sasCode: project.sasCode,
                 choiceId: currentChoiceId,
                 description: description
-            },{
+            }, {
                 headers: {
                     'Authorization': 'Bearer ' + token
                 }
             })
             .then((response) => {
-                if(response.data === true){
-                    const nextIndex = parseInt(qIndex) + 1;
-                    localStorage.setItem('qIndex', nextIndex+"");
+                if (response.data === true) {
                     getNextQuestion();
                 }
             })
             .catch((e) => {
-                console.log(e);
+                handleClickOpenErrorDialog();
             })
     }
 
@@ -83,22 +88,104 @@ function Survey() {
                 }
             })
             .then((response) => {
-                if(response.data){
-                    localStorage.setItem('previousQuestion',JSON.stringify(currentQuestion));
+                if (response.data) {
+                    const nextIndex = parseInt(qIndex) + 1;
+                    localStorage.setItem('qIndex', nextIndex + "");
+                    localStorage.setItem('previousQuestion', JSON.stringify(currentQuestion));
                     setCurrentQuestion(response.data);
-                    navigate('/survey');
-                }else{
-                    navigate('/projects');
+                } else {
+                    if (phase.serial === project.phases.length - 1) {
+                        completeSurvey();
+                    } else {
+                        localStorage.setItem('phase', JSON.stringify(project.phases[phase.serial + 1]));
+                        localStorage.setItem('qIndex', "1");
+                        startPhase();
+                    }
                 }
             })
             .catch((e) => {
-                console.log(e);
+                handleClickOpenErrorDialog();
             })
     }
+
+    function completeSurvey() {
+        const token = localStorage.getItem('token');
+        let description = null;
+        if (answerDescription.current !== null) description = answerDescription.current.value;
+        axios
+            .post(url + 'api/v1/answer/complete', {},
+                {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    params: {
+                        sasCode: project.sasCode
+                    }
+                })
+            .then((response) => {
+                if (response.data === true) {
+                    handleClickOpenSuccessDialog();
+                }else{
+                    handleClickOpenErrorDialog();
+                }
+            })
+            .catch((e) => {
+                handleClickOpenErrorDialog();
+            })
+    }
+
+    const handleClickOpenSuccessDialog = () => {
+        setOpenSuccessDialog(true);
+    };
+
+    const handleClickCloseSuccessDialog = () => {
+        setOpenSuccessDialog(false);
+        navigate('/projects');
+    };
+
+    const handleClickOpenErrorDialog = () => {
+        setOpenErrorDialog(true);
+    };
+
+
+    const handleCloseErrorDialog = () => {
+        setOpenErrorDialog(false);
+    };
+
 
     useEffect(() => {
         startPhase();
     }, []);
+
+    function SuccessDialog() {
+        return (
+            <Dialog open={openSuccessDialog} onClose={handleClickCloseSuccessDialog}>
+                <DialogTitle color="green"><Icon
+                    fontSize="medium">check_circle_outline</Icon> &nbsp; Success</DialogTitle>
+                <DialogContent>
+                    <MDTypography fontSize="small" color="success"> Thank you for completing the survey</MDTypography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClickCloseSuccessDialog}>Close</Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
+
+    function ErrorDialogue() {
+        return (
+            <Dialog open={openErrorDialog} onClose={handleCloseErrorDialog}>
+                <DialogTitle color="red"><Icon fontSize="small">error</Icon> &nbsp; Error</DialogTitle>
+                <DialogContent>
+                    <MDTypography fontSize="small" color="error"> Failed to submit answer, please try
+                        again</MDTypography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseErrorDialog}>Close</Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
 
     function Question() {
         const handleRadioChange = (event) => {
@@ -110,7 +197,7 @@ function Survey() {
             <MDBox>
                 <Card>
                     <MDBox m={2}>
-                        <MDTypography  fontWeight={"bold"}>Q{qIndex}. {currentQuestion.description} </MDTypography>
+                        <MDTypography fontWeight={"bold"}>Q{qIndex}. {currentQuestion.description} </MDTypography>
                     </MDBox>
                     <MDBox>
                         {
@@ -129,16 +216,21 @@ function Survey() {
                                         {
                                             currentQuestion.choices.map((choice, index1) => {
                                                     return (
-                                                        <MDBox m={1} >
+                                                        <MDBox m={1}>
                                                             {
                                                                 choice.choices.length === 0 ?
-                                                                    <FormControlLabel value={choice.id} control={<Radio />} label={"C"+(index1 + 1)+". "+choice.value} sx={{ '& .MuiFormControlLabel-label': { fontSize: '20px' } }}/>:
+                                                                    <FormControlLabel value={choice.id} control={<Radio/>}
+                                                                                      label={"C" + (index1 + 1) + ". " + choice.value}
+                                                                                      sx={{'& .MuiFormControlLabel-label': {fontSize: '20px'}}}/> :
                                                                     <MDBox>
-                                                                        <MDTypography fontWeight={"bold"}>{"C"+(index1 + 1)+". "+choice.value}</MDTypography>
+                                                                        <MDTypography
+                                                                            fontWeight={"bold"}>{"C" + (index1 + 1) + ". " + choice.value}</MDTypography>
                                                                         {
                                                                             choice.choices.map((subChoice, index2) => {
                                                                                     return (
-                                                                                        <FormControlLabel value={subChoice.id} control={<Radio />} label={String.fromCharCode(index2 + 65) + ". " +subChoice.value}/>
+                                                                                        <FormControlLabel value={subChoice.id}
+                                                                                                          control={<Radio/>}
+                                                                                                          label={String.fromCharCode(index2 + 65) + ". " + subChoice.value}/>
                                                                                     )
                                                                                 }
                                                                             )
@@ -169,6 +261,8 @@ function Survey() {
     return (
         <DashboardLayout>
             <DashboardNavbar/>
+            <SuccessDialog/>
+            <ErrorDialogue/>
             <MDBox m={2}>
                 <MDTypography color={"info"}>{phase.name}</MDTypography>
             </MDBox>
