@@ -53,7 +53,7 @@ function Footer({ light }) {
             by
             <Link href="" target="_blank">
               <MDTypography variant="button" fontWeight="medium" color={light ? "white" : "dark"}>
-                &nbsp;SurveyKing&nbsp;
+                &nbsp;SurveyDevs&nbsp;
               </MDTypography>
             </Link>
           </MDBox>

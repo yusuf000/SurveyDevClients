@@ -56,7 +56,7 @@ function BasicLayout({ image, errorMessage, children}) {
       >
 
           <MDTypography variant="h3" fontWeight="light" color="white" mt={1}>
-              SurveyKing
+              SurveyDevs
           </MDTypography>
       </MDBox>
       <MDBox px={1} width="100%" height="100vh" mx="auto">

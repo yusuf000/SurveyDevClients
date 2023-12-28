@@ -1,8 +1,8 @@
 {
-  "name": "SurveyKing",
+  "name": "SurveyDevs",
   "version": "2.2.0",
   "private": true,
-  "author": "SurveyKing",
+  "author": "SurveyDevs",
   "dependencies": {
     "@emotion/cache": "11.10.8",
     "@emotion/react": "^11.11.1",
