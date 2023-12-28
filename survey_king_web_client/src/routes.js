@@ -105,7 +105,7 @@ const routes = [
     component: <SignUp />,
   },
   {
-    type: "collapse",
+    type: "",
     name: "Survey",
     key: "survey",
     icon: <Icon fontSize="small">assignment</Icon>,
