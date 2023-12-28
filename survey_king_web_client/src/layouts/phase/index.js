@@ -160,7 +160,10 @@ function PhaseDetails() {
                 }
             })
             .catch((e) => {
-                console.log(e);
+                if(e.response.status === 403){
+                    localStorage.clear();
+                    navigate('/authentication/sign-in')
+                }
             })
     }
 
@@ -189,7 +192,6 @@ function PhaseDetails() {
                 handleClickCloseConfirmationDialog();
                 setErrorMessage("Unable to delete question, please check if you have added this question in a filter of another question. Delete that filter and try again.")
                 handleClickOpenErrorDialog()
-                console.log(e);
             })
     }
 

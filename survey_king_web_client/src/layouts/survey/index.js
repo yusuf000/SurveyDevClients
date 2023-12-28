@@ -47,7 +47,10 @@ function Survey() {
                 setCurrentQuestion(response.data);
             })
             .catch((e) => {
-                console.log(e);
+                if(e.response.status === 403){
+                    localStorage.clear();
+                    navigate('/authentication/sign-in')
+                }
             })
     }
 
@@ -110,10 +113,8 @@ function Survey() {
 
     function completeSurvey() {
         const token = localStorage.getItem('token');
-        let description = null;
-        if (answerDescription.current !== null) description = answerDescription.current.value;
         axios
-            .post(url + 'api/v1/answer/complete', {},
+            .post(url + 'api/v1/project/complete', {},
                 {
                     headers: {
                         'Authorization': 'Bearer ' + token

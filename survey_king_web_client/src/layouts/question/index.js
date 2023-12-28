@@ -17,7 +17,7 @@ import Button from "@mui/material/Button";
 import axios from "axios";
 import Choice from "./Components/Choice";
 import DialogContentText from "@mui/material/DialogContentText";
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 
 const url = `http://localhost:8080`
@@ -43,6 +43,7 @@ function Question() {
     let currentSubChoices = [];
     const [choiceIdSeq, setChoiceIdSeq] = useState(0);
     const location = useLocation();
+    const navigate = useNavigate();
 
     if (location.state != null) {
         localStorage.setItem("phaseId", location.state.phaseId)
@@ -98,8 +99,11 @@ function Question() {
                 setLanguageData(response.data);
                 setIsLanguageDataLoaded(true);
             })
-            .catch((error) => {
-                console.log(error)
+            .catch((e) => {
+                if(e.response.status === 403){
+                    localStorage.clear();
+                    navigate('/authentication/sign-in')
+                }
             })
     }
 

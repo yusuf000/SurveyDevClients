@@ -43,6 +43,7 @@ function Projects() {
     const [openStartConfirmationDialog, setOpenStartConfirmationDialog] = useState(false);
     const [openCreateProjectDialog, setOpenCreateProjectDialog] = useState(false);
     const phaseNamesMap = new Map();
+    const projectStatusMap = new Map();
     const navigate = useNavigate();
 
     const handleClickOpenCreateProjectDialog = () => {
@@ -86,26 +87,69 @@ function Projects() {
         for (let i in data) {
             let item = data[i];
             let sasCode = item.sasCode;
-            tableData.push({
-                "name": item.name,
-                "clientName": item.clientName,
-                "startDate": item.startDate,
-                "endDate": item.endDate,
-                "delete": <MDTypography component="a" href="" role="button" onClick={(e) => handleClickOpenDeleteConfirmationDialog(e,sasCode)}
-                                        color="error">
-                    <Icon>delete</Icon>
-                </MDTypography>,
-                "expand": <MDTypography component="a" href="" role="button" onClick={() => onExpand({item})}
-                                        color="info">
-                    <Icon>arrow_outward</Icon>
-                </MDTypography>,
-                "start": <MDTypography component="a" href="" role="button" onClick={(e) => handleClickOpenStartConfirmationDialog(e, item)}
-                                       color="info">
-                    <Icon>play_arrow</Icon>
-                </MDTypography>
-            });
+            if (projectStatusMap.get(sasCode)) {
+                tableData.push({
+                    "name": item.name,
+                    "clientName": item.clientName,
+                    "startDate": item.startDate,
+                    "endDate": item.endDate,
+                    "delete": <MDTypography component="a" href="" role="button"
+                                            onClick={(e) => handleClickOpenDeleteConfirmationDialog(e, sasCode)}
+                                            color="error">
+                        <Icon>delete</Icon>
+                    </MDTypography>,
+                    "expand": <MDTypography component="a" href="" role="button" onClick={() => onExpand({item})}
+                                            color="info">
+                        <Icon>arrow_outward</Icon>
+                    </MDTypography>
+                });
+            } else {
+                tableData.push({
+                    "name": item.name,
+                    "clientName": item.clientName,
+                    "startDate": item.startDate,
+                    "endDate": item.endDate,
+                    "delete": <MDTypography component="a" href="" role="button"
+                                            onClick={(e) => handleClickOpenDeleteConfirmationDialog(e, sasCode)}
+                                            color="error">
+                        <Icon>delete</Icon>
+                    </MDTypography>,
+                    "expand": <MDTypography component="a" href="" role="button" onClick={() => onExpand({item})}
+                                            color="info">
+                        <Icon>arrow_outward</Icon>
+                    </MDTypography>,
+                    "start": <MDTypography component="a" href="" role="button"
+                                           onClick={(e) => handleClickOpenStartConfirmationDialog(e, item)}
+                                           color="info">
+                        <Icon>play_arrow</Icon>
+                    </MDTypography>
+                });
+            }
+
         }
         return tableData;
+    }
+
+    const loadProjectStatuses = () => {
+        const token = localStorage.getItem('token');
+        axios
+            .get(url + "/status", {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+            .then((response) => {
+                for (let i = 0; i < response.data.length; i++) {
+                    projectStatusMap.set(response.data[i].sasCode, true);
+                }
+                loadData();
+            })
+            .catch((e) => {
+                if(e.response.status === 403){
+                    localStorage.clear();
+                    navigate('/authentication/sign-in')
+                }
+            })
     }
 
     const loadData = () => {
@@ -127,7 +171,7 @@ function Projects() {
     }
 
     useEffect(() => {
-        loadData();
+        loadProjectStatuses();
     }, []);
 
     function CreateProject() {
@@ -413,7 +457,8 @@ function Projects() {
             <Dialog open={openStartConfirmationDialog} onClose={handleClickCloseStartConfirmationDialog}>
                 <DialogTitle color="info"><Icon fontSize="medium">info</Icon> &nbsp; Confirm</DialogTitle>
                 <DialogContent>
-                    <MDTypography fontSize="small" color="info"> Do you want to start completing the survey now ?</MDTypography>
+                    <MDTypography fontSize="small" color="info"> Do you want to start completing the survey now
+                        ?</MDTypography>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClickCloseStartConfirmationDialog}>Cancel</Button>

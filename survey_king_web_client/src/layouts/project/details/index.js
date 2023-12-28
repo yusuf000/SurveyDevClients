@@ -189,7 +189,10 @@ function ProjectDetails() {
                 }
             })
             .catch((e) => {
-                console.log(e);
+                if(e.response.status === 403){
+                    localStorage.clear();
+                    navigate('/authentication/sign-in')
+                }
             })
     }
 
