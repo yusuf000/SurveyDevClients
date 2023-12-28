@@ -32,7 +32,7 @@ import {useRef, useState} from "react";
 import axios from "axios";
 import BasicLayout from "../components/BasicLayout";
 
-const registerURL = `http://localhost:8080/api/v1/auth/register`
+const registerURL = `http://203.161.57.194:8080/api/v1/auth/register`
 
 function Cover() {
   const fullNameRef = useRef(null);

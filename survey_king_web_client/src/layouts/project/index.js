@@ -30,7 +30,7 @@ import Button from "@mui/material/Button";
 import SimpleActionCard from "./components/SimpleActionCard";
 import MDButton from "../../components/MDButton";
 
-const url = `http://localhost:8080/api/v1/project`
+const url = `http://203.161.57.194:8080/api/v1/project`
 
 
 function Projects() {
