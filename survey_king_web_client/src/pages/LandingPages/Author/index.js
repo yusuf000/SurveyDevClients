@@ -35,54 +35,56 @@ import routes from "routes";
 import bgImage from "assets/images/city-profile.jpg";
 
 function Author() {
-  return (
-    <>
-      <DefaultNavbar
-        routes={routes}
-        transparent
-        light
-      />
-      <MKBox bgColor="white">
-        <MKBox
-          minHeight="25rem"
-          width="100%"
-          sx={{
-            backgroundImage: ({ functions: { linearGradient, rgba }, palette: { gradients } }) =>
-              `${linearGradient(
-                rgba(gradients.dark.main, 0.8),
-                rgba(gradients.dark.state, 0.8)
-              )}, url(${bgImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            display: "grid",
-            placeItems: "center",
-          }}
-        />
-        <Card
-          sx={{
-            p: 2,
-            mx: { xs: 2, lg: 3 },
-            mt: -8,
-            mb: 4,
-            backgroundColor: ({ palette: { white }, functions: { rgba } }) => rgba(white.main, 0.8),
-            backdropFilter: "saturate(200%) blur(30px)",
-            boxShadow: ({ boxShadows: { xxl } }) => xxl,
-          }}
-        >
-            <Profile name={"Abdullah Al Osman Sajid"}
-                description={"Hello, I am a fullstack software engineer currently working at TigerIt Bangladesh ltd."}
-                     link={"https://bd.linkedin.com/in/abdullah-al-osman-sajid"}
-                     profilePicture={"/assets/images/dev1.jpeg"}
+    return (
+        <>
+            <DefaultNavbar
+                routes={routes}
+                transparent
+                light
             />
-            <Profile name={"Md Yusuf"}
-                link={"https://bd.linkedin.com/in/mohammad-yusuf-b3460656"}
-                     profilePicture={"/assets/images/dev2.jpeg"}
-            />
-        </Card>
-        <Contact />
-      </MKBox>
-    </>
-  );
+            <MKBox bgColor="white">
+                <MKBox
+                    minHeight="25rem"
+                    width="100%"
+                    sx={{
+                        backgroundImage: ({functions: {linearGradient, rgba}, palette: {gradients}}) =>
+                            `${linearGradient(
+                                rgba(gradients.dark.main, 0.8),
+                                rgba(gradients.dark.state, 0.8)
+                            )}, url(${bgImage})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        display: "grid",
+                        placeItems: "center",
+                    }}
+                />
+                <Card
+                    sx={{
+                        p: 2,
+                        mx: {xs: 2, lg: 3},
+                        mt: -8,
+                        mb: 4,
+                        backgroundColor: ({palette: {white}, functions: {rgba}}) => rgba(white.main, 0.8),
+                        backdropFilter: "saturate(200%) blur(30px)",
+                        boxShadow: ({boxShadows: {xxl}}) => xxl,
+                    }}
+                >
+                    <Profile name={"Abdullah Al Osman Sajid"}
+                             description={"Hello, I am a fullstack software engineer currently working at TigerIt Bangladesh ltd."}
+                             link={"https://bd.linkedin.com/in/abdullah-al-osman-sajid"}
+                             profilePicture={"../images/dev1.jpeg"}
+                             mail={"osmansazid13@gmail.com"}
+                    />
+                    <Profile name={"Mohammad Yusuf"}
+                             description={"Software Engineer at TigerIt Bangladesh ltd."}
+                             link={"https://bd.linkedin.com/in/mohammad-yusuf-b3460656"}
+                             profilePicture={"../images/dev2.jpeg"}
+                             mail={"yusufst000@gmail.com"}
+                    />
+                </Card>
+            </MKBox>
+        </>
+    );
 }
 
 export default Author;

@@ -26,7 +26,7 @@ import MKTypography from "components/MKTypography";
 
 // Images
 
-function Profile({name, description, link, profilePicture}) {
+function Profile({name, description, link, profilePicture,mail}) {
   return (
     <MKBox component="section" py={{ xs: 6, sm: 12 }}>
       <Container>
@@ -38,10 +38,11 @@ function Profile({name, description, link, profilePicture}) {
             <Grid item xs={12} md={7} mx={{ xs: "auto", sm: 6, md: 1 }}>
               <MKBox display="flex" justifyContent="space-between" alignItems="center" mb={1}>
                 <MKTypography variant="h3">{name}</MKTypography>
-                  <MKButton variant="outlined" color="info" size="small">
-                      Mail
-                  </MKButton>
               </MKBox>
+                <MKBox mb={1} mt={1}>
+                    <MKButton variant="button" color="info" size="small"  onClick={() =>  navigator.clipboard.writeText(mail)}>{mail}
+                    </MKButton>
+                </MKBox>
               <MKTypography variant="body1" fontWeight="light" color="text">
                   {description} <br />
                 <MKTypography
