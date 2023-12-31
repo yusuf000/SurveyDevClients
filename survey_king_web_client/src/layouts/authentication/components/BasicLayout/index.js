@@ -31,6 +31,7 @@ import MDAlert from "../../../../components/MDAlert";
 import React from "react";
 import Icon from "@mui/material/Icon";
 import MDTypography from "../../../../components/MDTypography";
+import {Link} from "react-router-dom";
 
 function BasicLayout({ image, errorMessage, children}) {
 
@@ -55,7 +56,12 @@ function BasicLayout({ image, errorMessage, children}) {
         textAlign="center"
       >
 
-          <MDTypography variant="h3" fontWeight="light" color="white" mt={1}>
+          <MDTypography component={Link}
+                        to="/"
+                        variant="h3"
+                        color="light"
+                        fontWeight="medium"
+                        textGradient>
               SurveyDevs
           </MDTypography>
       </MDBox>

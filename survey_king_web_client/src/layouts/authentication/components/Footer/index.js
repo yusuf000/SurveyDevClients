@@ -51,7 +51,7 @@ function Footer({ light }) {
           >
             &copy; {new Date().getFullYear()}, made
             by
-            <Link href="" target="_blank">
+            <Link href="/" target="_blank">
               <MDTypography variant="button" fontWeight="medium" color={light ? "white" : "dark"}>
                 &nbsp;SurveyDevs&nbsp;
               </MDTypography>
