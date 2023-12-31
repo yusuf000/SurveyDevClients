@@ -53,6 +53,7 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 
 
 import {LocalizationProvider} from "@mui/x-date-pickers";
+import Presentation from "./pages/Presentation";
 
 // Images
 
@@ -154,7 +155,7 @@ export default function App() {
     if (!loggedInUser && (pathname !== "/authentication/sign-in" && pathname !== "/authentication/sign-up")) {
         return <ThemeProvider theme={darkMode ? themeDark : theme}>
             <CssBaseline/>
-            <SignIn/>
+            <Presentation/>
         </ThemeProvider>
     } else {
         return (
