@@ -39,8 +39,7 @@ function Author() {
         <>
             <DefaultNavbar
                 routes={routes}
-                transparent
-                light
+                sticky
             />
             <MKBox bgColor="white">
                 <MKBox

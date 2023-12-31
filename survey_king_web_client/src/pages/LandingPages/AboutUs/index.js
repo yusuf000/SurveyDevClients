@@ -43,11 +43,10 @@ import bgImage from "assets/images/bg-about-us.jpg";
 function AboutUs() {
   return (
     <>
-      <DefaultNavbar
-        routes={routes}
-        transparent
-        light
-      />
+        <DefaultNavbar
+            routes={routes}
+            sticky
+        />
       <MKBox
         minHeight="75vh"
         width="100%"
