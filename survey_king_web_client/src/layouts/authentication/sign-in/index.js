@@ -26,7 +26,7 @@ import MDButton from "components/MDButton";
 import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 // Images
-import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+import bgImage from "assets/images/bg4.jpg";
 
 const authURL = `http://203.161.57.194:8080/api/v1/auth/authenticate`
 

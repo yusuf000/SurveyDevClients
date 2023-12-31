@@ -27,7 +27,7 @@ import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 
 // Images
-import bgImage from "assets/images/bg-sign-up-cover.jpeg";
+import bgImage from "assets/images/bg6.jpg";
 import {useRef, useState} from "react";
 import axios from "axios";
 import BasicLayout from "../components/BasicLayout";
