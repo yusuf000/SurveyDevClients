@@ -49,6 +49,7 @@ import Question from "./layouts/question";
 import Survey from "./layouts/survey";
 import Author from "./pages/LandingPages/Author";
 import AboutUsPage from "./layouts/about-us";
+import ContactUsPage from "./layouts/contact-us";
 
 const routes = [
   {
@@ -121,6 +122,14 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/author",
     component: <Author />,
+  },
+  {
+    type: "",
+    name: "ContactUs",
+    key: "contact-us",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/contact-us",
+    component: <ContactUsPage />,
   },
   {
     type: "",

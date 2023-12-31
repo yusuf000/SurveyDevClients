@@ -32,12 +32,18 @@ import React from "react";
 import Icon from "@mui/material/Icon";
 import MDTypography from "../../../../components/MDTypography";
 import {Link} from "react-router-dom";
+import DefaultNavbar from "../../../../examples/Navbars/DefaultNavbar";
+import routes from "../../../../routes";
 
 function BasicLayout({ image, errorMessage, children}) {
 
 
   return (
     <PageLayout>
+        <DefaultNavbar
+            routes={routes}
+            sticky
+        />
       <MDBox
         position="absolute"
         width="100%"
@@ -56,14 +62,14 @@ function BasicLayout({ image, errorMessage, children}) {
         textAlign="center"
       >
 
-          <MDTypography component={Link}
+          {/*<MDTypography component={Link}
                         to="/"
                         variant="h3"
                         color="light"
                         fontWeight="medium"
                         textGradient>
               SurveyDevs
-          </MDTypography>
+          </MDTypography>*/}
       </MDBox>
       <MDBox px={1} width="100%" height="100vh" mx="auto">
         {
