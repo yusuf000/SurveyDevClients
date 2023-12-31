@@ -81,7 +81,7 @@ function Presentation() {
             </MKTypography>
             <MKTypography
               variant="body1"
-              color="black"
+              color="primary"
               textAlign="center"
               px={{ xs: 6, lg: 12 }}
               mt={1}

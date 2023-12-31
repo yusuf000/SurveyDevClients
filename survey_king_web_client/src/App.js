@@ -114,6 +114,10 @@ export default function App() {
         document.scrollingElement.scrollTop = 0;
     }, [pathname]);
 
+    const authNeeded = ()=>{
+        return (pathname !== "/authentication/sign-in" && pathname !== "/authentication/sign-up" && pathname !== "/contact-us" && pathname !== "/about-us" && pathname !== "/author");
+    }
+
     const getRoutes = (allRoutes) =>
         allRoutes.map((route) => {
             if (route.collapse) {
@@ -152,7 +156,7 @@ export default function App() {
     );
 
     const loggedInUser = localStorage.getItem("user");
-    if (!loggedInUser && (pathname !== "/authentication/sign-in" && pathname !== "/authentication/sign-up")) {
+    if (!loggedInUser && authNeeded()) {
         return <ThemeProvider theme={darkMode ? themeDark : theme}>
             <CssBaseline/>
             <Presentation/>
@@ -162,7 +166,7 @@ export default function App() {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <ThemeProvider theme={darkMode ? themeDark : theme}>
                     <CssBaseline/>
-                    {layout === "dashboard" && (
+                    {layout === "dashboard" && authNeeded() && (
                         <>
                             <Sidenav
                                 color={sidenavColor}
@@ -172,8 +176,6 @@ export default function App() {
                                 onMouseEnter={handleOnMouseEnter}
                                 onMouseLeave={handleOnMouseLeave}
                             />
-                            <Configurator/>
-                            {configsButton}
                         </>
                     )}
                     {layout === "vr" && <Configurator/>}

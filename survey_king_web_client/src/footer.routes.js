@@ -40,7 +40,7 @@ export default {
     {
       name: "company",
       items: [
-        { name: "about us", href: "https://www.creative-tim.com/presentation" }
+        { name: "about us", href: "/about-us" }
       ],
     },
     /*{
@@ -54,7 +54,8 @@ export default {
     {
       name: "help & support",
       items: [
-        { name: "contact us", href: "https://www.creative-tim.com/contact-us" },
+        { name: "contact us", href: "/contact-us" },
+        { name: "developers", href: "/author" },
         /*{ name: "knowledge center", href: "https://www.creative-tim.com/knowledge-center" },
         { name: "custom development", href: "https://services.creative-tim.com/" },
         { name: "sponsorships", href: "https://www.creative-tim.com/sponsorships" },*/

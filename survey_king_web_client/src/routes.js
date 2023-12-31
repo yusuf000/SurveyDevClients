@@ -47,6 +47,8 @@ import ProjectDetails from "./layouts/project/details"
 import Projects from "./layouts/project";
 import Question from "./layouts/question";
 import Survey from "./layouts/survey";
+import Author from "./pages/LandingPages/Author";
+import AboutUsPage from "./layouts/about-us";
 
 const routes = [
   {
@@ -103,6 +105,22 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/authentication/sign-up",
     component: <SignUp />,
+  },
+  {
+    type: "",
+    name: "AboutUs",
+    key: "about-us",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/about-us",
+    component: <AboutUsPage />,
+  },
+  {
+    type: "",
+    name: "Author",
+    key: "author",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/author",
+    component: <Author />,
   },
   {
     type: "",

@@ -39,12 +39,6 @@ function Author() {
     <>
       <DefaultNavbar
         routes={routes}
-        action={{
-          type: "external",
-          route: "https://www.creative-tim.com/product/material-kit-react",
-          label: "free download",
-          color: "info",
-        }}
         transparent
         light
       />
@@ -75,11 +69,17 @@ function Author() {
             boxShadow: ({ boxShadows: { xxl } }) => xxl,
           }}
         >
-          <Profile />
-          <Posts />
+            <Profile name={"Abdullah Al Osman Sajid"}
+                description={"Hello, I am a fullstack software engineer currently working at TigerIt Bangladesh ltd."}
+                     link={"https://bd.linkedin.com/in/abdullah-al-osman-sajid"}
+                     profilePicture={"/assets/images/dev1.jpeg"}
+            />
+            <Profile name={"Md Yusuf"}
+                link={"https://bd.linkedin.com/in/mohammad-yusuf-b3460656"}
+                     profilePicture={"/assets/images/dev2.jpeg"}
+            />
         </Card>
         <Contact />
-        <Footer />
       </MKBox>
     </>
   );
