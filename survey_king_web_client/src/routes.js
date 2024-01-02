@@ -107,14 +107,14 @@ const routes = [
     route: "/authentication/sign-up",
     component: <SignUp />,
   },
-  {
+  /*{
     type: "",
     name: "AboutUs",
     key: "about-us",
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/about-us",
     component: <AboutUsPage />,
-  },
+  },*/
   {
     type: "",
     name: "Author",

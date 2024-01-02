@@ -115,7 +115,7 @@ export default function App() {
     }, [pathname]);
 
     const authNeeded = ()=>{
-        return (pathname !== "/authentication/sign-in" && pathname !== "/authentication/sign-up" && pathname !== "/contact-us" && pathname !== "/about-us" && pathname !== "/author");
+        return (pathname !== "/authentication/sign-in" && pathname !== "/authentication/sign-up" && pathname !== "/contact-us" && pathname !== "/author");
     }
 
     const getRoutes = (allRoutes) =>

@@ -8,7 +8,7 @@ import YouTubeIcon from "@mui/icons-material/YouTube";
 import MKTypography from "components/MKTypography";
 
 // Images
-import logoCT from "assets/images/logo-ct-dark.png";
+import logoCT from "assets/images/logos/surveydevs-high-resolution-logo-black-transparent.png";
 
 const date = new Date().getFullYear();
 
@@ -40,7 +40,7 @@ export default {
     {
       name: "company",
       items: [
-        { name: "about us", href: "/about-us" }
+        { name: "team", href: "/author" },
       ],
     },
     /*{
@@ -55,7 +55,6 @@ export default {
       name: "help & support",
       items: [
         { name: "contact us", href: "/contact-us" },
-        { name: "team", href: "/author" },
         /*{ name: "knowledge center", href: "https://www.creative-tim.com/knowledge-center" },
         { name: "custom development", href: "https://services.creative-tim.com/" },
         { name: "sponsorships", href: "https://www.creative-tim.com/sponsorships" },*/
