@@ -122,6 +122,7 @@ function Dashboard() {
                                                 title={runningProjectData[currentIndex].projectName}
                                                 description="Submission count for last 7 days"
                                                 date={"project started " + runningProjectData[currentIndex].startedFor + " days ago"}
+                                                count={"Total "+ responseBarChartData.total+ " responses received"}
                                                 chart={responseBarChartData}
                                                 index={currentIndex + 1}
                                                 onForward={onForward}

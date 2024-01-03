@@ -46,7 +46,7 @@ import MDButton from "../../../../components/MDButton";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-function ReportsBarChart({ color, title, description, date, chart , index, onForward, onBackward}) {
+function ReportsBarChart({ color, title, description, date, chart , count, index, onForward, onBackward}) {
   const { data, options } = configs(chart.labels || [], chart.datasets || {});
 
   return (
@@ -87,6 +87,14 @@ function ReportsBarChart({ color, title, description, date, chart , index, onFor
           </MDBox>
           {
             index ? <MDBox>
+              <MDBox display="flex" alignItems="center">
+                <MDTypography variant="button" color="text" lineHeight={1} sx={{ mt: 0.15, mr: 0.5 }}>
+                  <Icon>feed</Icon>
+                </MDTypography>
+                <MDTypography variant="button" color="text" fontWeight="light">
+                  {count}
+                </MDTypography>
+              </MDBox>
               <Divider/>
               <Grid container spacing={1} justifyContent="center" alignItems="center">
                 <Grid item>
