@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 
 // porp-types is a library for typechecking of props
 import PropTypes from "prop-types";
@@ -41,10 +41,12 @@ import MDTypography from "components/MDTypography";
 
 // ReportsBarChart configurations
 import configs from "examples/Charts/BarCharts/ReportsBarChart/configs";
+import Grid from "@mui/material/Grid";
+import MDButton from "../../../../components/MDButton";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-function ReportsBarChart({ color, title, description, date, chart }) {
+function ReportsBarChart({ color, title, description, date, chart , index, onForward, onBackward}) {
   const { data, options } = configs(chart.labels || [], chart.datasets || {});
 
   return (
@@ -83,6 +85,26 @@ function ReportsBarChart({ color, title, description, date, chart }) {
               {date}
             </MDTypography>
           </MDBox>
+          {
+            index ? <MDBox>
+              <Divider/>
+              <Grid container spacing={1} justifyContent="center" alignItems="center">
+                <Grid item>
+                  <MDButton onClick={onBackward}>
+                    <Icon color="info">arrow_back_ios</Icon>
+                  </MDButton>
+                </Grid>
+                <Grid item>
+                  <MDTypography>{index}</MDTypography>
+                </Grid>
+                <Grid item>
+                  <MDButton onClick={onForward}>
+                    <Icon color="info">arrow_forward_ios</Icon>
+                  </MDButton>
+                </Grid>
+              </Grid>
+            </MDBox>: null
+          }
         </MDBox>
       </MDBox>
     </Card>
