@@ -163,15 +163,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 disableRipple
                 color="inherit"
                 sx={navbarIconButton}
-                onClick={handleConfiguratorOpen}
-              >
-                <Icon sx={iconsStyle}>settings</Icon>
-              </IconButton>
-              <IconButton
-                size="small"
-                disableRipple
-                color="inherit"
-                sx={navbarIconButton}
                 aria-controls="logout-menu"
                 aria-haspopup="true"
                 variant="contained"
