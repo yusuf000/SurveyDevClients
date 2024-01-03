@@ -14,7 +14,7 @@ import DefaultInfoCard from "../../examples/Cards/InfoCards/DefaultInfoCard";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 
-const url = `http://203.161.57.194:8080/api/v1/project`
+const url = `http://localhost:8080/api/v1/project`
 
 
 function Dashboard() {

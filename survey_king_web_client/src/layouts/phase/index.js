@@ -18,7 +18,7 @@ import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 import DialogContentText from "@mui/material/DialogContentText";
 import TextField from "@mui/material/TextField";
 
-const url = `http://203.161.57.194:8080/`
+const url = `http://localhost:8080/`
 
 function PhaseDetails() {
     const [openErrorDialog, setOpenErrorDialog] = React.useState(false);

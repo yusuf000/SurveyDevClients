@@ -18,7 +18,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 
-const url = `http://203.161.57.194:8080/`
+const url = `http://localhost:8080/`
 
 function Survey() {
     const navigate = useNavigate();
