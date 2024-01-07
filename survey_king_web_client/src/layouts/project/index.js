@@ -76,7 +76,7 @@ function Projects() {
     }
 
     const onShowResult = ({item}) => {
-        navigate('/project-details', {state: {project: JSON.stringify(item)}});
+        navigate('/result', {state: {project: JSON.stringify(item)}});
     }
 
     const onStart = () => {
@@ -126,7 +126,7 @@ function Projects() {
                                             color="info">
                         <Icon>settings</Icon>
                     </MDTypography>,
-                    "assessment": <MDTypography component="a" href="" role="button" onClick={() => onExpand({item})}
+                    "assessment": <MDTypography component="a" href="" role="button" onClick={() => onShowResult({item})}
                                             color="info">
                         <Icon>assessment</Icon>
                     </MDTypography>,

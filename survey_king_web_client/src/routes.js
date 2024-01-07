@@ -50,6 +50,7 @@ import Survey from "./layouts/survey";
 import Author from "./pages/LandingPages/Author";
 import AboutUsPage from "./layouts/about-us";
 import ContactUsPage from "./layouts/contact-us";
+import Result from "./layouts/result";
 
 const routes = [
   {
@@ -74,6 +75,14 @@ const routes = [
     icon: <Icon fontSize="small">folder</Icon>,
     route: "/project-details",
     component: <ProjectDetails />,
+  },
+  {
+    type: "",
+    name: "Result",
+    key: "result",
+    icon: <Icon fontSize="small">folder</Icon>,
+    route: "/result",
+    component: <Result />,
   },
   {
     type: "",
