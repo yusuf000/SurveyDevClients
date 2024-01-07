@@ -64,7 +64,7 @@ function DataTableHeadCell({ width, children, sorted, align,value, ...rest }) {
             })}
           >
               {
-                  (value !== "delete" && value !== "expand" && value !== "start") ? <MDBox>
+                  (!value.includes("__")) ? <MDBox>
                       <MDBox
                           position="absolute"
                           top={-6}

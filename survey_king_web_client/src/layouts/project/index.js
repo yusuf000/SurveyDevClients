@@ -75,6 +75,10 @@ function Projects() {
         navigate('/project-details', {state: {project: JSON.stringify(item)}});
     }
 
+    const onShowResult = ({item}) => {
+        navigate('/project-details', {state: {project: JSON.stringify(item)}});
+    }
+
     const onStart = () => {
         localStorage.setItem('project', JSON.stringify(currentItem));
         localStorage.setItem('phase', JSON.stringify(currentItem.phases[0]));
@@ -101,6 +105,10 @@ function Projects() {
                     "expand": <MDTypography component="a" href="" role="button" onClick={() => onExpand({item})}
                                             color="info">
                         <Icon>arrow_outward</Icon>
+                    </MDTypography>,
+                    "assessment": <MDTypography component="a" href="" role="button" onClick={() => onShowResult({item})}
+                                                color="info">
+                        <Icon>assessment</Icon>
                     </MDTypography>
                 });
             } else {
@@ -116,7 +124,11 @@ function Projects() {
                     </MDTypography>,
                     "expand": <MDTypography component="a" href="" role="button" onClick={() => onExpand({item})}
                                             color="info">
-                        <Icon>arrow_outward</Icon>
+                        <Icon>settings</Icon>
+                    </MDTypography>,
+                    "assessment": <MDTypography component="a" href="" role="button" onClick={() => onExpand({item})}
+                                            color="info">
+                        <Icon>assessment</Icon>
                     </MDTypography>,
                     "start": <MDTypography component="a" href="" role="button"
                                            onClick={(e) => handleClickOpenStartConfirmationDialog(e, item)}
@@ -509,9 +521,10 @@ function Projects() {
                                                 {Header: "client", accessor: "clientName"},
                                                 {Header: "start date", accessor: "startDate"},
                                                 {Header: "end date", accessor: "endDate"},
-                                                {Header: "delete", accessor: "delete"},
-                                                {Header: "expand", accessor: "expand"},
-                                                {Header: "start", accessor: "start"}
+                                                {Header: "delete__", accessor: "delete"},
+                                                {Header: "expand__", accessor: "expand"},
+                                                {Header: "assessment__", accessor: "assessment"},
+                                                {Header: "start__", accessor: "start"}
                                             ],
                                             rows: projectData
                                         }}/>
