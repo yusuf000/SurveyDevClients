@@ -51,6 +51,7 @@ import Author from "./pages/LandingPages/Author";
 import AboutUsPage from "./layouts/about-us";
 import ContactUsPage from "./layouts/contact-us";
 import Result from "./layouts/result";
+import ResultDetails from "./layouts/result/details";
 
 const routes = [
   {
@@ -83,6 +84,14 @@ const routes = [
     icon: <Icon fontSize="small">folder</Icon>,
     route: "/result",
     component: <Result />,
+  },
+  {
+    type: "",
+    name: "Result Details",
+    key: "result-details",
+    icon: <Icon fontSize="small">folder</Icon>,
+    route: "/result-details",
+    component: <ResultDetails />,
   },
   {
     type: "",

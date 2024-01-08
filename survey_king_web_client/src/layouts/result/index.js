@@ -27,7 +27,6 @@ function a11yProps(index) {
 }
 
 function Result() {
-    const [isQuestionsLoaded, setIsQuestionsLoaded] = useState(false)
     const [questionData, setQuestionData] = useState([])
     const location = useLocation();
     const navigate = useNavigate();
@@ -38,21 +37,20 @@ function Result() {
 
     const project = JSON.parse(localStorage.getItem('project'));
 
-    const onExpand = ({id}) => {
-
+    const onExpand = ({item}) => {
+        navigate('/result-details', {state: {question: JSON.stringify(item)}});
     }
 
     const prepareTabledata = (data) => {
         let tableData = [];
         for (let i in data) {
             let item = data[i];
-            let id = item.id;
             tableData.push({
                 "serial": item.serial,
                 "questionType": item.questionType.name,
                 "description": item.description,
 
-                "expand": <MDTypography component="a" href="" role="button" onClick={() => onExpand({id})}
+                "expand": <MDTypography component="a" href="" role="button" onClick={() => onExpand({item})}
                                         color="info">
                     <Icon>arrow_outward</Icon>
                 </MDTypography>,
@@ -77,10 +75,7 @@ function Result() {
                 if (response.data.length !== 0) {
                     response.data.sort((a, b) => a.serial - b.serial);
                     setQuestionData(prepareTabledata(response.data))
-                    setIsQuestionsLoaded(true)
 
-                } else {
-                    setIsQuestionsLoaded(false);
                 }
             })
             .catch((e) => {
