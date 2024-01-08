@@ -80,6 +80,32 @@ function ResultDetails() {
             })
     }
 
+    const loadResponsesChart = (pageNo) => {
+        /*const token = localStorage.getItem('token');
+        axios
+            .get(url + "api/v1/analytics/responses", {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                params: {
+                    questionId: question.id,
+                    pageNo: pageNo
+                }
+            })
+            .then((response) => {
+                if (response.data.content.length !== 0) {
+                    setTotalPage(response.data.totalPages);
+                    setAnswerData(prepareTabledata(response.data.content));
+                }
+            })
+            .catch((e) => {
+                if (e.response.status === 403) {
+                    localStorage.clear();
+                    navigate('/authentication/sign-in')
+                }
+            })*/
+    }
+
     function Descriptive() {
         return (
             <MDBox>
@@ -128,6 +154,8 @@ function ResultDetails() {
     useEffect(() => {
         if (question.questionType.name === "descriptive") {
             loadResponsesList(0);
+        }else{
+            loadResponsesChart();
         }
     }, []);
 
