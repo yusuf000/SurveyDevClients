@@ -15,6 +15,7 @@ import PieChart from "../../../examples/Charts/PieChart";
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import VerticalBarChart from "../../../examples/Charts/BarCharts/VerticalBarChart";
 
 const url = `http://localhost:8080/`
 
@@ -28,6 +29,7 @@ function a11yProps(index) {
 function ResultDetails() {
     const [answerData, setAnswerData] = useState(null)
     const [chartData, setChartData] = useState(null)
+    const [pieChartData, setPieChartData] = useState(null)
     const [currentPage, setCurrentPage] = useState(0)
     const [totalPage, setTotalPage] = useState()
     const [value, setValue] = React.useState(0);
@@ -107,12 +109,23 @@ function ResultDetails() {
 
         chartData = {
             "labels": labels,
+            "datasets": [{
+                "label": "Count",
+                "color": "dark",
+                "backgroundColors": ["primary", "secondary", "info", "success", "warning", "error", "light", "dark"],
+                "data": data
+            }]
+        }
+
+        setPieChartData({
+            "labels": labels,
             "datasets": {
                 "label": "Count",
+                "color": "dark",
                 "backgroundColors": ["primary", "secondary", "info", "success", "warning", "error", "light", "dark"],
                 "data": data
             }
-        }
+        })
         return chartData;
     }
 
@@ -227,15 +240,16 @@ function ResultDetails() {
                                         <Grid item xs={12} md={6} lg={12}>
                                             <MDBox mb={3}>
                                                 {
-                                                    value === 0 ? <ReportsBarChart
-                                                        color="info"
-                                                        title={question.description}
-                                                        chart={chartData}
-                                                    /> : <PieChart
+                                                    value === 0 ? <VerticalBarChart
                                                         icon={{ color: "info", component: "leaderboard" }}
                                                         title={question.description}
-                                                        description="choices with 0 count wont be shown in the chart"
+                                                        description="choices with 0 count will not have any bar"
                                                         chart={chartData}
+                                                    />: <PieChart
+                                                        icon={{ color: "info", component: "leaderboard" }}
+                                                        title={question.description}
+                                                        description="choices with 0 count won't be shown in the chart"
+                                                        chart={pieChartData}
                                                     />
                                                 }
                                             </MDBox>
