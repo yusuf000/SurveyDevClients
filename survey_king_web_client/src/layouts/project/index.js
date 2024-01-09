@@ -91,7 +91,7 @@ function Projects() {
         for (let i in data) {
             let item = data[i];
             let sasCode = item.sasCode;
-            if (projectStatusMap.get(sasCode)) {
+            /*if (projectStatusMap.get(sasCode)) {
                 tableData.push({
                     "name": item.name,
                     "clientName": item.clientName,
@@ -111,32 +111,48 @@ function Projects() {
                         <Icon>assessment</Icon>
                     </MDTypography>
                 });
-            } else {
+            } else {*/
                 tableData.push({
                     "name": item.name,
                     "clientName": item.clientName,
                     "startDate": item.startDate,
                     "endDate": item.endDate,
-                    "delete": <MDTypography component="a" href="" role="button"
-                                            onClick={(e) => handleClickOpenDeleteConfirmationDialog(e, sasCode)}
-                                            color="error">
-                        <Icon>delete</Icon>
-                    </MDTypography>,
-                    "expand": <MDTypography component="a" href="" role="button" onClick={() => onExpand({item})}
-                                            color="info">
-                        <Icon>settings</Icon>
-                    </MDTypography>,
-                    "assessment": <MDTypography component="a" href="" role="button" onClick={() => onShowResult({item})}
-                                            color="info">
-                        <Icon>assessment</Icon>
-                    </MDTypography>,
-                    "start": <MDTypography component="a" href="" role="button"
-                                           onClick={(e) => handleClickOpenStartConfirmationDialog(e, item)}
-                                           color="info">
-                        <Icon>play_arrow</Icon>
-                    </MDTypography>
+                    "delete": <MDBox>
+                        {
+                            item.owner === localStorage.getItem("user") ? <MDTypography component="a" href="" role="button"
+                                                                                        onClick={(e) => handleClickOpenDeleteConfirmationDialog(e, sasCode)}
+                                                                                        color="error">
+                                <Icon>delete</Icon>
+                            </MDTypography> : null
+                        }
+                    </MDBox>,
+                    "expand": <MDBox>
+                        {
+                            item.owner === localStorage.getItem("user") ? <MDTypography component="a" href="" role="button" onClick={() => onExpand({item})}
+                                                                                        color="info">
+                                <Icon>settings</Icon>
+                            </MDTypography> : null
+                        }
+                    </MDBox>,
+                    "assessment": <MDBox>
+                        {
+                            item.owner === localStorage.getItem("user") ? <MDTypography component="a" href="" role="button" onClick={() => onShowResult({item})}
+                                          color="info">
+                                <Icon>assessment</Icon>
+                            </MDTypography> : null
+                        }
+                    </MDBox>,
+                    "start": <MDBox>
+                        {
+                            !projectStatusMap.get(sasCode) ? <MDTypography component="a" href="" role="button"
+                                                                          onClick={(e) => handleClickOpenStartConfirmationDialog(e, item)}
+                                                                          color="info">
+                                <Icon>play_arrow</Icon>
+                            </MDTypography> : null
+                        }
+                    </MDBox>
                 });
-            }
+            //}
 
         }
         return tableData;
