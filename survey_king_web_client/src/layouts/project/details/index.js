@@ -326,7 +326,7 @@ function ProjectDetails() {
                                         table={{
                                             columns: [
                                                 {Header: "Name", accessor: "name", width: "85%"},
-                                                {Header: "delete", accessor: "delete"}
+                                                {Header: "delete__", accessor: "delete"}
                                             ],
                                             rows: tableDataMember
                                         }}/>
@@ -351,8 +351,8 @@ function ProjectDetails() {
                                         table={{
                                             columns: [
                                                 {Header: "Name", accessor: "name", width: "85%"},
-                                                {Header: "delete", accessor: "delete"},
-                                                {Header: "expand", accessor: "expand"}
+                                                {Header: "delete__", accessor: "delete"},
+                                                {Header: "expand__", accessor: "expand"}
                                             ],
                                             rows: tableDataPhase
                                         }}/>

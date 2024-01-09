@@ -72,7 +72,7 @@ function Basic() {
         }
 
         return (
-            <BasicLayout image={bgImage} errorMessage={errorMessage} spacing={7}>
+            <BasicLayout image={bgImage} spacing={7}>
                 <MDBox>
                     <Card>
                         <MDBox
@@ -127,6 +127,11 @@ function Basic() {
                                         &nbsp;&nbsp;Remember me
                                     </MDTypography>
                                 </MDBox>*/}
+                                <MDBox mt={1} mb={1}>
+                                    {
+                                        errorMessage ? <MDTypography variant={"button"} color={"error"}>{errorMessage}</MDTypography>: null
+                                    }
+                                </MDBox>
                                 <MDBox mt={4} mb={1}>
                                     <MDButton variant="gradient" onClick={handleOnClick} color="info" fullWidth>
                                         sign in

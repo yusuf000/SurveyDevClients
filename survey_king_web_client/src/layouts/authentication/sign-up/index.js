@@ -28,7 +28,7 @@ import MDButton from "components/MDButton";
 
 // Images
 import bgImage from "assets/images/bg6.jpg";
-import {useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import axios from "axios";
 import BasicLayout from "../components/BasicLayout";
 
@@ -94,7 +94,7 @@ function Cover() {
   }
 
   return (
-    <BasicLayout image={bgImage} errorMessage={errorMessage}>
+    <BasicLayout image={bgImage}>
       <Card>
         <MDBox
           variant="gradient"
@@ -151,6 +151,11 @@ function Cover() {
               >
                 Terms and Conditions
               </MDTypography>
+            </MDBox>
+            <MDBox mt={1} mb={1}>
+              {
+                errorMessage ? <MDTypography variant={"button"} color={"error"}>{errorMessage}</MDTypography>: null
+              }
             </MDBox>
             <MDBox mt={4} mb={1}>
               <MDButton variant="gradient" color="info" onClick={handleOnClick} fullWidth>
