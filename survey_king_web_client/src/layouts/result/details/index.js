@@ -11,14 +11,26 @@ import Card from "@mui/material/Card";
 import MDBox from "../../../components/MDBox";
 import DataTable from "../component/DataTable";
 import ReportsBarChart from "../../../examples/Charts/BarCharts/ReportsBarChart";
+import PieChart from "../../../examples/Charts/PieChart";
+import Box from "@mui/material/Box";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 
 const url = `http://localhost:8080/`
+
+function a11yProps(index) {
+    return {
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`,
+    };
+}
 
 function ResultDetails() {
     const [answerData, setAnswerData] = useState(null)
     const [chartData, setChartData] = useState(null)
     const [currentPage, setCurrentPage] = useState(0)
     const [totalPage, setTotalPage] = useState()
+    const [value, setValue] = React.useState(0);
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -27,6 +39,10 @@ function ResultDetails() {
     }
 
     const question = JSON.parse(localStorage.getItem('question'));
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
 
     function onBackward() {
         if (currentPage === 0) return
@@ -84,18 +100,19 @@ function ResultDetails() {
                     break;
                 }
             }
-            if(found === false){
+            if (found === false) {
                 data.push(0);
             }
         }
 
         chartData = {
-                "labels": labels,
-                "datasets": {
-                    "label": "Count",
-                    "data": data
-                }
+            "labels": labels,
+            "datasets": {
+                "label": "Count",
+                "backgroundColors": ["primary", "secondary", "info", "success", "warning", "error", "light", "dark"],
+                "data": data
             }
+        }
         return chartData;
     }
 
@@ -192,25 +209,44 @@ function ResultDetails() {
         return (
             <MDBox>
                 {
-                    chartData ? <MDBox mt={4.5}>
-                        <Grid container spacing={1}>
-                            <Grid item lg={15}>
-                                <Grid container spacing={1} justifyContent="left" alignItems="center">
-                                    <Grid item xs={12} md={6} lg={10}>
-                                        <MDBox mb={3}>
-                                            <ReportsBarChart
-                                                color="info"
-                                                title={question.description}
-                                                chart={chartData}
-                                            />
-                                        </MDBox>
-                                    </Grid>
-                                    <Grid item>
+                    chartData ? <MDBox>
+                        <MDBox>
+                            <Box sx={{width: '100%'}}>
+                                <Box>
+                                    <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                                        <Tab label="Bar Chart" {...a11yProps(0)} />
+                                        <Tab label="Pie Chart" {...a11yProps(1)} />
+                                    </Tabs>
+                                </Box>
+                            </Box>
+                        </MDBox>
+                        <MDBox mt={10}>
+                            <Grid container spacing={1}>
+                                <Grid item lg={15}>
+                                    <Grid container spacing={1} justifyContent="left" alignItems="center">
+                                        <Grid item xs={12} md={6} lg={12}>
+                                            <MDBox mb={3}>
+                                                {
+                                                    value === 0 ? <ReportsBarChart
+                                                        color="info"
+                                                        title={question.description}
+                                                        chart={chartData}
+                                                    /> : <PieChart
+                                                        icon={{ color: "info", component: "leaderboard" }}
+                                                        title={question.description}
+                                                        description="choices with 0 count wont be shown in the chart"
+                                                        chart={chartData}
+                                                    />
+                                                }
+                                            </MDBox>
+                                        </Grid>
+                                        <Grid item>
 
+                                        </Grid>
                                     </Grid>
                                 </Grid>
                             </Grid>
-                        </Grid>
+                        </MDBox>
                     </MDBox> : null
                 }
             </MDBox>
