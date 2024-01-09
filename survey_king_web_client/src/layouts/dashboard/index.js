@@ -63,9 +63,11 @@ function Dashboard() {
             })
             .then((response) => {
                 setTotalRunningProject(response.data.length);
-                setRunningProjectData(response.data);
-                setCurrentIndex(0)
-                loadResponseCountForProject(response.data[currentIndex].sasCode);
+                if(response.data.length !== 0){
+                    setRunningProjectData(response.data);
+                    setCurrentIndex(0)
+                    loadResponseCountForProject(response.data[currentIndex].sasCode);
+                }
             })
             .catch((e) => {
                 if (e.response.status === 403) {
@@ -103,7 +105,7 @@ function Dashboard() {
                         <MDBox mb={1.5}>
                             <DefaultInfoCard
                                 icon="folder"
-                                title="Total Running Projects"
+                                title="Total Running Projects you own"
                                 description="Running projects can still take answers"
                                 value={totalRunningProject + ""}
                             />

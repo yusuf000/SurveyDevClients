@@ -115,6 +115,7 @@ function Projects() {
                 tableData.push({
                     "name": item.name,
                     "clientName": item.clientName,
+                    "owner": item.owner,
                     "startDate": item.startDate,
                     "endDate": item.endDate,
                     "delete": <MDBox>
@@ -534,7 +535,8 @@ function Projects() {
                                         table={{
                                             columns: [
                                                 {Header: "project name", accessor: "name", width: "35%"},
-                                                {Header: "client", accessor: "clientName", width: "25%"},
+                                                {Header: "client", accessor: "clientName", width: "15%"},
+                                                {Header: "owner", accessor: "owner", width: "15%"},
                                                 {Header: "start date", accessor: "startDate",width: "10%"},
                                                 {Header: "end date", accessor: "endDate",width: "10%"},
                                                 {Header: "delete__", accessor: "delete"},
