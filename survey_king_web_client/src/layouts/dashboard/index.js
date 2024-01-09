@@ -115,7 +115,7 @@ function Dashboard() {
                         <Grid container spacing={1}>
                             <Grid item lg={15}>
                                 <Grid container spacing={1} justifyContent="left" alignItems="center">
-                                    <Grid item xs={12} md={6} lg={10}>
+                                    <Grid item xs={12} md={6} lg={12}>
                                         <MDBox mb={3}>
                                             <ReportsBarChart
                                                 color="info"

@@ -508,7 +508,7 @@ function Projects() {
                 </Grid>
                 <MDBox>
                     <Grid container spacing={3}>
-                        <Grid item xs={12} md={6} lg={8}>
+                        <Grid item xs={12} md={6} lg={12}>
                             {
                                 projectData ? <Card>
                                     <MDTypography variant="h5" fontWeight="medium" color="dark" mt={1} my={3} mx={3}>
@@ -518,9 +518,9 @@ function Projects() {
                                         table={{
                                             columns: [
                                                 {Header: "project name", accessor: "name", width: "35%"},
-                                                {Header: "client", accessor: "clientName"},
-                                                {Header: "start date", accessor: "startDate"},
-                                                {Header: "end date", accessor: "endDate"},
+                                                {Header: "client", accessor: "clientName", width: "25%"},
+                                                {Header: "start date", accessor: "startDate",width: "10%"},
+                                                {Header: "end date", accessor: "endDate",width: "10%"},
                                                 {Header: "delete__", accessor: "delete"},
                                                 {Header: "expand__", accessor: "expand"},
                                                 {Header: "assessment__", accessor: "assessment"},

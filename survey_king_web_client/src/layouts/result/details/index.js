@@ -1,16 +1,13 @@
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 import React, {useEffect, useState} from "react";
 import DashboardLayout from "../../../examples/LayoutContainers/DashboardLayout";
-import Result from "../index";
 import {useLocation, useNavigate} from "react-router-dom";
 import axios from "axios";
 import MDTypography from "../../../components/MDTypography";
-import Icon from "@mui/material/Icon";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import MDBox from "../../../components/MDBox";
 import DataTable from "../component/DataTable";
-import ReportsBarChart from "../../../examples/Charts/BarCharts/ReportsBarChart";
 import PieChart from "../../../examples/Charts/PieChart";
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
