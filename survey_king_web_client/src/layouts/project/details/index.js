@@ -117,6 +117,7 @@ function ProjectDetails() {
                 }
             })
             .then(() => {
+                handleClickCloseConfirmationDialog();
                 loadPhaseData();
             })
             .catch((e) => {
@@ -163,10 +164,14 @@ function ProjectDetails() {
 
             data.push({
                 "name": phaseName,
-                "delete": <MDTypography component="a" href="" role="button" onClick={(event) => handleClickOpenConfirmationDialog({event, phaseId})}
-                                        color="error">
-                    <Icon>delete</Icon>
-                </MDTypography>,
+                "delete": <MDBox>
+                    {
+                        phases.length !== 1 ? <MDTypography component="a" href="" role="button" onClick={(event) => handleClickOpenConfirmationDialog({event, phaseId})}
+                                                            color="error">
+                            <Icon>delete</Icon>
+                        </MDTypography>: null
+                    }
+                </MDBox>,
                 "expand": <MDTypography component="a" href="" role="button" onClick={() => onExpandPhase({phaseId})}
                                         color="info">
                     <Icon>arrow_outward</Icon> </MDTypography>
