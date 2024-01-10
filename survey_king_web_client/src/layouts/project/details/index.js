@@ -33,6 +33,7 @@ const url = `http://localhost:8080/`
 function ProjectDetails() {
     const location = useLocation();
     const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
+    const [openStartConfirmationDialog, setOpenStartConfirmationDialog] = React.useState(false);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [isPhaseDataLoaded, setIsPhaseDataLoaded] = useState(false);
     const [tableDataMember, setTableDataMember] = useState(null);
@@ -121,6 +122,10 @@ function ProjectDetails() {
             .catch((e) => {
                 console.log(e);
             })
+    }
+
+    const onStart = () => {
+
     }
 
     const prepareTableDataMember = (members) => {
@@ -227,8 +232,16 @@ function ProjectDetails() {
         setOpenConfirmationDialog(true)
     }
 
+    const handleClickOpenStartConfirmationDialog = () => {
+        setOpenStartConfirmationDialog(true)
+    }
+
     const handleClickCloseConfirmationDialog = () => {
         setOpenConfirmationDialog(false)
+    }
+
+    const handleClickCloseStartConfirmationDialog = () => {
+        setOpenStartConfirmationDialog(false)
     }
 
     function ConfirmationDialog() {
@@ -241,6 +254,21 @@ function ProjectDetails() {
                 <DialogActions>
                     <Button onClick={handleClickCloseConfirmationDialog}>Cancel</Button>
                     <Button onClick={() => {onDeletePhase()}}>Confirm</Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
+
+    function ConfirmationStartDialog() {
+        return (
+            <Dialog open={openStartConfirmationDialog} onClose={handleClickCloseStartConfirmationDialog}>
+                <DialogTitle color="info"><Icon fontSize="medium">info</Icon> &nbsp; Confirm</DialogTitle>
+                <DialogContent>
+                    <MDTypography fontSize="small" color="info">Starting will prevent you from modifying the project further and you can start collecting reponses</MDTypography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClickCloseStartConfirmationDialog}>Cancel</Button>
+                    <Button onClick={() => {onStart()}}>Confirm</Button>
                 </DialogActions>
             </Dialog>
         );
@@ -277,6 +305,7 @@ function ProjectDetails() {
         <DashboardLayout>
             <DashboardNavbar/>
             <ConfirmationDialog/>
+            <ConfirmationStartDialog/>
             <AddMember/>
             <MDBox py={3}>
                 <Grid container
@@ -285,7 +314,7 @@ function ProjectDetails() {
                       alignItems="stretch"
                       spacing={3}
                 >
-                    <Grid item xs={1} md={6} lg={5} >
+                    <Grid item xs={1} md={6} lg={6} >
                         <Card sx={{ height: '100%' }}>
                             <MDBox pt={3} px={2} sx={{ height: '10%' }}>
                                 <MDTypography variant="h4" fontWeight="medium">
@@ -303,12 +332,13 @@ function ProjectDetails() {
                                         jobNumber={project.jobNumber}
                                         startDate={project.startDate}
                                         endDate={project.endDate}
+                                        onStart={handleClickOpenStartConfirmationDialog}
                                     />
                                 </MDBox>
                             </MDBox>
                         </Card>
                     </Grid>
-                    <Grid item xs={12} md={6} lg={5}>
+                    <Grid item xs={12} md={6} lg={6}>
                         {
                             isDataLoaded ?
                                 <Card sx={{ height: '100%' }}>
@@ -338,7 +368,7 @@ function ProjectDetails() {
             {
                 isPhaseDataLoaded ? <MDBox py={3}>
                     <Grid container spacing={3}>
-                        <Grid item xs={12} md={6} lg={5}>
+                        <Grid item xs={12} md={6} lg={12}>
                             {
                                 <Card>
                                     <MDTypography variant="h4" fontWeight="medium" color="dark" mt={1} my={3} mx={3}>

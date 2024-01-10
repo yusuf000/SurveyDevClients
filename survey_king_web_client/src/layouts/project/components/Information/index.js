@@ -27,7 +27,7 @@ import MDButton from "components/MDButton";
 // Material Dashboard 2 React context
 import { useMaterialUIController } from "context";
 
-function Information({ name, projectType, clientName, status, sasCode, jobNumber, startDate, endDate }) {
+function Information({ name, projectType, clientName, status, sasCode, jobNumber, startDate, endDate, onStart}) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
 
@@ -55,6 +55,9 @@ function Information({ name, projectType, clientName, status, sasCode, jobNumber
           <MDTypography variant="h5" fontWeight="medium" textTransform="capitalize">
             {name}
           </MDTypography>
+          <MDBox mt={2}>
+              <MDButton color={"success"} variant={"gradient"} onClick={onStart}>Start</MDButton>
+          </MDBox>
         </MDBox>
         <MDBox mb={1} lineHeight={0} >
           <MDTypography variant="h6" fontWeight="light"  color="text">
