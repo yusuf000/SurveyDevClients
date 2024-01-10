@@ -52,7 +52,7 @@ function SimpleBlogCard({title, description, click, action }) {
             {description}
           </MDTypography>
         </MDBox>
-        <MDButton color={action.color ? action.color : "dark"} onClick={click}>{action.label}</MDButton>
+        <MDButton variant={"gradient"} color={action.color ? action.color : "dark"} onClick={click}>{action.label} </MDButton>
       </MDBox>
     </Card>
   );
