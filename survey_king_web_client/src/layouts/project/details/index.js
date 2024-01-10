@@ -166,10 +166,14 @@ function ProjectDetails() {
                 "name": phaseName,
                 "delete": <MDBox>
                     {
-                        phases.length !== 1 ? <MDTypography component="a" href="" role="button" onClick={(event) => handleClickOpenConfirmationDialog({event, phaseId})}
+                        phases.length !== 1 ? <MDTypography component="a" href="" role="button"
+                                                            onClick={(event) => handleClickOpenConfirmationDialog({
+                                                                event,
+                                                                phaseId
+                                                            })}
                                                             color="error">
                             <Icon>delete</Icon>
-                        </MDTypography>: null
+                        </MDTypography> : null
                     }
                 </MDBox>,
                 "expand": <MDTypography component="a" href="" role="button" onClick={() => onExpandPhase({phaseId})}
@@ -199,7 +203,7 @@ function ProjectDetails() {
                 }
             })
             .catch((e) => {
-                if(e.response.status === 403){
+                if (e.response.status === 403) {
                     localStorage.clear();
                     navigate('/authentication/sign-in')
                 }
@@ -254,11 +258,14 @@ function ProjectDetails() {
             <Dialog open={openConfirmationDialog} onClose={handleClickCloseConfirmationDialog}>
                 <DialogTitle color="info"><Icon fontSize="medium">info</Icon> &nbsp; Confirm</DialogTitle>
                 <DialogContent>
-                    <MDTypography fontSize="small" color="info"> Deleting the phase will delete the related questions also</MDTypography>
+                    <MDTypography fontSize="small" color="info"> Deleting the phase will delete the related questions
+                        also</MDTypography>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClickCloseConfirmationDialog}>Cancel</Button>
-                    <Button onClick={() => {onDeletePhase()}}>Confirm</Button>
+                    <Button onClick={() => {
+                        onDeletePhase()
+                    }}>Confirm</Button>
                 </DialogActions>
             </Dialog>
         );
@@ -269,11 +276,14 @@ function ProjectDetails() {
             <Dialog open={openStartConfirmationDialog} onClose={handleClickCloseStartConfirmationDialog}>
                 <DialogTitle color="info"><Icon fontSize="medium">info</Icon> &nbsp; Confirm</DialogTitle>
                 <DialogContent>
-                    <MDTypography fontSize="small" color="info">Starting will prevent you from modifying the project further and you can start collecting reponses</MDTypography>
+                    <MDTypography fontSize="small" color="info">Starting will prevent you from modifying the project
+                        further and you can start collecting reponses</MDTypography>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClickCloseStartConfirmationDialog}>Cancel</Button>
-                    <Button onClick={() => {onStart()}}>Confirm</Button>
+                    <Button onClick={() => {
+                        onStart()
+                    }}>Confirm</Button>
                 </DialogActions>
             </Dialog>
         );
@@ -319,15 +329,16 @@ function ProjectDetails() {
                       alignItems="stretch"
                       spacing={3}
                 >
-                    <Grid item xs={1} md={6} lg={6} >
-                        <Card sx={{ height: '100%' }}>
-                            <MDBox pt={3} px={2} sx={{ height: '10%' }}>
+                    <Grid item xs={1} md={6} lg={6}>
+                        <Card sx={{height: '100%'}}>
+                            <MDBox pt={3} px={2} sx={{height: '10%'}}>
                                 <MDTypography variant="h4" fontWeight="medium">
                                     Project Information
                                 </MDTypography>
                             </MDBox>
-                            <MDBox pt={1} pb={2} px={2} sx={{ height: '90%' }}>
-                                <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0} sx={{ height: '100%' }}>
+                            <MDBox pt={1} pb={2} px={2} sx={{height: '90%'}}>
+                                <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}
+                                       sx={{height: '100%'}}>
                                     <Information
                                         name={project.name}
                                         projectType={project.type}
@@ -343,17 +354,19 @@ function ProjectDetails() {
                             </MDBox>
                         </Card>
                     </Grid>
-                    <Grid item xs={12} md={6} lg={6}>
-                        {
-                            isDataLoaded ?
-                                <Card sx={{ height: '100%' }}>
+
+                    {
+                        isDataLoaded ?
+                            <Grid item xs={12} md={6} lg={6}>
+                                <Card sx={{height: '100%'}}>
                                     <MDBox mt={1} my={3} mx={3}>
                                         <MDTypography variant="h4" fontWeight="medium" color="dark">
                                             Members
                                         </MDTypography>
                                     </MDBox>
                                     <MDBox mt={1} my={3} mx={3}>
-                                        <MDButton variant="gradient" onClick={handleClickOpenAddMemberDialog} color="info">
+                                        <MDButton variant="gradient" onClick={handleClickOpenAddMemberDialog}
+                                                  color="info">
                                             Add New
                                         </MDButton>
                                     </MDBox>
@@ -365,9 +378,9 @@ function ProjectDetails() {
                                             ],
                                             rows: tableDataMember
                                         }}/>
-                                </Card> : null
-                        }
-                    </Grid>
+                                </Card>
+                            </Grid> : null
+                    }
                 </Grid>
             </MDBox>
             {
