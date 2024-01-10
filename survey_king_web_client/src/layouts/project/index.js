@@ -44,7 +44,7 @@ function Projects() {
     const [openStartConfirmationDialog, setOpenStartConfirmationDialog] = useState(false);
     const [openCreateProjectDialog, setOpenCreateProjectDialog] = useState(false);
     const phaseNamesMap = new Map();
-    const projectStatusMap = new Map();
+    const [projectStatusMap, setProjectStatusMap] = useState(new Map())
     const navigate = useNavigate();
 
     const handleClickOpenCreateProjectDialog = () => {
@@ -170,7 +170,7 @@ function Projects() {
             })
             .then((response) => {
                 for (let i = 0; i < response.data.length; i++) {
-                    projectStatusMap.set(response.data[i].sasCode, true);
+                    setProjectStatusMap(projectStatusMap.set(response.data[i].sasCode, true));
                 }
                 loadData();
             })
