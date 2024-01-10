@@ -29,6 +29,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import SimpleActionCard from "./components/SimpleActionCard";
 import MDButton from "../../components/MDButton";
+import Moment from "dayjs";
 
 const url = `http://localhost:8080/api/v1/project`
 
@@ -329,14 +330,15 @@ function Projects() {
 
         const onCreate = async () => {
             console.log('create clicked');
+            Moment.locale('en');
             const projectName = projectNameRef.current.value;
             const projectTypeSelected = projectType;
             const clientName = clientNameRef.current.value;
             const status = statusRef.current.value;
             const sasCode = sasCodeRef.current.value;
             const jobNumber = jobNumberRef.current.value;
-            const startDate = startDate_;
-            const endDate = endDate_;
+            let startDate = Moment(startDate_).format('d/MM/YYYY');
+            let endDate = Moment(endDate_).format('d/MM/YYYY');
             const phases = [];
             for (let [key, value] of phaseNamesMap) {
                 phases.push({
