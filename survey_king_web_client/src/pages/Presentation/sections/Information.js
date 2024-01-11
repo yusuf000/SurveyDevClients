@@ -27,8 +27,8 @@ import RotatingCardBack from "examples/Cards/RotatingCard/RotatingCardBack";
 import DefaultInfoCard from "examples/Cards/InfoCards/DefaultInfoCard";
 
 // Images
-import bgFront from "assets/images/rotating-card-bg-front.jpeg";
-import bgBack from "assets/images/rotating-card-bg-back.jpeg";
+import bgFront from "assets/images/bg6.jpg";
+import bgBack from "assets/images/bg4.jpg";
 
 function Information() {
     return (
@@ -92,7 +92,7 @@ Tailor the survey experience to individual participant journeys."
                             </Grid>
                             <Grid item xs={12} md={6}>
                                 <DefaultInfoCard
-                                    icon="devices"
+                                    icon="account_tree"
                                     title="Multi-Level Choice Options"
                                     description="Add multiple layers of choices for comprehensive responses.
 Capture nuanced participant feedback with nested options."
