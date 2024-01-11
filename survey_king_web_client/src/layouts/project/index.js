@@ -116,6 +116,7 @@ function CreateProject({phaseNamesMap,openCreateProjectDialog, handleCloseCreate
             })
             .then(() => {
                 console.log("project created");
+                setErrorMessage("")
                 handleCloseCreateProjectDialog();
                 loadData();
             })
