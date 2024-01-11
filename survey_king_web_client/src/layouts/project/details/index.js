@@ -30,6 +30,33 @@ import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 
 const url = `http://203.161.57.194:8080/`
 
+function AddMember({openAddMemberDialog, handleCloseAddMemberDialog, newMemberIdRef,onAdd}) {
+    return (
+        <Dialog open={openAddMemberDialog} onClose={handleCloseAddMemberDialog}>
+            <DialogTitle>Add Member</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    To add a member to this project please type the email address of the member here.
+                </DialogContentText>
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Email Address"
+                    type="email"
+                    fullWidth
+                    variant="standard"
+                    inputRef={newMemberIdRef}
+                />
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleCloseAddMemberDialog}>Cancel</Button>
+                <Button onClick={onAdd}>Add</Button>
+            </DialogActions>
+        </Dialog>
+    );
+}
+
 function ProjectDetails() {
     const location = useLocation();
     const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
@@ -305,39 +332,13 @@ function ProjectDetails() {
         );
     }
 
-    function AddMember() {
-        return (
-            <Dialog open={openAddMemberDialog} onClose={handleCloseAddMemberDialog}>
-                <DialogTitle>Add Member</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        To add a member to this project please type the email address of the member here.
-                    </DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="name"
-                        label="Email Address"
-                        type="email"
-                        fullWidth
-                        variant="standard"
-                        inputRef={newMemberIdRef}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseAddMemberDialog}>Cancel</Button>
-                    <Button onClick={onAdd}>Add</Button>
-                </DialogActions>
-            </Dialog>
-        );
-    }
 
     return (
         <DashboardLayout>
             <DashboardNavbar/>
             <ConfirmationDialog/>
             <ConfirmationStartDialog/>
-            <AddMember/>
+            <AddMember onAdd={onAdd} handleCloseAddMemberDialog={handleCloseAddMemberDialog} newMemberIdRef={newMemberIdRef} openAddMemberDialog={openAddMemberDialog}/>
             <MDBox py={3}>
                 <Grid container
                       direction="row"
