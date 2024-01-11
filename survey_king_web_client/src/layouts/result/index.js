@@ -16,7 +16,7 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 
-const url = `http://localhost:8080/`
+const url = `http://203.161.57.194:8080/`
 
 
 function a11yProps(index) {
