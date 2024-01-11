@@ -193,6 +193,8 @@ function Projects() {
             .then((response) => {
                 if (response.data.length !== 0) {
                     setProjectData(prepareTableData(response.data));
+                }else{
+                    setProjectData(null)
                 }
             })
             .catch((e) => {
