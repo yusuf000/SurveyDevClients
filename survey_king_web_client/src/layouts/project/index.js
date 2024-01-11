@@ -211,7 +211,6 @@ function Projects() {
         const projectNameRef = useRef(null);
         const phaseNameRef = useRef(null);
         const clientNameRef = useRef(null);
-        const statusRef = useRef(null);
         const sasCodeRef = useRef(null);
         const jobNumberRef = useRef(null);
         const [projectType, setProjectType] = useState(0);
@@ -272,7 +271,6 @@ function Projects() {
                                      clientName,
                                      startDate,
                                      endDate,
-                                     status,
                                      sasCode,
                                      jobNumber
                                  }, phasesInfo) => {
@@ -285,7 +283,6 @@ function Projects() {
                     clientName: clientName,
                     startDate: startDate,
                     endDate: endDate,
-                    status: status,
                     sasCode: sasCode,
                     jobNumber: jobNumber,
                     phases: phasesInfo
@@ -309,14 +306,13 @@ function Projects() {
         const isValidInput = ({
                                   projectName,
                                   clientName,
-                                  status,
                                   sasCode,
                                   jobNumber,
                                   startDate,
                                   endDate,
                                   projectTypeSelected
                               }) => {
-            if (projectName === "" || clientName === "" || status === "" || sasCode === "" || jobNumber === "" || startDate === "" || endDate === "") {
+            if (projectName === "" || clientName === "" || sasCode === "" || jobNumber === "" || startDate === "" || endDate === "") {
                 setErrorMessage("Please give necessary information to create a project")
                 return false;
             } else if (startDate > endDate) {
@@ -336,7 +332,6 @@ function Projects() {
             const projectName = projectNameRef.current.value;
             const projectTypeSelected = projectType;
             const clientName = clientNameRef.current.value;
-            const status = statusRef.current.value;
             const sasCode = sasCodeRef.current.value;
             const jobNumber = jobNumberRef.current.value;
             let startDate = Moment(startDate_).format('d/MM/YYYY');
@@ -352,7 +347,6 @@ function Projects() {
             if (isValidInput({
                 projectName,
                 clientName,
-                status,
                 sasCode,
                 jobNumber,
                 startDate,
@@ -365,7 +359,6 @@ function Projects() {
                     clientName,
                     startDate,
                     endDate,
-                    status,
                     sasCode,
                     jobNumber
                 }, phases);
@@ -417,9 +410,6 @@ function Projects() {
                     }
                     <MDBox mb={2}>
                         <MDInput type="email" label="Client Name" inputRef={clientNameRef} fullWidth/>
-                    </MDBox>
-                    <MDBox mb={2}>
-                        <MDInput type="email" label="Status" inputRef={statusRef} fullWidth/>
                     </MDBox>
                     <MDBox mb={2}>
                         <MDInput type="email" label="Sas-Code" inputRef={sasCodeRef} fullWidth/>
