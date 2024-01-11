@@ -126,7 +126,23 @@ function ProjectDetails() {
     }
 
     const onStart = () => {
-
+        const token = localStorage.getItem('token');
+        axios
+            .post(url + "api/v1/project/start", {}, {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                params: {
+                    'sasCode': project.sasCode
+                }
+            })
+            .then(() => {
+                handleClickCloseStartConfirmationDialog();
+                navigate('/projects');
+            })
+            .catch((e) => {
+                console.log(e);
+            })
     }
 
     const prepareTableDataMember = (members) => {

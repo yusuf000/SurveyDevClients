@@ -42,6 +42,7 @@ function Projects() {
     const [currentItem, setCurrentItem] = useState(null);
     const [openDeleteConfirmationDialog, setOpenDeleteConfirmationDialog] = useState(false);
     const [openStartConfirmationDialog, setOpenStartConfirmationDialog] = useState(false);
+    const [openStopConfirmationDialog, setOpenStopConfirmationDialog] = useState(false);
     const [openCreateProjectDialog, setOpenCreateProjectDialog] = useState(false);
     const phaseNamesMap = new Map();
     const [projectStatusMap, setProjectStatusMap] = useState(new Map())
@@ -87,6 +88,26 @@ function Projects() {
         navigate('/survey');
     }
 
+    const onStop = () => {
+        const token = localStorage.getItem('token');
+        axios
+            .post(url + "/end", {}, {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                params: {
+                    'sasCode': currentItem.sasCode
+                }
+            })
+            .then(() => {
+                handleClickCloseStartConfirmationDialog();
+                loadData();
+            })
+            .catch((e) => {
+                console.log(e);
+            })
+    }
+
     const prepareTableData = (data) => {
         let tableData = [];
         for (let i in data) {
@@ -110,7 +131,7 @@ function Projects() {
                 </MDBox>,
                 "expand": <MDBox>
                     {
-                        item.owner === localStorage.getItem("user") ?
+                        item.owner === localStorage.getItem("user") && item.status === "CREATED"?
                             <MDTypography component="a" href="" role="button" onClick={() => onExpand({item})}
                                           color="info">
                                 <Icon>settings</Icon>
@@ -132,6 +153,15 @@ function Projects() {
                                                                        onClick={(e) => handleClickOpenStartConfirmationDialog(e, item)}
                                                                        color="info">
                             <Icon>play_arrow</Icon>
+                        </MDTypography> : null
+                    }
+                </MDBox>,
+                "end": <MDBox>
+                    {
+                        item.owner === localStorage.getItem("user") && item.status === "RUNNING" ? <MDTypography component="a" href="" role="button"
+                                                                                                    onClick={(e) => handleClickOpenStopConfirmationDialog(e, item)}
+                                                                                                    color="info">
+                            <Icon>stop</Icon>
                         </MDTypography> : null
                     }
                 </MDBox>
@@ -438,6 +468,15 @@ function Projects() {
         setOpenStartConfirmationDialog(false)
     }
 
+    const handleClickOpenStopConfirmationDialog = (e, item) => {
+        e.preventDefault();
+        setCurrentItem(item);
+        setOpenStopConfirmationDialog(true)
+    }
+
+    const handleClickCloseStopConfirmationDialog = () => {
+        setOpenStopConfirmationDialog(false);
+    }
 
     function DeleteConfirmationDialog() {
         return (
@@ -475,12 +514,31 @@ function Projects() {
         );
     }
 
+    function StopConfirmationDialog() {
+        return (
+            <Dialog open={openStopConfirmationDialog} onClose={handleClickCloseStopConfirmationDialog}>
+                <DialogTitle color="info"><Icon fontSize="medium">info</Icon> &nbsp; Confirm</DialogTitle>
+                <DialogContent>
+                    <MDTypography fontSize="small" color="info"> Do you want to end the survey now? Ending the survey will stop taking any further responses from members. You can still view the result.
+                    </MDTypography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClickCloseStopConfirmationDialog}>Cancel</Button>
+                    <Button onClick={() => {
+                        onStop()
+                    }}>Yes</Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
+
     return (
         <DashboardLayout>
             <DashboardNavbar/>
             <CreateProject/>
             <DeleteConfirmationDialog/>
             <StartConfirmationDialog/>
+            <StopConfirmationDialog/>
             <MDBox py={3}>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={6} lg={3}>
@@ -519,7 +577,8 @@ function Projects() {
                                                 {Header: "delete__", accessor: "delete"},
                                                 {Header: "expand__", accessor: "expand"},
                                                 {Header: "assessment__", accessor: "assessment"},
-                                                {Header: "start__", accessor: "start"}
+                                                {Header: "start__", accessor: "start"},
+                                                {Header: "end__", accessor: "end"}
                                             ],
                                             rows: projectData
                                         }}/>
