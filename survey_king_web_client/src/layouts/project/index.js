@@ -100,7 +100,7 @@ function Projects() {
                 }
             })
             .then(() => {
-                handleClickCloseStartConfirmationDialog();
+                handleClickCloseStopConfirmationDialog();
                 loadData();
             })
             .catch((e) => {
