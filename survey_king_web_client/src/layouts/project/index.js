@@ -34,6 +34,232 @@ import Moment from "dayjs";
 const url = `http://203.161.57.194:8080/api/v1/project`
 
 
+function CreateProject({phaseNamesMap,openCreateProjectDialog, handleCloseCreateProjectDialog, loadData}) {
+    const [errorMessage, setErrorMessage] = useState("");
+    const projectNameRef = useRef(null);
+    const phaseNameRef = useRef(null);
+    const clientNameRef = useRef(null);
+    const sasCodeRef = useRef(null);
+    const jobNumberRef = useRef(null);
+    const [projectType, setProjectType] = useState(0);
+    const [startDate_, setStartDate_] = useState("");
+    const [endDate_, setEndDate_] = useState("");
+    const [inputMap, setInputMap] = useState({
+        formValues: []
+    });
+
+    const addFormFields = (e) => {
+        setInputMap(({
+            formValues: [...inputMap.formValues, {phaseName: phaseNameRef.current.value}]
+        }))
+        phaseNamesMap.set(inputMap.formValues.length, phaseNameRef.current.value);
+        phaseNameRef.current.value = "";
+    }
+
+    function PhaseNames() {
+
+        function removeFormFields(i) {
+            let formValues = inputMap.formValues;
+            phaseNamesMap.delete(i);
+            formValues.splice(i, 1);
+            setInputMap({formValues});
+        }
+
+
+        return (
+            <MDBox>
+                {inputMap.formValues.map((element, index) => (
+                    <MDBox mb={2} key={index}>
+                        <Grid container spacing={3}>
+                            <Grid item>
+                                <MDInput type="email" label="Phase Name" value={element.phaseName}
+                                         disabled={true}></MDInput>
+                            </Grid>
+                            <Grid item>
+                                <MDButton color="error" onClick={() => removeFormFields(index)}>
+                                    <Icon>delete</Icon>
+                                </MDButton>
+                            </Grid>
+                        </Grid>
+                    </MDBox>
+                ))
+                }
+            </MDBox>
+        );
+    }
+
+    const doCreateProject = ({
+                                 projectName,
+                                 projectTypeSelected,
+                                 clientName,
+                                 startDate,
+                                 endDate,
+                                 sasCode,
+                                 jobNumber
+                             }, phasesInfo) => {
+        const token = localStorage.getItem('token');
+
+        axios
+            .post(url + "/add", {
+                name: projectName,
+                projectType: projectTypeSelected,
+                clientName: clientName,
+                startDate: startDate,
+                endDate: endDate,
+                sasCode: sasCode,
+                jobNumber: jobNumber,
+                phases: phasesInfo
+            }, {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+            .then(() => {
+                console.log("project created");
+                handleCloseCreateProjectDialog();
+                loadData();
+            })
+            .catch((error) => {
+                console.log(error)
+                setErrorMessage("Can not create project")
+            })
+
+    }
+
+    const isValidInput = ({
+                              projectName,
+                              clientName,
+                              sasCode,
+                              jobNumber,
+                              startDate,
+                              endDate,
+                              projectTypeSelected
+                          }) => {
+        if (projectName === "" || clientName === "" || sasCode === "" || jobNumber === "" || startDate === "" || endDate === "") {
+            setErrorMessage("Please give necessary information to create a project")
+            return false;
+        } else if (startDate > endDate) {
+            setErrorMessage("Start date can not be greater than end date")
+            return false;
+        } else if (projectTypeSelected === 1 && phaseNamesMap.size === 0) {
+            setErrorMessage("phase names can not be empty")
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    const onCreate = async () => {
+        console.log('create clicked');
+        Moment.locale('en');
+        const projectName = projectNameRef.current.value;
+        const projectTypeSelected = projectType;
+        const clientName = clientNameRef.current.value;
+        const sasCode = sasCodeRef.current.value;
+        const jobNumber = jobNumberRef.current.value;
+        let startDate = Moment(startDate_).format('DD/MM/YYYY');
+        let endDate = Moment(endDate_).format('DD/MM/YYYY');
+        const phases = [];
+        for (let [key, value] of phaseNamesMap) {
+            phases.push({
+                "serial": key,
+                "name": value
+            })
+        }
+
+        if (isValidInput({
+            projectName,
+            clientName,
+            sasCode,
+            jobNumber,
+            startDate,
+            endDate,
+            projectTypeSelected
+        })) {
+            doCreateProject({
+                projectName,
+                projectTypeSelected,
+                clientName,
+                startDate,
+                endDate,
+                sasCode,
+                jobNumber
+            }, phases);
+        }
+    }
+
+    const handleProjectTypeChange = (event) => {
+        setProjectType(event.target.value);
+    }
+
+    return (
+        <Dialog open={openCreateProjectDialog} onClose={handleCloseCreateProjectDialog}>
+            <DialogTitle>Add Project</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    To add a project fill up the necessary details below.
+                </DialogContentText>
+                <MDBox mb={2}></MDBox>
+                <MDBox mb={2}>
+                    <MDInput type="email" label="Project Name" inputRef={projectNameRef} fullWidth/>
+                </MDBox>
+                <MDBox mb={2}>
+                    <FormControl fullWidth>
+                        <InputLabel id="project-type-label">Project Type</InputLabel>
+                        <Select
+                            labelId="project-type-label"
+                            id="project-type-select"
+                            value={projectType}
+                            label="Project Type"
+                            onChange={handleProjectTypeChange}
+                            sx={{minHeight: 45}}
+                        >
+                            <MenuItem value={0}>Single Phase</MenuItem>
+                            <MenuItem value={1}>Multi Phase</MenuItem>
+                        </Select>
+                    </FormControl>
+                </MDBox>
+                {
+                    projectType === 1 ? <MDBox>
+                        <PhaseNames/>
+                        <MDBox mb={2}>
+                            <MDInput type="email" label="Phase Name" inputRef={phaseNameRef} fullWidth/>
+                        </MDBox>
+                        <MDBox mb={2}>
+                            <MDButton color="info" onClick={addFormFields} fullWidth>
+                                Add phase
+                            </MDButton>
+                        </MDBox> </MDBox> : null
+                }
+                <MDBox mb={2}>
+                    <MDInput type="email" label="Client Name" inputRef={clientNameRef} fullWidth/>
+                </MDBox>
+                <MDBox mb={2}>
+                    <MDInput type="email" label="Sas-Code" inputRef={sasCodeRef} fullWidth/>
+                </MDBox>
+                <MDBox mb={2}>
+                    <MDInput type="email" label="Job Number" inputRef={jobNumberRef} fullWidth/>
+                </MDBox>
+                <MDBox mb={2}>
+                    <DatePicker label='Start Date' onChange={setStartDate_}/>
+                </MDBox>
+                <MDBox mb={2}>
+                    <DatePicker label='End Date' onChange={setEndDate_}/>
+                </MDBox>
+                {
+                    errorMessage ? <MDTypography fontSize="small" color="error"> <Icon
+                        fontSize="small">error</Icon>&nbsp; {errorMessage} </MDTypography> : null
+                }
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleCloseCreateProjectDialog}>Cancel</Button>
+                <Button onClick={onCreate}>Create</Button>
+            </DialogActions>
+        </Dialog>
+    );
+}
+
+
 function Projects() {
 
 
@@ -50,6 +276,10 @@ function Projects() {
 
     const handleClickOpenCreateProjectDialog = () => {
         setOpenCreateProjectDialog(true);
+    };
+
+    const handleCloseCreateProjectDialog = () => {
+        setOpenCreateProjectDialog(false);
     };
 
     const onDelete = () => {
@@ -218,236 +448,6 @@ function Projects() {
         loadProjectStatuses();
     }, []);
 
-    function CreateProject() {
-        const [errorMessage, setErrorMessage] = useState("");
-        const projectNameRef = useRef(null);
-        const phaseNameRef = useRef(null);
-        const clientNameRef = useRef(null);
-        const sasCodeRef = useRef(null);
-        const jobNumberRef = useRef(null);
-        const [projectType, setProjectType] = useState(0);
-        const [startDate_, setStartDate_] = useState("");
-        const [endDate_, setEndDate_] = useState("");
-        const [inputMap, setInputMap] = useState({
-            formValues: []
-        });
-
-        const addFormFields = (e) => {
-            setInputMap(({
-                formValues: [...inputMap.formValues, {phaseName: phaseNameRef.current.value}]
-            }))
-            phaseNamesMap.set(inputMap.formValues.length, phaseNameRef.current.value);
-            phaseNameRef.current.value = "";
-        }
-
-        function PhaseNames() {
-
-            function removeFormFields(i) {
-                let formValues = inputMap.formValues;
-                phaseNamesMap.delete(i);
-                formValues.splice(i, 1);
-                setInputMap({formValues});
-            }
-
-
-            return (
-                <MDBox>
-                    {inputMap.formValues.map((element, index) => (
-                        <MDBox mb={2} key={index}>
-                            <Grid container spacing={3}>
-                                <Grid item>
-                                    <MDInput type="email" label="Phase Name" value={element.phaseName}
-                                             disabled={true}></MDInput>
-                                </Grid>
-                                <Grid item>
-                                    <MDButton color="error" onClick={() => removeFormFields(index)}>
-                                        <Icon>delete</Icon>
-                                    </MDButton>
-                                </Grid>
-                            </Grid>
-                        </MDBox>
-                    ))
-                    }
-                </MDBox>
-            );
-        }
-
-        const handleCloseCreateProjectDialog = () => {
-            setOpenCreateProjectDialog(false);
-            setErrorMessage("");
-        };
-
-        const doCreateProject = ({
-                                     projectName,
-                                     projectTypeSelected,
-                                     clientName,
-                                     startDate,
-                                     endDate,
-                                     sasCode,
-                                     jobNumber
-                                 }, phasesInfo) => {
-            const token = localStorage.getItem('token');
-
-            axios
-                .post(url + "/add", {
-                    name: projectName,
-                    projectType: projectTypeSelected,
-                    clientName: clientName,
-                    startDate: startDate,
-                    endDate: endDate,
-                    sasCode: sasCode,
-                    jobNumber: jobNumber,
-                    phases: phasesInfo
-                }, {
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    }
-                })
-                .then(() => {
-                    console.log("project created");
-                    handleCloseCreateProjectDialog();
-                    loadData();
-                })
-                .catch((error) => {
-                    console.log(error)
-                    setErrorMessage("Can not create project")
-                })
-
-        }
-
-        const isValidInput = ({
-                                  projectName,
-                                  clientName,
-                                  sasCode,
-                                  jobNumber,
-                                  startDate,
-                                  endDate,
-                                  projectTypeSelected
-                              }) => {
-            if (projectName === "" || clientName === "" || sasCode === "" || jobNumber === "" || startDate === "" || endDate === "") {
-                setErrorMessage("Please give necessary information to create a project")
-                return false;
-            } else if (startDate > endDate) {
-                setErrorMessage("Start date can not be greater than end date")
-                return false;
-            } else if (projectTypeSelected === 1 && phaseNamesMap.size === 0) {
-                setErrorMessage("phase names can not be empty")
-                return false;
-            } else {
-                return true;
-            }
-        }
-
-        const onCreate = async () => {
-            console.log('create clicked');
-            Moment.locale('en');
-            const projectName = projectNameRef.current.value;
-            const projectTypeSelected = projectType;
-            const clientName = clientNameRef.current.value;
-            const sasCode = sasCodeRef.current.value;
-            const jobNumber = jobNumberRef.current.value;
-            let startDate = Moment(startDate_).format('DD/MM/YYYY');
-            let endDate = Moment(endDate_).format('DD/MM/YYYY');
-            const phases = [];
-            for (let [key, value] of phaseNamesMap) {
-                phases.push({
-                    "serial": key,
-                    "name": value
-                })
-            }
-
-            if (isValidInput({
-                projectName,
-                clientName,
-                sasCode,
-                jobNumber,
-                startDate,
-                endDate,
-                projectTypeSelected
-            })) {
-                doCreateProject({
-                    projectName,
-                    projectTypeSelected,
-                    clientName,
-                    startDate,
-                    endDate,
-                    sasCode,
-                    jobNumber
-                }, phases);
-            }
-        }
-
-        const handleProjectTypeChange = (event) => {
-            setProjectType(event.target.value);
-        }
-
-        return (
-            <Dialog open={openCreateProjectDialog} onClose={handleCloseCreateProjectDialog}>
-                <DialogTitle>Add Project</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        To add a project fill up the necessary details below.
-                    </DialogContentText>
-                    <MDBox mb={2}></MDBox>
-                    <MDBox mb={2}>
-                        <MDInput type="email" label="Project Name" inputRef={projectNameRef} fullWidth/>
-                    </MDBox>
-                    <MDBox mb={2}>
-                        <FormControl fullWidth>
-                            <InputLabel id="project-type-label">Project Type</InputLabel>
-                            <Select
-                                labelId="project-type-label"
-                                id="project-type-select"
-                                value={projectType}
-                                label="Project Type"
-                                onChange={handleProjectTypeChange}
-                                sx={{minHeight: 45}}
-                            >
-                                <MenuItem value={0}>Single Phase</MenuItem>
-                                <MenuItem value={1}>Multi Phase</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </MDBox>
-                    {
-                        projectType === 1 ? <MDBox>
-                            <PhaseNames/>
-                            <MDBox mb={2}>
-                                <MDInput type="email" label="Phase Name" inputRef={phaseNameRef} fullWidth/>
-                            </MDBox>
-                            <MDBox mb={2}>
-                                <MDButton color="info" onClick={addFormFields} fullWidth>
-                                    Add phase
-                                </MDButton>
-                            </MDBox> </MDBox> : null
-                    }
-                    <MDBox mb={2}>
-                        <MDInput type="email" label="Client Name" inputRef={clientNameRef} fullWidth/>
-                    </MDBox>
-                    <MDBox mb={2}>
-                        <MDInput type="email" label="Sas-Code" inputRef={sasCodeRef} fullWidth/>
-                    </MDBox>
-                    <MDBox mb={2}>
-                        <MDInput type="email" label="Job Number" inputRef={jobNumberRef} fullWidth/>
-                    </MDBox>
-                    <MDBox mb={2}>
-                        <DatePicker label='Start Date' onChange={setStartDate_}/>
-                    </MDBox>
-                    <MDBox mb={2}>
-                        <DatePicker label='End Date' onChange={setEndDate_}/>
-                    </MDBox>
-                    {
-                        errorMessage ? <MDTypography fontSize="small" color="error"> <Icon
-                            fontSize="small">error</Icon>&nbsp; {errorMessage} </MDTypography> : null
-                    }
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseCreateProjectDialog}>Cancel</Button>
-                    <Button onClick={onCreate}>Create</Button>
-                </DialogActions>
-            </Dialog>
-        );
-    }
-
     const handleClickOpenDeleteConfirmationDialog = (e, sasCode) => {
         e.preventDefault();
         setCurrentSasCode(sasCode)
@@ -535,7 +535,7 @@ function Projects() {
     return (
         <DashboardLayout>
             <DashboardNavbar/>
-            <CreateProject/>
+            <CreateProject phaseNamesMap={phaseNamesMap} openCreateProjectDialog={openCreateProjectDialog} loadData={loadData} handleCloseCreateProjectDialog={handleCloseCreateProjectDialog}/>
             <DeleteConfirmationDialog/>
             <StartConfirmationDialog/>
             <StopConfirmationDialog/>
