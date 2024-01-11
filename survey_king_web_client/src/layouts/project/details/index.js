@@ -342,7 +342,6 @@ function ProjectDetails() {
                        newMemberIdRef={newMemberIdRef} openAddMemberDialog={openAddMemberDialog}/>
             <MDBox py={3}>
                 <Grid container
-                      direction="row"
                       spacing={3}
                 >
                     <Grid item md={6} lg={12}>
