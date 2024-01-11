@@ -119,7 +119,7 @@ function Projects() {
                 </MDBox>,
                 "assessment": <MDBox>
                     {
-                        item.owner === localStorage.getItem("user") ?
+                        item.owner === localStorage.getItem("user") && item.status !== "CREATED"?
                             <MDTypography component="a" href="" role="button" onClick={() => onShowResult({item})}
                                           color="info">
                                 <Icon>assessment</Icon>
@@ -128,7 +128,7 @@ function Projects() {
                 </MDBox>,
                 "start": <MDBox>
                     {
-                        !projectStatusMap.get(sasCode) ? <MDTypography component="a" href="" role="button"
+                        !projectStatusMap.get(sasCode) && item.status === "RUNNING" ? <MDTypography component="a" href="" role="button"
                                                                        onClick={(e) => handleClickOpenStartConfirmationDialog(e, item)}
                                                                        color="info">
                             <Icon>play_arrow</Icon>
