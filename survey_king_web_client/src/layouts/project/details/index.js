@@ -30,7 +30,7 @@ import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 
 const url = `http://203.161.57.194:8080/`
 
-function AddMember({openAddMemberDialog, handleCloseAddMemberDialog, newMemberIdRef,onAdd}) {
+function AddMember({openAddMemberDialog, handleCloseAddMemberDialog, newMemberIdRef, onAdd}) {
     return (
         <Dialog open={openAddMemberDialog} onClose={handleCloseAddMemberDialog}>
             <DialogTitle>Add Member</DialogTitle>
@@ -338,19 +338,31 @@ function ProjectDetails() {
             <DashboardNavbar/>
             <ConfirmationDialog/>
             <ConfirmationStartDialog/>
-            <AddMember onAdd={onAdd} handleCloseAddMemberDialog={handleCloseAddMemberDialog} newMemberIdRef={newMemberIdRef} openAddMemberDialog={openAddMemberDialog}/>
+            <AddMember onAdd={onAdd} handleCloseAddMemberDialog={handleCloseAddMemberDialog}
+                       newMemberIdRef={newMemberIdRef} openAddMemberDialog={openAddMemberDialog}/>
             <MDBox py={3}>
                 <Grid container
                       direction="row"
                       spacing={3}
                 >
-                    <Grid item md={6} lg={6}>
+                    <Grid item md={6} lg={12}>
                         <Card sx={{height: '100%', width: '100%'}}>
-                            <MDBox pt={3} px={2} sx={{height: '10%'}}>
-                                <MDTypography variant="h4" fontWeight="medium">
-                                    Project Information
-                                </MDTypography>
+                            <MDBox
+                                display="flex"
+                                justifyContent="space-between"
+                                alignItems={{xs: "flex-start", sm: "center"}}
+                                flexDirection={{xs: "column", sm: "row"}}
+                            >
+                                <MDBox m={2} sx={{height: '10%'}}>
+                                    <MDTypography variant="h4" fontWeight="medium">
+                                        Project Information
+                                    </MDTypography>
+                                </MDBox>
+                                <MDBox m={3}>
+                                    <MDButton color={"success"} variant={"gradient"} onClick={handleClickOpenStartConfirmationDialog}>Start</MDButton>
+                                </MDBox>
                             </MDBox>
+
                             <MDBox pt={1} pb={2} px={2} sx={{height: '90%'}}>
                                 <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}
                                        sx={{height: '100%'}}>
@@ -363,7 +375,6 @@ function ProjectDetails() {
                                         jobNumber={project.jobNumber}
                                         startDate={project.startDate}
                                         endDate={project.endDate}
-                                        onStart={handleClickOpenStartConfirmationDialog}
                                     />
                                 </MDBox>
                             </MDBox>
@@ -372,18 +383,26 @@ function ProjectDetails() {
 
                     {
                         isDataLoaded ?
-                            <Grid item md={6} lg={6}>
+                            <Grid item md={6} lg={12}>
                                 <Card sx={{height: '100%', width: '100%'}}>
-                                    <MDBox mt={1} my={3} mx={3}>
-                                        <MDTypography variant="h4" fontWeight="medium" color="dark">
-                                            Members
-                                        </MDTypography>
-                                    </MDBox>
-                                    <MDBox mt={1} my={3} mx={3}>
-                                        <MDButton variant="gradient" onClick={handleClickOpenAddMemberDialog}
-                                                  color="info">
-                                            Add New
-                                        </MDButton>
+                                    <MDBox
+                                        display="flex"
+                                        justifyContent="space-between"
+                                        alignItems={{xs: "flex-start", sm: "center"}}
+                                        flexDirection={{xs: "column", sm: "row"}}
+                                        mb={2}
+                                    >
+                                        <MDBox mt={1} my={3} mx={3}>
+                                            <MDTypography variant="h4" fontWeight="medium" color="dark">
+                                                Members
+                                            </MDTypography>
+                                        </MDBox>
+                                        <MDBox mt={1} my={3} mx={3}>
+                                            <MDButton variant="gradient" onClick={handleClickOpenAddMemberDialog}
+                                                      color="info">
+                                                Add New
+                                            </MDButton>
+                                        </MDBox>
                                     </MDBox>
                                     <DataTable
                                         table={{
