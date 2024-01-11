@@ -46,7 +46,7 @@ function Dashboard() {
                 }
             })
             .catch((e) => {
-                if (e.response.status === 403) {
+                if (e.response && e.response.status === 403) {
                     localStorage.clear();
                     navigate('/authentication/sign-in')
                 }
@@ -70,7 +70,7 @@ function Dashboard() {
                 }
             })
             .catch((e) => {
-                if (e.response.status === 403) {
+                if (e.response && e.response.status === 403) {
                     localStorage.clear();
                     navigate('/authentication/sign-in')
                 }
