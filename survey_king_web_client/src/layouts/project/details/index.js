@@ -343,17 +343,16 @@ function ProjectDetails() {
                 <Grid container
                       direction="row"
                       justifyContent="flex-start"
-                      alignItems="stretch"
                       spacing={3}
                 >
-                    <Grid item xs={1} md={6} lg={6}>
+                    <Grid item md={6} lg={6}>
                         <Card sx={{height: '100%'}}>
-                            <MDBox pt={3} px={2} >
+                            <MDBox pt={3} px={2} sx={{height: '10%'}}>
                                 <MDTypography variant="h4" fontWeight="medium">
                                     Project Information
                                 </MDTypography>
                             </MDBox>
-                            <MDBox pt={1} pb={2} px={2} >
+                            <MDBox pt={1} pb={2} px={2} sx={{height: '90%'}}>
                                 <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}
                                        sx={{height: '100%'}}>
                                     <Information
@@ -374,7 +373,7 @@ function ProjectDetails() {
 
                     {
                         isDataLoaded ?
-                            <Grid item xs={12} md={6} lg={6}>
+                            <Grid item md={6} lg={6}>
                                 <Card sx={{height: '100%'}}>
                                     <MDBox mt={1} my={3} mx={3}>
                                         <MDTypography variant="h4" fontWeight="medium" color="dark">
