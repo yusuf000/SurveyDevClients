@@ -346,8 +346,8 @@ function Projects() {
             const clientName = clientNameRef.current.value;
             const sasCode = sasCodeRef.current.value;
             const jobNumber = jobNumberRef.current.value;
-            let startDate = Moment(startDate_).format('d/MM/YYYY');
-            let endDate = Moment(endDate_).format('d/MM/YYYY');
+            let startDate = Moment(startDate_).format('DD/MM/YYYY');
+            let endDate = Moment(endDate_).format('DD/MM/YYYY');
             const phases = [];
             for (let [key, value] of phaseNamesMap) {
                 phases.push({
