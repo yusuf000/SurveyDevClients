@@ -14,7 +14,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import VerticalBarChart from "../../../examples/Charts/BarCharts/VerticalBarChart";
 
-const url = `http://203.161.57.194:8080/`
+const url = `http://localhost:8080/`
 
 function a11yProps(index) {
     return {
