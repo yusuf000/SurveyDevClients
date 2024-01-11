@@ -92,68 +92,50 @@ function Projects() {
         for (let i in data) {
             let item = data[i];
             let sasCode = item.sasCode;
-            /*if (projectStatusMap.get(sasCode)) {
-                tableData.push({
-                    "name": item.name,
-                    "clientName": item.clientName,
-                    "startDate": item.startDate,
-                    "endDate": item.endDate,
-                    "delete": <MDTypography component="a" href="" role="button"
-                                            onClick={(e) => handleClickOpenDeleteConfirmationDialog(e, sasCode)}
-                                            color="error">
-                        <Icon>delete</Icon>
-                    </MDTypography>,
-                    "expand": <MDTypography component="a" href="" role="button" onClick={() => onExpand({item})}
-                                            color="info">
-                        <Icon>arrow_outward</Icon>
-                    </MDTypography>,
-                    "assessment": <MDTypography component="a" href="" role="button" onClick={() => onShowResult({item})}
-                                                color="info">
-                        <Icon>assessment</Icon>
-                    </MDTypography>
-                });
-            } else {*/
-                tableData.push({
-                    "name": item.name,
-                    "clientName": item.clientName,
-                    "owner": item.owner,
-                    "startDate": item.startDate,
-                    "endDate": item.endDate,
-                    "delete": <MDBox>
-                        {
-                            item.owner === localStorage.getItem("user") ? <MDTypography component="a" href="" role="button"
-                                                                                        onClick={(e) => handleClickOpenDeleteConfirmationDialog(e, sasCode)}
-                                                                                        color="error">
-                                <Icon>delete</Icon>
-                            </MDTypography> : null
-                        }
-                    </MDBox>,
-                    "expand": <MDBox>
-                        {
-                            item.owner === localStorage.getItem("user") ? <MDTypography component="a" href="" role="button" onClick={() => onExpand({item})}
-                                                                                        color="info">
+            tableData.push({
+                "name": item.name,
+                "clientName": item.clientName,
+                "owner": item.owner,
+                "status": item.status,
+                "startDate": item.startDate,
+                "endDate": item.endDate,
+                "delete": <MDBox>
+                    {
+                        item.owner === localStorage.getItem("user") ? <MDTypography component="a" href="" role="button"
+                                                                                    onClick={(e) => handleClickOpenDeleteConfirmationDialog(e, sasCode)}
+                                                                                    color="error">
+                            <Icon>delete</Icon>
+                        </MDTypography> : null
+                    }
+                </MDBox>,
+                "expand": <MDBox>
+                    {
+                        item.owner === localStorage.getItem("user") ?
+                            <MDTypography component="a" href="" role="button" onClick={() => onExpand({item})}
+                                          color="info">
                                 <Icon>settings</Icon>
                             </MDTypography> : null
-                        }
-                    </MDBox>,
-                    "assessment": <MDBox>
-                        {
-                            item.owner === localStorage.getItem("user") ? <MDTypography component="a" href="" role="button" onClick={() => onShowResult({item})}
+                    }
+                </MDBox>,
+                "assessment": <MDBox>
+                    {
+                        item.owner === localStorage.getItem("user") ?
+                            <MDTypography component="a" href="" role="button" onClick={() => onShowResult({item})}
                                           color="info">
                                 <Icon>assessment</Icon>
                             </MDTypography> : null
-                        }
-                    </MDBox>,
-                    "start": <MDBox>
-                        {
-                            !projectStatusMap.get(sasCode) ? <MDTypography component="a" href="" role="button"
-                                                                          onClick={(e) => handleClickOpenStartConfirmationDialog(e, item)}
-                                                                          color="info">
-                                <Icon>play_arrow</Icon>
-                            </MDTypography> : null
-                        }
-                    </MDBox>
-                });
+                    }
+                </MDBox>,
+                "start": <MDBox>
+                    {
+                        !projectStatusMap.get(sasCode) ? <MDTypography component="a" href="" role="button"
+                                                                       onClick={(e) => handleClickOpenStartConfirmationDialog(e, item)}
+                                                                       color="info">
+                            <Icon>play_arrow</Icon>
+                        </MDTypography> : null
+                    }
+                </MDBox>
+            });
             //}
 
         }
@@ -175,7 +157,7 @@ function Projects() {
                 loadData();
             })
             .catch((e) => {
-                if(e.response.status === 403){
+                if (e.response.status === 403) {
                     localStorage.clear();
                     navigate('/authentication/sign-in')
                 }
@@ -193,7 +175,7 @@ function Projects() {
             .then((response) => {
                 if (response.data.length !== 0) {
                     setProjectData(prepareTableData(response.data));
-                }else{
+                } else {
                     setProjectData(null)
                 }
             })
@@ -528,11 +510,12 @@ function Projects() {
                                     <DataTable
                                         table={{
                                             columns: [
-                                                {Header: "project name", accessor: "name", width: "35%"},
+                                                {Header: "project name", accessor: "name", width: "15%"},
                                                 {Header: "client", accessor: "clientName", width: "15%"},
                                                 {Header: "owner", accessor: "owner", width: "15%"},
-                                                {Header: "start date", accessor: "startDate",width: "10%"},
-                                                {Header: "end date", accessor: "endDate",width: "10%"},
+                                                {Header: "status", accessor: "status"},
+                                                {Header: "start date", accessor: "startDate", width: "10%"},
+                                                {Header: "end date", accessor: "endDate", width: "10%"},
                                                 {Header: "delete__", accessor: "delete"},
                                                 {Header: "expand__", accessor: "expand"},
                                                 {Header: "assessment__", accessor: "assessment"},
