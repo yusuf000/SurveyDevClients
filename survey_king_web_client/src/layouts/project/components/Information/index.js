@@ -34,9 +34,7 @@ function Information({ name, projectType, clientName, status, sasCode, jobNumber
   return (
     <MDBox
         sx={{ height: '100%' }}
-      component="li"
       display="flex"
-      justifyContent="space-between"
       alignItems="flex-start"
       bgColor={darkMode ? "transparent" : "grey-100"}
       borderRadius="lg"

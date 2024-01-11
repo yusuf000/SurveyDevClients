@@ -348,12 +348,12 @@ function ProjectDetails() {
                 >
                     <Grid item xs={1} md={6} lg={6}>
                         <Card sx={{height: '100%'}}>
-                            <MDBox pt={3} px={2} sx={{height: '10%'}}>
+                            <MDBox pt={3} px={2} >
                                 <MDTypography variant="h4" fontWeight="medium">
                                     Project Information
                                 </MDTypography>
                             </MDBox>
-                            <MDBox pt={1} pb={2} px={2} sx={{height: '90%'}}>
+                            <MDBox pt={1} pb={2} px={2} >
                                 <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}
                                        sx={{height: '100%'}}>
                                     <Information
