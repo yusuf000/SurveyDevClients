@@ -342,11 +342,10 @@ function ProjectDetails() {
             <MDBox py={3}>
                 <Grid container
                       direction="row"
-                      justifyContent="flex-start"
                       spacing={3}
                 >
                     <Grid item md={6} lg={6}>
-                        <Card sx={{height: '100%'}}>
+                        <Card sx={{height: '100%', width: '100%'}}>
                             <MDBox pt={3} px={2} sx={{height: '10%'}}>
                                 <MDTypography variant="h4" fontWeight="medium">
                                     Project Information
@@ -374,7 +373,7 @@ function ProjectDetails() {
                     {
                         isDataLoaded ?
                             <Grid item md={6} lg={6}>
-                                <Card sx={{height: '100%'}}>
+                                <Card sx={{height: '100%', width: '100%'}}>
                                     <MDBox mt={1} my={3} mx={3}>
                                         <MDTypography variant="h4" fontWeight="medium" color="dark">
                                             Members
@@ -402,9 +401,9 @@ function ProjectDetails() {
             {
                 isPhaseDataLoaded ? <MDBox py={3}>
                     <Grid container spacing={3}>
-                        <Grid item xs={12} md={6} lg={12}>
+                        <Grid item md={6} lg={12}>
                             {
-                                <Card>
+                                <Card sx={{height: '100%', width: '100%'}}>
                                     <MDTypography variant="h4" fontWeight="medium" color="dark" mt={1} my={3} mx={3}>
                                         Phases
                                     </MDTypography>
