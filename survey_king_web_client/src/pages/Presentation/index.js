@@ -69,7 +69,7 @@ function Presentation() {
             <MKTypography
               variant="h1"
               color="white"
-              mt={-20}
+              mt={-25}
               mb={1}
               sx={({ breakpoints, typography: { size } }) => ({
                 [breakpoints.down("md")]: {
@@ -84,7 +84,7 @@ function Presentation() {
               color="black"
               textAlign="center"
               px={{ xs: 6, lg: 12 }}
-              mt={-12}
+              mt={-17}
             >
               Free online survey software to collect and visualize data.
             </MKTypography>
