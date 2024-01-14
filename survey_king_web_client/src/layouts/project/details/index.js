@@ -340,115 +340,107 @@ function ProjectDetails() {
             <ConfirmationStartDialog/>
             <AddMember onAdd={onAdd} handleCloseAddMemberDialog={handleCloseAddMemberDialog}
                        newMemberIdRef={newMemberIdRef} openAddMemberDialog={openAddMemberDialog}/>
+
             <MDBox>
-                <Grid container spacing={3}>
-                    <Grid item xs={12} md={6} lg={12}>
-                        <MDBox>
-                            <Card sx={{height: '100%', width: '100%'}}>
-                                <MDBox
-                                    display="flex"
-                                    justifyContent="space-between"
-                                    alignItems={{xs: "flex-start", sm: "center"}}
-                                    flexDirection={{xs: "column", sm: "row"}}
-                                >
-                                    <MDBox m={2} sx={{height: '10%'}}>
-                                        <MDTypography variant="h4" fontWeight="medium">
-                                            Project Information
-                                        </MDTypography>
-                                    </MDBox>
-                                    <MDBox m={3}>
-                                        <MDButton color={"success"} variant={"gradient"}
-                                                  onClick={handleClickOpenStartConfirmationDialog}>Start</MDButton>
-                                    </MDBox>
-                                </MDBox>
-
-                                <MDBox pt={1} pb={2} px={2} sx={{height: '90%'}}>
-                                    <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}
-                                           sx={{height: '100%'}}>
-                                        <Information
-                                            name={project.name}
-                                            projectType={project.projectType}
-                                            clientName={project.clientName}
-                                            status={project.status}
-                                            sasCode={project.sasCode}
-                                            jobNumber={project.jobNumber}
-                                            startDate={project.startDate}
-                                            endDate={project.endDate}
-                                        />
-                                    </MDBox>
-                                </MDBox>
-                            </Card>
+                <Card sx={{height: '100%', width: '100%'}}>
+                    <MDBox
+                        display="flex"
+                        justifyContent="space-between"
+                        alignItems={{xs: "flex-start", sm: "center"}}
+                        flexDirection={{xs: "column", sm: "row"}}
+                    >
+                        <MDBox m={2} sx={{height: '10%'}}>
+                            <MDTypography variant="h4" fontWeight="medium">
+                                Project Information
+                            </MDTypography>
                         </MDBox>
-                    </Grid>
-                    <Grid item xs={12} md={6} lg={12}>
-                        {
-                            isDataLoaded ?
+                        <MDBox m={3}>
+                            <MDButton color={"success"} variant={"gradient"}
+                                      onClick={handleClickOpenStartConfirmationDialog}>Start</MDButton>
+                        </MDBox>
+                    </MDBox>
 
-                                <MDBox mt={3}>
-                                    <Card sx={{height: '100%', width: '100%'}}>
-                                        <MDBox
-                                            display="flex"
-                                            justifyContent="space-between"
-                                            alignItems={{xs: "flex-start", sm: "center"}}
-                                            flexDirection={{xs: "column", sm: "row"}}
-                                            mb={2}
-                                        >
-                                            <MDBox mt={1} my={3} mx={3}>
-                                                <MDTypography variant="h4" fontWeight="medium" color="dark">
-                                                    Members
-                                                </MDTypography>
-                                            </MDBox>
-                                            <MDBox mt={1} my={3} mx={3}>
-                                                <MDButton variant="gradient" onClick={handleClickOpenAddMemberDialog}
-                                                          color="info">
-                                                    Add New
-                                                </MDButton>
-                                            </MDBox>
-                                        </MDBox>
-                                        <DataTable
-                                            table={{
-                                                columns: [
-                                                    {Header: "Name", accessor: "name", width: "85%"},
-                                                    {Header: "delete__", accessor: "delete"}
-                                                ],
-                                                rows: tableDataMember
-                                            }}/>
-                                    </Card>
-
-                                </MDBox> : null
-                        }
-                    </Grid>
-                    <Grid item xs={12} md={6} lg={12}>
-                        {
-                            isPhaseDataLoaded ? <MDBox mt={3}>
-                                <Grid container spacing={3}>
-                                    <Grid item md={6} lg={12}>
-                                        {
-                                            <Card sx={{height: '100%', width: '100%'}}>
-                                                <MDTypography variant="h4" fontWeight="medium" color="dark" mt={1} my={3} mx={3}>
-                                                    Phases
-                                                </MDTypography>
-                                                <MDTypography variant="h6" fontWeight="light" color="dark" mt={1} my={3} mx={3}>
-                                                    Expand a phase to see questions under it
-                                                </MDTypography>
-                                                <DataTable
-                                                    table={{
-                                                        columns: [
-                                                            {Header: "Name", accessor: "name", width: "85%"},
-                                                            {Header: "delete__", accessor: "delete"},
-                                                            {Header: "expand__", accessor: "expand"}
-                                                        ],
-                                                        rows: tableDataPhase
-                                                    }}/>
-                                            </Card>
-                                        }
-                                    </Grid>
-                                </Grid>
-                            </MDBox> : null
-                        }
-                    </Grid>
-                </Grid>
+                    <MDBox pt={1} pb={2} px={2} sx={{height: '90%'}}>
+                        <MDBox component="ul" display="flex" flexDirection="column" p={0} m={0}
+                               sx={{height: '100%'}}>
+                            <Information
+                                name={project.name}
+                                projectType={project.projectType}
+                                clientName={project.clientName}
+                                status={project.status}
+                                sasCode={project.sasCode}
+                                jobNumber={project.jobNumber}
+                                startDate={project.startDate}
+                                endDate={project.endDate}
+                            />
+                        </MDBox>
+                    </MDBox>
+                </Card>
             </MDBox>
+            {
+                isDataLoaded ?
+
+                    <MDBox mt={3}>
+                        <Card sx={{height: '100%', width: '100%'}}>
+                            <MDBox
+                                display="flex"
+                                justifyContent="space-between"
+                                alignItems={{xs: "flex-start", sm: "center"}}
+                                flexDirection={{xs: "column", sm: "row"}}
+                                mb={2}
+                            >
+                                <MDBox mt={1} my={3} mx={3}>
+                                    <MDTypography variant="h4" fontWeight="medium" color="dark">
+                                        Members
+                                    </MDTypography>
+                                </MDBox>
+                                <MDBox mt={1} my={3} mx={3}>
+                                    <MDButton variant="gradient" onClick={handleClickOpenAddMemberDialog}
+                                              color="info">
+                                        Add New
+                                    </MDButton>
+                                </MDBox>
+                            </MDBox>
+                            <DataTable
+                                table={{
+                                    columns: [
+                                        {Header: "Name", accessor: "name", width: "85%"},
+                                        {Header: "delete__", accessor: "delete"}
+                                    ],
+                                    rows: tableDataMember
+                                }}/>
+                        </Card>
+
+                    </MDBox> : null
+            }
+
+            {
+                isPhaseDataLoaded ? <MDBox mt={3}>
+                    <Grid container spacing={3}>
+                        <Grid item md={6} lg={12}>
+                            {
+                                <Card sx={{height: '100%', width: '100%'}}>
+                                    <MDTypography variant="h4" fontWeight="medium" color="dark" mt={1} my={3} mx={3}>
+                                        Phases
+                                    </MDTypography>
+                                    <MDTypography variant="h6" fontWeight="light" color="dark" mt={1} my={3} mx={3}>
+                                        Expand a phase to see questions under it
+                                    </MDTypography>
+                                    <DataTable
+                                        table={{
+                                            columns: [
+                                                {Header: "Name", accessor: "name", width: "85%"},
+                                                {Header: "delete__", accessor: "delete"},
+                                                {Header: "expand__", accessor: "expand"}
+                                            ],
+                                            rows: tableDataPhase
+                                        }}/>
+                                </Card>
+                            }
+                        </Grid>
+                    </Grid>
+                </MDBox> : null
+            }
         </DashboardLayout>
     );
 }
