@@ -33,6 +33,7 @@ import routes from "routes";
 
 // Images
 import bgImage from "assets/images/city-profile.jpg";
+import Divider from "@mui/material/Divider";
 
 function Author() {
     return (
@@ -69,11 +70,12 @@ function Author() {
                     }}
                 >
                     <Profile name={"Abdullah Al Osman Sajid"}
-                             description={"Hello, I am a fullstack software engineer currently working at TigerIt Bangladesh ltd."}
+                             description={"Hello, I am a fullstack software engineer currently working at TigerIt Bangladesh ltd with experience on Java backend development using Spring Boot, Android application development, Embedded application development on linux systems using JavaFX."}
                              link={"https://bd.linkedin.com/in/abdullah-al-osman-sajid"}
                              profilePicture={"../images/dev1.jpeg"}
                              mail={"osmansazid13@gmail.com"}
                     />
+                    <Divider/>
                     <Profile name={"Mohammad Yusuf"}
                              description={"Software Engineer at TigerIt Bangladesh ltd."}
                              link={"https://bd.linkedin.com/in/mohammad-yusuf-b3460656"}

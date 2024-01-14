@@ -78,7 +78,9 @@ function BasicLayout({ image, errorMessage, children}) {
           </Grid>
         </Grid>
       </MDBox>
-      <Footer light />
+        <MDBox mt={2}>
+            <Footer light/>
+        </MDBox>
     </PageLayout>
   );
 }

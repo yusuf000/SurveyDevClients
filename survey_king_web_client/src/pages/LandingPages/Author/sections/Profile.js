@@ -39,9 +39,9 @@ function Profile({name, description, link, profilePicture,mail}) {
               <MKBox display="flex" justifyContent="space-between" alignItems="center" mb={1}>
                 <MKTypography variant="h3">{name}</MKTypography>
               </MKBox>
-                <MKBox mb={1} mt={1}>
-                    <MKButton variant="button" color="info" size="small"  onClick={() =>  navigator.clipboard.writeText(mail)}>{mail}
-                    </MKButton>
+                <MKBox mb={1} mt={1} alignItems="center" display={"flex"} flexDirection={"row"}>
+                    <Icon fontSize={"small"}>mail</Icon>
+                    <MKTypography variant={"button"} m={1}>{mail}</MKTypography>
                 </MKBox>
               <MKTypography variant="body1" fontWeight="light" color="text">
                   {description} <br />

@@ -68,8 +68,8 @@ function Presentation() {
           <Grid container item xs={12} lg={7} justifyContent="center" mx="auto">
             <MKTypography
               variant="h1"
-              color="black"
-              mt={-6}
+              color="white"
+              mt={-20}
               mb={1}
               sx={({ breakpoints, typography: { size } }) => ({
                 [breakpoints.down("md")]: {
@@ -81,10 +81,10 @@ function Presentation() {
             </MKTypography>
             <MKTypography
               variant="body1"
-              color="primary"
+              color="black"
               textAlign="center"
               px={{ xs: 6, lg: 12 }}
-              mt={1}
+              mt={-12}
             >
               Free online survey software to collect and visualize data.
             </MKTypography>
