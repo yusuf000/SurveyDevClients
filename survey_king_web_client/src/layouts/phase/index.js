@@ -20,6 +20,114 @@ import TextField from "@mui/material/TextField";
 
 const url = `http://203.161.57.194:8080/`
 
+function AddChoiceFilterLogicDialog({openAddChoiceFilterLogicDialog, handleCloseAddChoiceFilterLogicDialog,currentChoiceIndex, currentQuestionIndex, questionData, filterLogicRef, onAddChoiceFilterLogic}) {
+    return (
+        <Dialog open={openAddChoiceFilterLogicDialog} onClose={handleCloseAddChoiceFilterLogicDialog}>
+            <DialogTitle>Add Filter Logic In C{currentChoiceIndex + 1} of Q{currentQuestionIndex + 1}</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    Filter logic will filter out this choice during survey based on the answers given to
+                    particular questions added by you here. Adding a new filter will delete existing one.
+                </DialogContentText>
+                <MDBox mt={2} mb={2}>
+                    {
+                        currentQuestionIndex < questionData.length && currentChoiceIndex < questionData[currentQuestionIndex].choices.length && questionData[currentQuestionIndex].choices && questionData[currentQuestionIndex].choices[currentChoiceIndex].choiceFilterExpression ?
+                            <MDTypography fontSize="small" color="info"> Current
+                                Filter: {questionData[currentQuestionIndex].choices[currentChoiceIndex].choiceFilterExpression}</MDTypography> : null
+                    }
+                </MDBox>
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Filter Logic Expression"
+                    type="text"
+                    fullWidth
+                    variant="standard"
+                    inputRef={filterLogicRef}
+                />
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleCloseAddChoiceFilterLogicDialog}>Cancel</Button>
+                <Button onClick={onAddChoiceFilterLogic}>Add</Button>
+            </DialogActions>
+        </Dialog>
+    );
+}
+
+function AddFilterLogicDialog({openAddFilterLogicDialog, handleCloseAddFilterLogicDialog, currentQuestionIndex, questionData,filterLogicRef, onAddFilterLogic}) {
+    return (
+        <Dialog open={openAddFilterLogicDialog} onClose={handleCloseAddFilterLogicDialog}>
+            <DialogTitle>Add Filter Logic In Q{currentQuestionIndex + 1}</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    Filter logic will filter out this question during survey based on the answers given to
+                    particular questions added by you here. Adding a new filter will delete existing one.
+                </DialogContentText>
+                <MDBox mt={2} mb={2}>
+                    {
+                        currentQuestionIndex < questionData.length && questionData[currentQuestionIndex].questionFilterExpression ?
+                            <MDTypography fontSize="small" color="info"> Current
+                                Filter: {questionData[currentQuestionIndex].questionFilterExpression}</MDTypography> : null
+                    }
+                </MDBox>
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Filter Logic Expression"
+                    type="text"
+                    fullWidth
+                    variant="standard"
+                    inputRef={filterLogicRef}
+                />
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleCloseAddFilterLogicDialog}>Cancel</Button>
+                <Button onClick={onAddFilterLogic}>Add</Button>
+            </DialogActions>
+        </Dialog>
+    );
+}
+
+function AddSubChoiceFilterLogicDialog({openAddSubChoiceFilterLogicDialog, handleCloseAddSubChoiceFilterLogicDialog, currentChoiceIndex, currentSubChoiceIndex, currentQuestionIndex, questionData, filterLogicRef, onAddChoiceFilterLogic}) {
+    return (
+        <Dialog open={openAddSubChoiceFilterLogicDialog} onClose={handleCloseAddSubChoiceFilterLogicDialog}>
+            <DialogTitle>Add Filter Logic In
+                C{currentChoiceIndex + 1}{String.fromCharCode(currentSubChoiceIndex + 65)} of
+                Q{currentQuestionIndex + 1}</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    Filter logic will filter out this sub choice during survey based on the answers given to
+                    particular questions added by you here. Adding a new filter will delete existing one.
+                </DialogContentText>
+
+                <MDBox mt={2} mb={2}>
+                    {
+                        currentQuestionIndex < questionData.length && questionData[currentQuestionIndex].choices && currentChoiceIndex < questionData[currentQuestionIndex].choices.length && questionData[currentQuestionIndex].choices[currentChoiceIndex].choices && currentSubChoiceIndex< questionData[currentQuestionIndex].choices[currentChoiceIndex].choices.length && questionData[currentQuestionIndex].choices[currentChoiceIndex].choices[currentSubChoiceIndex].choiceFilterExpression ?
+                            <MDTypography fontSize="small" color="info"> Current
+                                Filter: {questionData[currentQuestionIndex].choices[currentChoiceIndex].choices[currentSubChoiceIndex].choiceFilterExpression}</MDTypography> : null
+                    }
+                </MDBox>
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Filter Logic Expression"
+                    type="text"
+                    fullWidth
+                    variant="standard"
+                    inputRef={filterLogicRef}
+                />
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleCloseAddSubChoiceFilterLogicDialog}>Cancel</Button>
+                <Button onClick={onAddChoiceFilterLogic}>Add</Button>
+            </DialogActions>
+        </Dialog>
+    );
+}
+
 function PhaseDetails() {
     const [openErrorDialog, setOpenErrorDialog] = React.useState(false);
     const [openAddFilterLogicDialog, setOpenAddFilterLogicDialog] = React.useState(false);
@@ -320,7 +428,7 @@ function PhaseDetails() {
                     } else {
                         if( questionData[currentQuestionIndex].choices[currentChoiceIndex].id === currentChoiceId){
                             questionData[currentQuestionIndex].choices[currentChoiceIndex].choiceFilterExpression = filterLogicRef.current.value
-                            if (questionData[currentQuestionIndex].choices[currentQuestionIndex].choices) {
+                            if (questionData[currentQuestionIndex].choices[currentChoiceIndex].choices) {
                                 for (let i = 0; i < questionData[currentQuestionIndex].choices[currentChoiceIndex].choices.length; i++) {
                                     questionData[currentQuestionIndex].choices[currentChoiceIndex].choices[i].choiceFilterExpression = filterLogicRef.current.value;
                                 }
@@ -377,8 +485,8 @@ function PhaseDetails() {
                 handleCloseDeleteChoiceFilterLogicDialog();
                 handleCloseDeleteSubChoiceFilterLogicDialog();
                 if( questionData[currentQuestionIndex].choices[currentChoiceIndex].id === currentChoiceId){
-                    questionData[currentQuestionIndex].choices[currentChoiceIndex].choiceFilterExpression = filterLogicRef.current.value
-                    if (questionData[currentQuestionIndex].choices[currentQuestionIndex].choices) {
+                    questionData[currentQuestionIndex].choices[currentChoiceIndex].choiceFilterExpression = ""
+                    if (questionData[currentQuestionIndex].choices[currentChoiceIndex].choices) {
                         for (let i = 0; i < questionData[currentQuestionIndex].choices[currentChoiceIndex].choices.length; i++) {
                             questionData[currentQuestionIndex].choices[currentChoiceIndex].choices[i].choiceFilterExpression = "";
                         }
@@ -422,41 +530,6 @@ function PhaseDetails() {
         );
     }
 
-    function AddChoiceFilterLogicDialog() {
-        return (
-            <Dialog open={openAddChoiceFilterLogicDialog} onClose={handleCloseAddChoiceFilterLogicDialog}>
-                <DialogTitle>Add Filter Logic In C{currentChoiceIndex + 1} of Q{currentQuestionIndex + 1}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Filter logic will filter out this choice during survey based on the answers given to
-                        particular questions added by you here. Adding a new filter will delete existing one.
-                    </DialogContentText>
-                    <MDBox mt={2} mb={2}>
-                        {
-                            currentQuestionIndex < questionData.length && currentChoiceIndex < questionData[currentQuestionIndex].choices.length && questionData[currentQuestionIndex].choices && questionData[currentQuestionIndex].choices[currentChoiceIndex].choiceFilterExpression ?
-                                <MDTypography fontSize="small" color="info"> Current
-                                    Filter: {questionData[currentQuestionIndex].choices[currentChoiceIndex].choiceFilterExpression}</MDTypography> : null
-                        }
-                    </MDBox>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="name"
-                        label="Filter Logic Expression"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        inputRef={filterLogicRef}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseAddChoiceFilterLogicDialog}>Cancel</Button>
-                    <Button onClick={onAddChoiceFilterLogic}>Add</Button>
-                </DialogActions>
-            </Dialog>
-        );
-    }
-
     function DeleteChoiceFilterLogicDialog() {
         return (
             <Dialog open={openDeleteChoiceFilterLogicDialog} onClose={handleCloseDeleteChoiceFilterLogicDialog}>
@@ -486,44 +559,6 @@ function PhaseDetails() {
                         currentQuestionIndex < questionData.length && currentChoiceIndex < questionData[currentQuestionIndex].choices.length && questionData[currentQuestionIndex].choices && questionData[currentQuestionIndex].choices[currentChoiceIndex].choiceFilterExpression ?
                             <Button onClick={onDeleteChoiceFilterLogic}>Yes</Button> : null
                     }
-                </DialogActions>
-            </Dialog>
-        );
-    }
-
-    function AddSubChoiceFilterLogicDialog() {
-        return (
-            <Dialog open={openAddSubChoiceFilterLogicDialog} onClose={handleCloseAddSubChoiceFilterLogicDialog}>
-                <DialogTitle>Add Filter Logic In
-                    C{currentChoiceIndex + 1}{String.fromCharCode(currentSubChoiceIndex + 65)} of
-                    Q{currentQuestionIndex + 1}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Filter logic will filter out this sub choice during survey based on the answers given to
-                        particular questions added by you here. Adding a new filter will delete existing one.
-                    </DialogContentText>
-
-                    <MDBox mt={2} mb={2}>
-                        {
-                            currentQuestionIndex < questionData.length && questionData[currentQuestionIndex].choices && currentChoiceIndex < questionData[currentQuestionIndex].choices.length && questionData[currentQuestionIndex].choices[currentChoiceIndex].choices && currentSubChoiceIndex< questionData[currentQuestionIndex].choices[currentChoiceIndex].choices.length && questionData[currentQuestionIndex].choices[currentChoiceIndex].choices[currentSubChoiceIndex].choiceFilterExpression ?
-                                <MDTypography fontSize="small" color="info"> Current
-                                    Filter: {questionData[currentQuestionIndex].choices[currentChoiceIndex].choices[currentSubChoiceIndex].choiceFilterExpression}</MDTypography> : null
-                        }
-                    </MDBox>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="name"
-                        label="Filter Logic Expression"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        inputRef={filterLogicRef}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseAddSubChoiceFilterLogicDialog}>Cancel</Button>
-                    <Button onClick={onAddChoiceFilterLogic}>Add</Button>
                 </DialogActions>
             </Dialog>
         );
@@ -564,40 +599,6 @@ function PhaseDetails() {
         );
     }
 
-    function AddFilterLogicDialog() {
-        return (
-            <Dialog open={openAddFilterLogicDialog} onClose={handleCloseAddFilterLogicDialog}>
-                <DialogTitle>Add Filter Logic In Q{currentQuestionIndex + 1}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Filter logic will filter out this question during survey based on the answers given to
-                        particular questions added by you here. Adding a new filter will delete existing one.
-                    </DialogContentText>
-                    <MDBox mt={2} mb={2}>
-                        {
-                            currentQuestionIndex < questionData.length && questionData[currentQuestionIndex].questionFilterExpression ?
-                                <MDTypography fontSize="small" color="info"> Current
-                                    Filter: {questionData[currentQuestionIndex].questionFilterExpression}</MDTypography> : null
-                        }
-                    </MDBox>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="name"
-                        label="Filter Logic Expression"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        inputRef={filterLogicRef}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseAddFilterLogicDialog}>Cancel</Button>
-                    <Button onClick={onAddFilterLogic}>Add</Button>
-                </DialogActions>
-            </Dialog>
-        );
-    }
 
     function DeleteFilterLogicDialog() {
         return (
@@ -691,11 +692,11 @@ function PhaseDetails() {
             <DashboardNavbar/>
             <ErrorDialogue/>
             <ConfirmationDialog/>
-            <AddFilterLogicDialog/>
+            <AddFilterLogicDialog questionData={questionData} filterLogicRef={filterLogicRef} currentQuestionIndex={currentQuestionIndex} onAddFilterLogic={onAddFilterLogic} openAddFilterLogicDialog={openAddFilterLogicDialog} handleCloseAddFilterLogicDialog={handleCloseAddFilterLogicDialog}/>
             <DeleteFilterLogicDialog/>
-            <AddChoiceFilterLogicDialog/>
+            <AddChoiceFilterLogicDialog currentChoiceIndex={currentChoiceIndex} onAddChoiceFilterLogic={onAddChoiceFilterLogic} currentQuestionIndex={currentQuestionIndex} handleCloseAddChoiceFilterLogicDialog={handleCloseAddChoiceFilterLogicDialog} filterLogicRef={filterLogicRef} openAddChoiceFilterLogicDialog={openAddChoiceFilterLogicDialog} questionData={questionData}/>
             <DeleteChoiceFilterLogicDialog/>
-            <AddSubChoiceFilterLogicDialog/>
+            <AddSubChoiceFilterLogicDialog onAddChoiceFilterLogic={onAddChoiceFilterLogic} currentQuestionIndex={currentQuestionIndex} filterLogicRef={filterLogicRef} questionData={questionData} currentChoiceIndex={currentChoiceIndex} currentSubChoiceIndex={currentSubChoiceIndex} handleCloseAddSubChoiceFilterLogicDialog={handleCloseAddSubChoiceFilterLogicDialog} openAddSubChoiceFilterLogicDialog={openAddSubChoiceFilterLogicDialog}/>
             <DeleteSubChoiceFilterLogicDialog/>
             <MDBox py={3} mb={3}>
                 <Grid container spacing={3}>
