@@ -19,7 +19,7 @@ export default {
     route: "/",
   },
   socials: [
-    {
+    /*{
       icon: <FacebookIcon />,
       link: "https://www.facebook.com/",
     },
@@ -34,7 +34,7 @@ export default {
     {
       icon: <YouTubeIcon />,
       link: "https://www.youtube.com/",
-    },
+    },*/
   ],
   menus: [
     {
