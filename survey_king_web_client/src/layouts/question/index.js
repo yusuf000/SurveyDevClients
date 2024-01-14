@@ -22,6 +22,59 @@ import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 
 const url = `http://203.161.57.194:8080`
 
+function SubChoice({removeFormFields, inputMap}){
+    return (
+        <MDBox>
+            {inputMap.formValues.map((element, index) => (
+                <MDBox mb={2} key={index}>
+                    <Grid container spacing={3}>
+                        <Grid item >
+                            <MDInput type="email" label="Subchoice value" value={element.subChoiceName} disabled={true}></MDInput>
+                        </Grid>
+                        <Grid item>
+                            <MDButton  color="error" onClick={() => removeFormFields(index)}>
+                                <Icon>delete</Icon>
+                            </MDButton>
+                        </Grid>
+                    </Grid>
+                </MDBox>
+            ))
+            }
+        </MDBox>
+    );
+}
+
+function AddChoiceDialog({openAddChoiceDialog, handleCloseAddChoiceDialog, removeFormFields, inputMap, choiceValueRef, subChoiceRef, addFormFields, handleAddChoice}) {
+
+    return (
+        <Dialog open={openAddChoiceDialog} onClose={handleCloseAddChoiceDialog}>
+            <DialogTitle>Add Choice</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    To add a choice fill up the necessary details below.
+                </DialogContentText>
+                <MDBox mb={2}></MDBox>
+                <MDBox mb={2}>
+                    <MDInput type="email" label="value" inputRef={choiceValueRef} fullWidth/>
+                </MDBox>
+                <SubChoice removeFormFields={removeFormFields} inputMap={inputMap}/>
+                <MDBox mb={2}>
+                    <MDInput type="email" label="Optional Subchoice" inputRef={subChoiceRef} fullWidth/>
+                </MDBox>
+                <MDBox  mb={2}>
+                    <MDButton  color="info" onClick={addFormFields} fullWidth>
+                        Add Subchoice
+                    </MDButton>
+                </MDBox>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleCloseAddChoiceDialog}>Cancel</Button>
+                <Button onClick={handleAddChoice}>Add</Button>
+            </DialogActions>
+        </Dialog>
+    );
+}
+
 function Question() {
 
     const [openErrorDialog, setOpenErrorDialog] = React.useState(false);
@@ -40,10 +93,15 @@ function Question() {
     const choiceValueRef = useRef(null);
     const token = localStorage.getItem('token');
     const [choiceSubChoiceMap,setChoiceSubChoiceMap] = useState(new Map());
-    let currentSubChoices = [];
+    const [currentSubChoices,setCurrentSubChoices] = useState([])
     const [choiceIdSeq, setChoiceIdSeq] = useState(0);
     const location = useLocation();
     const navigate = useNavigate();
+    const subChoiceRef = useRef();
+    const [subChoiceIdSeq, setSubChoiceIdSeq] = useState(0);
+    const [inputMap, setInputMap] = useState({
+        formValues: []
+    });
 
     if (location.state != null) {
         localStorage.setItem("phaseId", location.state.phaseId)
@@ -132,6 +190,18 @@ function Question() {
         setOpenSuccessDialog(true);
     };
 
+    const handleClickOpenAddChoiceDialog = () => {
+        setInputMap({
+            formValues: []
+        });
+        setSubChoiceIdSeq(0);
+        setOpenAddChoiceDialog(true);
+    };
+
+    const handleCloseAddChoiceDialog = () => {
+        setOpenAddChoiceDialog(false);
+    }
+
     const handleClickCloseSuccessDialog = () => {
         questionDescriptionRef.current.value = "";
         setChoiceData([])
@@ -143,14 +213,6 @@ function Question() {
 
     const handleClickOpenErrorDialog = () => {
         setOpenErrorDialog(true);
-    };
-
-    const handleCloseAddChoiceDialog = () => {
-        setOpenAddChoiceDialog(false);
-    };
-
-    const handleClickOpenAddChoiceDialog = () => {
-        setOpenAddChoiceDialog(true);
     };
 
     const handleCloseErrorDialog = () => {
@@ -174,13 +236,31 @@ function Question() {
         }
     };
 
+    const addFormFields = ()=> {
+        setInputMap(({
+            formValues: [...inputMap.formValues, { subChoiceName: subChoiceRef.current.value, subChoiceId: subChoiceIdSeq}]
+        }))
+        setCurrentSubChoices([...currentSubChoices, {value: subChoiceRef.current.value, id: subChoiceIdSeq}]);
+        setSubChoiceIdSeq(subChoiceIdSeq + 1);
+        subChoiceRef.current.value = "";
+    }
+
+    function removeFormFields(i) {
+        let formValues = inputMap.formValues;
+        setCurrentSubChoices(currentSubChoices.filter(function (element) {
+            return element.id !== formValues[i].subChoiceId;
+        }));
+        formValues.splice(i, 1);
+        setInputMap({ formValues });
+    }
+
     function handleAddChoice() {
         const choiceValue = choiceValueRef.current.value;
         if(choiceValue){
             setChoiceSubChoiceMap(choiceSubChoiceMap.set(choiceIdSeq, currentSubChoices));
             setChoiceData([...choiceData, {value: choiceValue, id: choiceIdSeq}]);
             setChoiceIdSeq(choiceIdSeq + 1);
-            currentSubChoices = [];
+            setCurrentSubChoices([]);
             setIsChoiceAdded(true)
         }
         handleCloseAddChoiceDialog()
@@ -251,82 +331,6 @@ function Question() {
         );
     }
 
-    function AddChoiceDialog() {
-        const subChoiceRef = useRef();
-        const [subChoiceIdSeq, setSubChoiceIdSeq] = useState(0);
-        const [inputMap, setInputMap] = useState({
-            formValues: []
-        });
-
-        const addFormFields = ()=> {
-            setInputMap(({
-                formValues: [...inputMap.formValues, { subChoiceName: subChoiceRef.current.value, subChoiceId: subChoiceIdSeq}]
-            }))
-            currentSubChoices.push({value: subChoiceRef.current.value, id: subChoiceIdSeq});
-            setSubChoiceIdSeq(subChoiceIdSeq + 1);
-            subChoiceRef.current.value = "";
-        }
-
-        function removeFormFields(i) {
-            let formValues = inputMap.formValues;
-            currentSubChoices = currentSubChoices.filter(function (element) {
-                return element.id !== formValues[i].subChoiceId;
-            });
-            formValues.splice(i, 1);
-            setInputMap({ formValues });
-        }
-
-        function SubChoice(){
-            return (
-                <MDBox>
-                    {inputMap.formValues.map((element, index) => (
-                        <MDBox mb={2} key={index}>
-                            <Grid container spacing={3}>
-                                <Grid item >
-                                    <MDInput type="email" label="Subchoice value" value={element.subChoiceName} disabled={true}></MDInput>
-                                </Grid>
-                                <Grid item>
-                                    <MDButton  color="error" onClick={() => removeFormFields(index)}>
-                                        <Icon>delete</Icon>
-                                    </MDButton>
-                                </Grid>
-                            </Grid>
-                        </MDBox>
-                    ))
-                    }
-                </MDBox>
-            );
-        }
-
-        return (
-            <Dialog open={openAddChoiceDialog} onClose={handleCloseAddChoiceDialog}>
-                <DialogTitle>Add Choice</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        To add a choice fill up the necessary details below.
-                    </DialogContentText>
-                    <MDBox mb={2}></MDBox>
-                    <MDBox mb={2}>
-                        <MDInput type="email" label="value" inputRef={choiceValueRef} fullWidth/>
-                    </MDBox>
-                    <SubChoice/>
-                    <MDBox mb={2}>
-                        <MDInput type="email" label="Optional Subchoice" inputRef={subChoiceRef} fullWidth/>
-                    </MDBox>
-                    <MDBox  mb={2}>
-                        <MDButton  color="info" onClick={addFormFields} fullWidth>
-                             Add Subchoice
-                        </MDButton>
-                    </MDBox>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseAddChoiceDialog}>Cancel</Button>
-                    <Button onClick={handleAddChoice}>Add</Button>
-                </DialogActions>
-            </Dialog>
-        );
-    }
-
 
     function ChoiceBox(){
         return (
@@ -363,7 +367,7 @@ function Question() {
             <DashboardNavbar/>
             <ErrorDialogue/>
             <SuccessDialog/>
-            <AddChoiceDialog/>
+            <AddChoiceDialog choiceValueRef={choiceValueRef} handleAddChoice={handleAddChoice} handleCloseAddChoiceDialog={handleCloseAddChoiceDialog} removeFormFields={removeFormFields} subChoiceRef={subChoiceRef} inputMap={inputMap} openAddChoiceDialog={openAddChoiceDialog} addFormFields={addFormFields}/>
             <MDBox mb={2}>
                 <Card>
                     <MDBox mb={2} mt={2} ml={2} mr={2}>
