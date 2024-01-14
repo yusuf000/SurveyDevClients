@@ -34,6 +34,8 @@ import footerRoutes from "footer.routes";
 import bgImage from "assets/images/contact.jpg";
 import Container from "@mui/material/Container";
 import * as emailjs from "emailjs-com";
+import Footer from "../../../layouts/authentication/components/Footer";
+import React from "react";
 
 function ContactUs() {
     const sendMail = (e)=>{
@@ -140,6 +142,7 @@ function ContactUs() {
                     </MKBox>
                 </Container>
             </MKBox>
+            <Footer light />
         </>
     );
 }

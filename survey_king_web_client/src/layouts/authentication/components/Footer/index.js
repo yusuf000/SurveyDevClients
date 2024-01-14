@@ -85,7 +85,7 @@ function Footer({ light }) {
                 </MDTypography>
               </Link>
             </MDBox>*/}
-            <MDBox component="li" px={2} lineHeight={1}>
+            {/*<MDBox component="li" px={2} lineHeight={1}>
               <Link href="" target="_blank">
                 <MDTypography
                   variant="button"
@@ -95,7 +95,7 @@ function Footer({ light }) {
                   About Us
                 </MDTypography>
               </Link>
-            </MDBox>
+            </MDBox>*/}
             {/*<MDBox component="li" px={2} lineHeight={1}>
               <Link href="https://www.creative-tim.com/blog" target="_blank">
                 <MDTypography
