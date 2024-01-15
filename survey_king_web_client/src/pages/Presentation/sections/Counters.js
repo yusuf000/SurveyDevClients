@@ -40,7 +40,7 @@ function Counters() {
           <Grid item xs={12} md={4} display="flex">
             <Divider orientation="vertical" sx={{ display: { xs: "none", md: "block" }, mx: 0 }} />
             <DefaultCounterCard
-              count={15}
+              count={5}
               suffix="+"
               title="Visuals"
               description="Interactive charts and graphs for insightful analysis"
