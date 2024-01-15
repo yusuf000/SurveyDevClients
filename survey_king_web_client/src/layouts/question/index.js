@@ -20,7 +20,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import {useLocation, useNavigate} from "react-router-dom";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
 
-const url = `http://203.161.57.194:8080`
+const url = `http://localhost:8080`
 
 function SubChoice({removeFormFields, inputMap}){
     return (

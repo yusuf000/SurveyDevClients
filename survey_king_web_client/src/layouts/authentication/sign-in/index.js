@@ -28,7 +28,7 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 // Images
 import bgImage from "assets/images/bg4.jpg";
 
-const authURL = `http://203.161.57.194:8080/api/v1/auth/authenticate`
+const authURL = `http://localhost:8080/api/v1/auth/authenticate`
 
 function Basic() {
     const [rememberMe, setRememberMe] = useState(false);
@@ -151,6 +151,19 @@ function Basic() {
                                             Sign up
                                         </MDTypography>
                                     </MDTypography>
+                                </MDBox>
+                                <MDBox mt={1} mb={1} textAlign="center">
+
+                                        <MDTypography
+                                            component={Link}
+                                            to="/authentication/forgot-password"
+                                            variant="button"
+                                            color="info"
+                                            fontWeight="medium"
+                                            textGradient
+                                        >
+                                            Forgot password?
+                                        </MDTypography>
                                 </MDBox>
                             </MDBox>
                         </MDBox>

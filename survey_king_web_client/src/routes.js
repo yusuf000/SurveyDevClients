@@ -52,6 +52,7 @@ import AboutUsPage from "./layouts/about-us";
 import ContactUsPage from "./layouts/contact-us";
 import Result from "./layouts/result";
 import ResultDetails from "./layouts/result/details";
+import ForgotPassword from "./layouts/authentication/reset-password/cover";
 
 const routes = [
   {
@@ -140,6 +141,14 @@ const routes = [
     icon: <Icon fontSize="small">assignment</Icon>,
     route: "/author",
     component: <Author />,
+  },
+  {
+    type: "",
+    name: "Forgot Password",
+    key: "forgot-password",
+    icon: <Icon fontSize="small">login</Icon>,
+    route: "/authentication/forgot-password",
+    component: <ForgotPassword />,
   },
   {
     type: "",

@@ -28,7 +28,7 @@ import MDButton from "../../../components/MDButton";
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 
 
-const url = `http://203.161.57.194:8080/`
+const url = `http://localhost:8080/`
 
 function AddMember({openAddMemberDialog, handleCloseAddMemberDialog, newMemberIdRef, onAdd}) {
     return (
