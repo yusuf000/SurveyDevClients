@@ -61,6 +61,7 @@ function ProjectDetails() {
     const location = useLocation();
     const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
     const [openStartConfirmationDialog, setOpenStartConfirmationDialog] = React.useState(false);
+    const [openErrorDialog, setOpenErrorDialog] = React.useState(false);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [isPhaseDataLoaded, setIsPhaseDataLoaded] = useState(false);
     const [tableDataMember, setTableDataMember] = useState(null);
@@ -296,6 +297,14 @@ function ProjectDetails() {
         setOpenStartConfirmationDialog(false)
     }
 
+    const handleClickCloseErrorDialog = () => {
+        setOpenErrorDialog(false)
+    }
+
+    const handleClickOpenErrorDialog = () => {
+        setOpenErrorDialog(true)
+    }
+
     function ConfirmationDialog() {
         return (
             <Dialog open={openConfirmationDialog} onClose={handleClickCloseConfirmationDialog}>
@@ -332,11 +341,26 @@ function ProjectDetails() {
         );
     }
 
+    function ErrorDialog() {
+        return (
+            <Dialog open={openErrorDialog} onClose={handleClickCloseErrorDialog}>
+                <DialogTitle color="red"><Icon fontSize="medium">info</Icon> &nbsp; Error</DialogTitle>
+                <DialogContent>
+                    <MDTypography fontSize="small" color="info">{"Project can be started after "+ project.startDate}</MDTypography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClickCloseErrorDialog}>Ok</Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
+
 
     return (
         <DashboardLayout>
             <DashboardNavbar/>
             <ConfirmationDialog/>
+            <ErrorDialog/>
             <ConfirmationStartDialog/>
             <AddMember onAdd={onAdd} handleCloseAddMemberDialog={handleCloseAddMemberDialog}
                        newMemberIdRef={newMemberIdRef} openAddMemberDialog={openAddMemberDialog}/>
@@ -355,8 +379,13 @@ function ProjectDetails() {
                             </MDTypography>
                         </MDBox>
                         <MDBox m={3}>
-                            <MDButton color={"success"} variant={"gradient"}
-                                      onClick={handleClickOpenStartConfirmationDialog}>Start</MDButton>
+                            {
+                                new Date() > new Date(project.startDate) ?
+                                    <MDButton color={"success"} variant={"gradient"}
+                                              onClick={handleClickOpenStartConfirmationDialog}>Start</MDButton> :
+                                    <MDButton color={"error"} variant={"gradient"}
+                                              onClick={handleClickOpenErrorDialog}>Start</MDButton>
+                            }
                         </MDBox>
                     </MDBox>
 
