@@ -23,46 +23,50 @@ import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 
 // Authentication layout components
-import CoverLayout from "layouts/authentication/components/CoverLayout";
 
 // Images
 import bgImage from "assets/images/bg4.jpg";
-import BasicLayout from "../../components/BasicLayout";
 import axios from "axios";
 import {useRef, useState} from "react";
+import {useNavigate, useSearchParams} from "react-router-dom";
+import BasicLayout from "../components/BasicLayout";
 
-const url = `http://localhost:8080/api/v1/auth/reset-password`
+const url = `http://localhost:8080/api/v1/auth/change-password`
 
-function ForgotPassword() {
-    const emailRef = useRef();
-    const [successMessage, setSuccessMessage] = useState(null);
+function ChangePassword() {
+    const [queryParams] = useSearchParams()
+    const passwordRef = useRef();
+    const repeatedPasswordRef = useRef();
     const [errorMessage, setErrorMessage] = useState(null);
-    const resetPassword = () => {
-        if (!emailRef.current) {
-            setSuccessMessage(null)
-            setErrorMessage("Registration failed,please give valid information");
+    const navigate = useNavigate();
+
+    const checkIfMatch = () => {
+        return passwordRef.current.value === repeatedPasswordRef.current.value;
+    }
+    const changePassword = () => {
+        if (!passwordRef.current || !repeatedPasswordRef.current) {
+            setErrorMessage("password change failed,please give valid information");
             return;
         }
-        setSuccessMessage(null)
-        setErrorMessage(null)
+        if (!checkIfMatch(passwordRef.current.value, repeatedPasswordRef.current.value)) {
+            setErrorMessage("passwords don't match");
+            return;
+        }
+        setErrorMessage(null);
         axios
-            .post(url, {}, {
-                params: {
-                    email: emailRef.current.value
-                }
-            })
+            .post(url, {
+                password: passwordRef.current.value,
+                token: queryParams.get("token")
+            }, {})
             .then((response) => {
                 if (response.data) {
-                    setErrorMessage(null)
-                    setSuccessMessage("Password reset mail sent to " + emailRef.current.value);
-                    emailRef.current.value = "";
+                    navigate("/authenticate/sign-in")
                 } else {
-                    setSuccessMessage(null)
-                    setErrorMessage("Password reset failed,please give valid information");
+                    setErrorMessage("Password change failed,please try again");
                 }
             })
             .catch((error) => {
-                setErrorMessage("Password reset failed,please try again");
+                setErrorMessage("Password change failed,please try again");
             })
     }
 
@@ -81,16 +85,18 @@ function ForgotPassword() {
                     textAlign="center"
                 >
                     <MDTypography variant="h3" fontWeight="medium" color="white" mt={1}>
-                        Reset Password
-                    </MDTypography>
-                    <MDTypography display="block" variant="button" color="white" my={1}>
-                        You will receive an e-mail in maximum 60 seconds
+                        Change Password
                     </MDTypography>
                 </MDBox>
                 <MDBox pt={4} pb={3} px={3}>
                     <MDBox component="form" role="form">
                         <MDBox mb={1}>
-                            <MDInput type="email" label="Email" variant="standard" fullWidth inputRef={emailRef}/>
+                            <MDInput type="password" label="Password" variant="standard" fullWidth
+                                     inputRef={passwordRef}/>
+                        </MDBox>
+                        <MDBox mb={1}>
+                            <MDInput type="password" label="Confirm Password" variant="standard" fullWidth
+                                     inputRef={repeatedPasswordRef}/>
                         </MDBox>
                         {
                             errorMessage ?
@@ -98,21 +104,17 @@ function ForgotPassword() {
                                     <MDTypography variant={"button"} color={"error"}>{errorMessage}</MDTypography>
                                 </MDBox> : null
                         }
-                        {
-                            successMessage ? <MDBox mb={4}>
-                                <MDTypography variant={"button"} color={"success"}>{successMessage}</MDTypography>
-                            </MDBox> : null
-                        }
                         <MDBox mt={6} mb={1}>
-                            <MDButton variant="gradient" color="info" fullWidth onClick={resetPassword}>
-                                reset
+                            <MDButton variant="gradient" color="info" fullWidth onClick={changePassword}>
+                                Confirm
                             </MDButton>
                         </MDBox>
                     </MDBox>
                 </MDBox>
             </Card>
         </BasicLayout>
-    );
+    )
+        ;
 }
 
-export default ForgotPassword;
+export default ChangePassword;

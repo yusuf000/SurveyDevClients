@@ -53,6 +53,7 @@ import ContactUsPage from "./layouts/contact-us";
 import Result from "./layouts/result";
 import ResultDetails from "./layouts/result/details";
 import ForgotPassword from "./layouts/authentication/reset-password/cover";
+import ChangePassword from "./layouts/authentication/change-password";
 
 const routes = [
   {
@@ -149,6 +150,14 @@ const routes = [
     icon: <Icon fontSize="small">login</Icon>,
     route: "/authentication/forgot-password",
     component: <ForgotPassword />,
+  },
+  {
+    type: "",
+    name: "Change Password",
+    key: "change-password",
+    icon: <Icon fontSize="small">login</Icon>,
+    route: "/authentication/change-password",
+    component: <ChangePassword />,
   },
   {
     type: "",
