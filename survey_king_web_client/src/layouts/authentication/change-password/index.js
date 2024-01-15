@@ -40,6 +40,10 @@ function ChangePassword() {
     const [errorMessage, setErrorMessage] = useState(null);
     const navigate = useNavigate();
 
+    if(!queryParams.get("token")){
+        navigate("/")
+    }
+
     const checkIfMatch = () => {
         return passwordRef.current.value === repeatedPasswordRef.current.value;
     }
