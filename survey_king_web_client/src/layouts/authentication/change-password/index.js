@@ -60,7 +60,7 @@ function ChangePassword() {
             }, {})
             .then((response) => {
                 if (response.data) {
-                    navigate("/authenticate/sign-in")
+                    navigate("/authentication/sign-in")
                 } else {
                     setErrorMessage("Password change failed,please try again");
                 }
