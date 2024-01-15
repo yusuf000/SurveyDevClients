@@ -31,7 +31,7 @@ import BasicLayout from "../../components/BasicLayout";
 import axios from "axios";
 import {useRef, useState} from "react";
 
-const url = `http://localhost:8080/api/v1/auth/reset-password`
+const url = `http://203.161.57.194:8080/api/v1/auth/reset-password`
 
 function ForgotPassword() {
     const emailRef = useRef();

@@ -31,7 +31,7 @@ import {useRef, useState} from "react";
 import {useNavigate, useSearchParams} from "react-router-dom";
 import BasicLayout from "../components/BasicLayout";
 
-const url = `http://localhost:8080/api/v1/auth/change-password`
+const url = `http://203.161.57.194:8080/api/v1/auth/change-password`
 
 function ChangePassword() {
     const [queryParams] = useSearchParams()

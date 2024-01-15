@@ -38,7 +38,7 @@ import Icon from "@mui/material/Icon";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 
-const registerURL = `http://localhost:8080/api/v1/auth/register`
+const registerURL = `http://203.161.57.194:8080/api/v1/auth/register`
 
 function Cover() {
   const fullNameRef = useRef(null);
