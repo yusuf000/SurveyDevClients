@@ -142,7 +142,6 @@ function ContactUs() {
                     </MKBox>
                 </Container>
             </MKBox>
-            <Footer light />
         </>
     );
 }
