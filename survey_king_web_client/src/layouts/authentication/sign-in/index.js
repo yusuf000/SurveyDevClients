@@ -27,6 +27,9 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 // Images
 import bgImage from "assets/images/bg4.jpg";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import {BouncingBalls} from "react-cssfx-loading";
 
 const authURL = `http://203.161.57.194:8080/api/v1/auth/authenticate`
 
@@ -35,6 +38,7 @@ function Basic() {
     const userNameRef = useRef(null);
     const passwordRef = useRef(null);
     const [errorMessage, setErrorMessage] = useState("");
+    const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
     const navigate = useNavigate();
 
 
@@ -42,6 +46,7 @@ function Basic() {
 
 
     const doLogin = ({userName, password}) => {
+        handleClickOpenLoadingDialog();
         axios
             .post(authURL, {}, {
                 auth: {
@@ -50,46 +55,66 @@ function Basic() {
                 }
             })
             .then((response) => {
+                handleClickCloseLoadingDialog();
                 localStorage.setItem("token", response.data.token);
                 localStorage.setItem("user", userName);
                 navigate('/dashboard')
             })
             .catch(() => {
+                handleClickCloseLoadingDialog();
                 setErrorMessage("Username and/or password don't match")
             })
 
     }
 
-        const handleOnClick = async () => {
-            console.log('login clicked');
-            const userName = userNameRef.current.value;
-            const password = passwordRef.current.value;
-            if (!userName || !password) {
-                setErrorMessage("Username and/or password don't match")
-            } else {
-                doLogin({userName, password});
-            }
+    const handleOnClick = async () => {
+        console.log('login clicked');
+        const userName = userNameRef.current.value;
+        const password = passwordRef.current.value;
+        if (!userName || !password) {
+            setErrorMessage("Username and/or password don't match")
+        } else {
+            doLogin({userName, password});
         }
+    }
 
+    const handleClickOpenLoadingDialog = () => {
+        setOpenLoadingDialog(true);
+    }
+
+    const handleClickCloseLoadingDialog = () => {
+        setOpenLoadingDialog(false);
+    }
+
+    function LoadingDialog({}) {
         return (
-            <BasicLayout image={bgImage} spacing={7}>
-                <MDBox>
-                    <Card>
-                        <MDBox
-                            variant="gradient"
-                            bgColor="info"
-                            borderRadius="lg"
-                            coloredShadow="info"
-                            mx={2}
-                            mt={-3}
-                            p={2}
-                            mb={1}
-                            textAlign="center"
-                        >
-                            <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-                                Sign in
-                            </MDTypography>
-                            {/*<Grid container spacing={3} justifyContent="center" sx={{mt: 1, mb: 2}}>
+            <Dialog open={openLoadingDialog} onClose={handleClickCloseLoadingDialog}>
+                <DialogContent>
+                    <BouncingBalls color="#2882eb" width="35px" height="10px" duration="1s"/>
+                </DialogContent>
+            </Dialog>
+        );
+    }
+
+    return (
+        <BasicLayout image={bgImage} spacing={7}>
+            <MDBox>
+                <Card>
+                    <MDBox
+                        variant="gradient"
+                        bgColor="info"
+                        borderRadius="lg"
+                        coloredShadow="info"
+                        mx={2}
+                        mt={-3}
+                        p={2}
+                        mb={1}
+                        textAlign="center"
+                    >
+                        <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
+                            Sign in
+                        </MDTypography>
+                        {/*<Grid container spacing={3} justifyContent="center" sx={{mt: 1, mb: 2}}>
                                 <Grid item xs={2}>
                                     <MDTypography component={MuiLink} href="#" variant="body1" color="white">
                                         <FacebookIcon color="inherit"/>
@@ -106,16 +131,16 @@ function Basic() {
                                     </MDTypography>
                                 </Grid>
                             </Grid>*/}
-                        </MDBox>
-                        <MDBox pt={4} pb={3} px={3}>
-                            <MDBox component="form" role="form">
-                                <MDBox mb={2}>
-                                    <MDInput type="email" label="Email" inputRef={userNameRef} fullWidth/>
-                                </MDBox>
-                                <MDBox mb={2}>
-                                    <MDInput type="password" label="Password" inputRef={passwordRef} fullWidth/>
-                                </MDBox>
-                                {/*<MDBox display="flex" alignItems="center" ml={-1}>
+                    </MDBox>
+                    <MDBox pt={4} pb={3} px={3}>
+                        <MDBox component="form" role="form">
+                            <MDBox mb={2}>
+                                <MDInput type="email" label="Email" inputRef={userNameRef} fullWidth/>
+                            </MDBox>
+                            <MDBox mb={2}>
+                                <MDInput type="password" label="Password" inputRef={passwordRef} fullWidth/>
+                            </MDBox>
+                            {/*<MDBox display="flex" alignItems="center" ml={-1}>
                                     <Switch checked={rememberMe} onChange={handleSetRememberMe}/>
                                     <MDTypography
                                         variant="button"
@@ -127,51 +152,52 @@ function Basic() {
                                         &nbsp;&nbsp;Remember me
                                     </MDTypography>
                                 </MDBox>*/}
-                                <MDBox mt={1} mb={1}>
-                                    {
-                                        errorMessage ? <MDTypography variant={"button"} color={"error"}>{errorMessage}</MDTypography>: null
-                                    }
-                                </MDBox>
-                                <MDBox mt={4} mb={1}>
-                                    <MDButton variant="gradient" onClick={handleOnClick} color="info" fullWidth>
-                                        sign in
-                                    </MDButton>
-                                </MDBox>
-                                <MDBox mt={3} mb={1} textAlign="center">
-                                    <MDTypography variant="button" color="text">
-                                        Don&apos;t have an account?{" "}
-                                        <MDTypography
-                                            component={Link}
-                                            to="/authentication/sign-up"
-                                            variant="button"
-                                            color="info"
-                                            fontWeight="medium"
-                                            textGradient
-                                        >
-                                            Sign up
-                                        </MDTypography>
+                            <MDBox mt={1} mb={1}>
+                                {
+                                    errorMessage ? <MDTypography variant={"button"}
+                                                                 color={"error"}>{errorMessage}</MDTypography> : null
+                                }
+                            </MDBox>
+                            <MDBox mt={4} mb={1}>
+                                <MDButton variant="gradient" onClick={handleOnClick} color="info" fullWidth>
+                                    sign in
+                                </MDButton>
+                            </MDBox>
+                            <MDBox mt={3} mb={1} textAlign="center">
+                                <MDTypography variant="button" color="text">
+                                    Don&apos;t have an account?{" "}
+                                    <MDTypography
+                                        component={Link}
+                                        to="/authentication/sign-up"
+                                        variant="button"
+                                        color="info"
+                                        fontWeight="medium"
+                                        textGradient
+                                    >
+                                        Sign up
                                     </MDTypography>
-                                </MDBox>
-                                <MDBox mt={1} mb={1} textAlign="center">
+                                </MDTypography>
+                            </MDBox>
+                            <MDBox mt={1} mb={1} textAlign="center">
 
-                                        <MDTypography
-                                            component={Link}
-                                            to="/authentication/forgot-password"
-                                            variant="button"
-                                            color="info"
-                                            fontWeight="medium"
-                                            textGradient
-                                        >
-                                            Forgot password?
-                                        </MDTypography>
-                                </MDBox>
+                                <MDTypography
+                                    component={Link}
+                                    to="/authentication/forgot-password"
+                                    variant="button"
+                                    color="info"
+                                    fontWeight="medium"
+                                    textGradient
+                                >
+                                    Forgot password?
+                                </MDTypography>
                             </MDBox>
                         </MDBox>
-                    </Card>
-                </MDBox>
+                    </MDBox>
+                </Card>
+            </MDBox>
 
-            </BasicLayout>
-        );
-    }
+        </BasicLayout>
+    );
+}
 
-    export default Basic;
+export default Basic;

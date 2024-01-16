@@ -37,6 +37,7 @@ import DialogContent from "@mui/material/DialogContent";
 import Icon from "@mui/material/Icon";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
+import {BouncingBalls} from "react-cssfx-loading";
 
 const registerURL = `http://203.161.57.194:8080/api/v1/auth/register`
 
@@ -48,6 +49,7 @@ function Cover() {
   const [errorMessage, setErrorMessage] = useState(null);
   const [termsAgreed, setTermsAgreed] = useState(false);
   const navigate = useNavigate();
+  const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
   const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
 
   const handleOpenConfirmationDialog = ()=>{
@@ -117,6 +119,7 @@ function Cover() {
   }
 
   const doRegister = ({fullName, userName, password}) => {
+    handleClickOpenLoadingDialog();
     axios
         .post(registerURL, {
           name: fullName,
@@ -124,6 +127,7 @@ function Cover() {
           password: password
         })
         .then((response) => {
+          handleClickCloseLoadingDialog();
           if (response.data) {
             navigate('/authentication/sign-in');
           } else {
@@ -131,6 +135,7 @@ function Cover() {
           }
         })
         .catch(() => {
+          handleClickCloseLoadingDialog();
           setErrorMessage("Registration failed,please give valid information");
         })
   }
@@ -166,10 +171,28 @@ function Cover() {
     setTermsAgreed(!termsAgreed);
   }
 
+  const handleClickOpenLoadingDialog = () => {
+    setOpenLoadingDialog(true);
+  }
+
+  const handleClickCloseLoadingDialog = () => {
+    setOpenLoadingDialog(false);
+  }
+
+  function LoadingDialog({}) {
+    return (
+        <Dialog open={openLoadingDialog} onClose={handleClickCloseLoadingDialog}>
+          <DialogContent>
+            <BouncingBalls color="#2882eb" width="35px" height="10px" duration="1s"/>
+          </DialogContent>
+        </Dialog>
+    );
+  }
+
   return (
     <BasicLayout image={bgImage}>
       <ConfirmationDialog/>
-      <Card>
+      <Card mb={2}>
         <MDBox
           variant="gradient"
           bgColor="info"
