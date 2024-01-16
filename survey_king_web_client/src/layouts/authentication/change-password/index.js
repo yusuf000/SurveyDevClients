@@ -13,31 +13,35 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  */
 
-// @mui material components
-import Card from "@mui/material/Card";
-
-// Material Dashboard 2 React components
-import MDBox from "components/MDBox";
-import MDTypography from "components/MDTypography";
-import MDInput from "components/MDInput";
-import MDButton from "components/MDButton";
-
-// Authentication layout components
 
 // Images
 import bgImage from "assets/images/bg4.jpg";
 import axios from "axios";
-import {useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import {useNavigate, useSearchParams} from "react-router-dom";
 import BasicLayout from "../components/BasicLayout";
+import {BarWave, BouncingBalls, FadingBalls, Hypnosis} from "react-cssfx-loading";
+import MDTypography from "../../../components/MDTypography";
+import MDBox from "../../../components/MDBox";
+import MDInput from "../../../components/MDInput";
+import MDButton from "../../../components/MDButton";
+import Card from "@mui/material/Card";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import Icon from "@mui/material/Icon";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
 
 const url = `http://203.161.57.194:8080/api/v1/auth/change-password`
+
 
 function ChangePassword() {
     const [queryParams] = useSearchParams()
     const passwordRef = useRef();
     const repeatedPasswordRef = useRef();
     const [errorMessage, setErrorMessage] = useState(null);
+    const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
     const navigate = useNavigate();
 
     if(!queryParams.get("token")){
@@ -47,6 +51,7 @@ function ChangePassword() {
     const checkIfMatch = () => {
         return passwordRef.current.value === repeatedPasswordRef.current.value;
     }
+
     const changePassword = () => {
         if (!passwordRef.current || !repeatedPasswordRef.current) {
             setErrorMessage("password change failed,please give valid information");
@@ -56,6 +61,7 @@ function ChangePassword() {
             setErrorMessage("passwords don't match");
             return;
         }
+        handleClickOpenLoadingDialog();
         setErrorMessage(null);
         axios
             .post(url, {
@@ -63,6 +69,7 @@ function ChangePassword() {
                 token: queryParams.get("token")
             }, {})
             .then((response) => {
+                handleClickCloseLoadingDialog();
                 if (response.data) {
                     navigate("/authentication/sign-in")
                 } else {
@@ -70,12 +77,32 @@ function ChangePassword() {
                 }
             })
             .catch((error) => {
+                handleClickCloseLoadingDialog();
                 setErrorMessage("Password change failed,please try again");
             })
     }
 
+    const handleClickOpenLoadingDialog = () => {
+        setOpenLoadingDialog(true);
+    }
+
+    const handleClickCloseLoadingDialog = () => {
+        setOpenLoadingDialog(false);
+    }
+
+    function LoadingDialog({}) {
+        return (
+            <Dialog open={openLoadingDialog} onClose={handleClickCloseLoadingDialog}>
+                <DialogContent>
+                    <BouncingBalls color="#2882eb" width="35px" height="10px" duration="1s"/>
+                </DialogContent>
+            </Dialog>
+        );
+    }
+
     return (
         <BasicLayout image={bgImage}>
+            <LoadingDialog/>
             <Card>
                 <MDBox
                     variant="gradient"

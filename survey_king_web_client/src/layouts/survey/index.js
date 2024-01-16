@@ -17,6 +17,7 @@ import Icon from "@mui/material/Icon";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
+import {BouncingBalls} from "react-cssfx-loading";
 
 const url = `http://203.161.57.194:8080/`
 
@@ -29,6 +30,7 @@ function Survey() {
     const [currentChoiceId, setCurrentChoiceId] = useState();
     const [openSuccessDialog, setOpenSuccessDialog] = React.useState(false);
     const [openErrorDialog, setOpenErrorDialog] = React.useState(false);
+    const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
     const answerDescription = useRef(null);
 
     function startPhase() {
@@ -44,9 +46,11 @@ function Survey() {
                 }
             })
             .then((response) => {
+                handleClickCloseLoadingDialog();
                 setCurrentQuestion(response.data);
             })
             .catch((e) => {
+                handleClickCloseLoadingDialog();
                 if(e.response.status === 403){
                     localStorage.clear();
                     navigate('/authentication/sign-in')
@@ -55,6 +59,7 @@ function Survey() {
     }
 
     function submitAnswer() {
+        handleClickCloseLoadingDialog();
         const token = localStorage.getItem('token');
         let description = null;
         if (answerDescription.current !== null) description = answerDescription.current.value;
@@ -72,9 +77,13 @@ function Survey() {
             .then((response) => {
                 if (response.data === true) {
                     getNextQuestion();
+                }else{
+                    handleClickCloseLoadingDialog();
+                    handleClickOpenErrorDialog();
                 }
             })
             .catch((e) => {
+                handleClickCloseLoadingDialog();
                 handleClickOpenErrorDialog();
             })
     }
@@ -98,6 +107,7 @@ function Survey() {
                     setCurrentQuestion(response.data);
                 } else {
                     if (phase.serial === project.phases.length - 1) {
+                        handleClickCloseLoadingDialog();
                         completeSurvey();
                     } else {
                         localStorage.setItem('phase', JSON.stringify(project.phases[phase.serial + 1]));
@@ -107,6 +117,7 @@ function Survey() {
                 }
             })
             .catch((e) => {
+                handleClickCloseLoadingDialog();
                 handleClickOpenErrorDialog();
             })
     }
@@ -153,6 +164,23 @@ function Survey() {
         setOpenErrorDialog(false);
     };
 
+    const handleClickOpenLoadingDialog = () => {
+        setOpenLoadingDialog(true);
+    }
+
+    const handleClickCloseLoadingDialog = () => {
+        setOpenLoadingDialog(false);
+    }
+
+    function LoadingDialog({}) {
+        return (
+            <Dialog open={openLoadingDialog} onClose={handleClickCloseLoadingDialog}>
+                <DialogContent>
+                    <BouncingBalls color="#2882eb" width="35px" height="10px" duration="1s"/>
+                </DialogContent>
+            </Dialog>
+        );
+    }
 
     useEffect(() => {
         startPhase();
@@ -261,6 +289,7 @@ function Survey() {
 
     return (
         <DashboardLayout>
+            <LoadingDialog/>
             <DashboardNavbar/>
             <SuccessDialog/>
             <ErrorDialogue/>

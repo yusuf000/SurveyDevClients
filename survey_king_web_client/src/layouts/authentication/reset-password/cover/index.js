@@ -29,20 +29,27 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 import bgImage from "assets/images/bg4.jpg";
 import BasicLayout from "../../components/BasicLayout";
 import axios from "axios";
-import {useRef, useState} from "react";
+import React, {useRef, useState} from "react";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import {BouncingBalls} from "react-cssfx-loading";
 
 const url = `http://203.161.57.194:8080/api/v1/auth/reset-password`
+
+
 
 function ForgotPassword() {
     const emailRef = useRef();
     const [successMessage, setSuccessMessage] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
+    const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
     const resetPassword = () => {
         if (!emailRef.current) {
             setSuccessMessage(null)
             setErrorMessage("Registration failed,please give valid information");
             return;
         }
+        handleClickOpenLoadingDialog();
         setSuccessMessage(null)
         setErrorMessage(null)
         axios
@@ -52,6 +59,7 @@ function ForgotPassword() {
                 }
             })
             .then((response) => {
+                handleClickCloseLoadingDialog();
                 if (response.data) {
                     setErrorMessage(null)
                     setSuccessMessage("Password reset mail sent to " + emailRef.current.value);
@@ -62,12 +70,32 @@ function ForgotPassword() {
                 }
             })
             .catch((error) => {
+                handleClickCloseLoadingDialog();
                 setErrorMessage("Password reset failed,please try again");
             })
     }
 
+    const handleClickOpenLoadingDialog = () => {
+        setOpenLoadingDialog(true);
+    }
+
+    const handleClickCloseLoadingDialog = () => {
+        setOpenLoadingDialog(false);
+    }
+
+    function LoadingDialog({}) {
+        return (
+            <Dialog open={openLoadingDialog} onClose={handleClickCloseLoadingDialog}>
+                <DialogContent>
+                    <BouncingBalls color="#2882eb" width="35px" height="10px" duration="1s"/>
+                </DialogContent>
+            </Dialog>
+        );
+    }
+
     return (
         <BasicLayout image={bgImage}>
+            <LoadingDialog/>
             <Card>
                 <MDBox
                     variant="gradient"
