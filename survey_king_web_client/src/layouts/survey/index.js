@@ -59,7 +59,7 @@ function Survey() {
     }
 
     function submitAnswer() {
-        handleClickCloseLoadingDialog();
+        handleClickOpenLoadingDialog();
         const token = localStorage.getItem('token');
         let description = null;
         if (answerDescription.current !== null) description = answerDescription.current.value;
