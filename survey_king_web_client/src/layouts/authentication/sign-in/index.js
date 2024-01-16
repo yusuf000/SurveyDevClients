@@ -86,7 +86,7 @@ function Basic() {
         setOpenLoadingDialog(false);
     }
 
-    function LoadingDialog({}) {
+    function LoadingDialog() {
         return (
             <Dialog open={openLoadingDialog} onClose={handleClickCloseLoadingDialog}>
                 <DialogContent>
@@ -98,6 +98,7 @@ function Basic() {
 
     return (
         <BasicLayout image={bgImage} spacing={7}>
+            <LoadingDialog/>
             <MDBox>
                 <Card>
                     <MDBox

@@ -191,6 +191,7 @@ function Cover() {
 
   return (
     <BasicLayout image={bgImage}>
+      <LoadingDialog/>
       <ConfirmationDialog/>
       <Card mb={2}>
         <MDBox
