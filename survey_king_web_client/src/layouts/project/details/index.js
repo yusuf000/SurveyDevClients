@@ -71,6 +71,23 @@ function ProjectDetails() {
     const newMemberIdRef = useRef(null);
     const navigate = useNavigate();
 
+    const canProjectStart = (startDate) => {
+        const formattedDate = startDate.substring(3, 5) + "/" + startDate.substring(0, 2) + "/" + startDate.substring(6);
+        var date = new Date(formattedDate);
+        if (isNaN(date)) {
+            return false;
+        } else {
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+            date.setHours(0, 0, 0, 0);
+            if (date <= today) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
     const handleClickOpenAddMemberDialog = () => {
         setOpenAddMemberDialog(true);
     };
@@ -346,7 +363,8 @@ function ProjectDetails() {
             <Dialog open={openErrorDialog} onClose={handleClickCloseErrorDialog}>
                 <DialogTitle color="red"><Icon fontSize="medium">info</Icon> &nbsp; Error</DialogTitle>
                 <DialogContent>
-                    <MDTypography fontSize="small" color="info">{"Project can be started after "+ project.startDate}</MDTypography>
+                    <MDTypography fontSize="small"
+                                  color="info">{"Project can be started after " + project.startDate}</MDTypography>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClickCloseErrorDialog}>Ok</Button>
@@ -380,7 +398,7 @@ function ProjectDetails() {
                         </MDBox>
                         <MDBox m={3}>
                             {
-                                new Date() > new Date(project.startDate) ?
+                                canProjectStart(project.startDate) ?
                                     <MDButton color={"success"} variant={"gradient"}
                                               onClick={handleClickOpenStartConfirmationDialog}>Start</MDButton> :
                                     <MDButton color={"error"} variant={"gradient"}
@@ -471,7 +489,8 @@ function ProjectDetails() {
                 </MDBox> : null
             }
         </DashboardLayout>
-    );
+    )
+        ;
 }
 
 export default ProjectDetails;

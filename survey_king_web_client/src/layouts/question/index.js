@@ -19,6 +19,7 @@ import Choice from "./Components/Choice";
 import DialogContentText from "@mui/material/DialogContentText";
 import {useLocation, useNavigate} from "react-router-dom";
 import DashboardNavbar from "../../examples/Navbars/DashboardNavbar";
+import {BouncingBalls} from "react-cssfx-loading";
 
 const url = `http://203.161.57.194:8080`
 
@@ -76,7 +77,7 @@ function AddChoiceDialog({openAddChoiceDialog, handleCloseAddChoiceDialog, remov
 }
 
 function Question() {
-
+    const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
     const [openErrorDialog, setOpenErrorDialog] = React.useState(false);
     const [openSuccessDialog, setOpenSuccessDialog] = React.useState(false);
     const [openAddChoiceDialog, setOpenAddChoiceDialog] = React.useState(false);
@@ -124,6 +125,7 @@ function Question() {
     }
 
     const doCreateQuestion = () => {
+        handleClickOpenLoadingDialog();
         const choices = prepareChoices();
         axios
             .post(url + "/api/v1/question/add", {
@@ -138,10 +140,13 @@ function Question() {
                 }
             })
             .then(() => {
+                handleClickCloseLoadingDialog();
                 handleClickOpenSuccessDialog();
             })
             .catch((error) => {
-                console.log(error)
+                handleClickCloseLoadingDialog();
+                setErrorMessage("Failed to create question. Please try again.")
+                handleClickOpenErrorDialog();
             })
 
     }
@@ -298,6 +303,24 @@ function Question() {
         }
     }
 
+    const handleClickOpenLoadingDialog = () => {
+        setOpenLoadingDialog(true);
+    }
+
+    const handleClickCloseLoadingDialog = () => {
+        setOpenLoadingDialog(false);
+    }
+
+    function LoadingDialog() {
+        return (
+            <Dialog open={openLoadingDialog} onClose={handleClickCloseLoadingDialog}>
+                <DialogContent>
+                    <BouncingBalls color="#2882eb" width="35px" height="10px" duration="1s"/>
+                </DialogContent>
+            </Dialog>
+        );
+    }
+
 
     useEffect(() => {
         loadData();
@@ -364,6 +387,7 @@ function Question() {
 
     return (
         <DashboardLayout>
+            <LoadingDialog/>
             <DashboardNavbar/>
             <ErrorDialogue/>
             <SuccessDialog/>
