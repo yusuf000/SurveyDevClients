@@ -21,6 +21,74 @@ import {BouncingBalls} from "react-cssfx-loading";
 
 const url = `http://203.161.57.194:8080/`
 
+function Questions({qIndex,currentQuestion,answerDescription,handleRadioChange,submitAnswer}) {
+
+
+    return (
+        <MDBox>
+            <Card>
+                <MDBox m={2}>
+                    <MDTypography fontWeight={"bold"}>Q{qIndex}. {currentQuestion.description} </MDTypography>
+                </MDBox>
+                <MDBox>
+                    {
+                        currentQuestion.questionType.name === "descriptive" ? <MDBox m={2}>
+                            <TextField
+                                label="Answer"
+                                multiline
+                                rows={3}
+                                fullWidth
+                                inputRef={answerDescription}
+                            />
+                        </MDBox> : currentQuestion.questionType.name === "multiple-choice" ? <MDBox m={2}>
+                            <FormControl fullWidth>
+                                <RadioGroup onChange={handleRadioChange}
+                                >
+                                    {
+                                        currentQuestion.choices.map((choice, index1) => {
+                                                return (
+                                                    <MDBox m={1}>
+                                                        {
+                                                            choice.choices.length === 0 ?
+                                                                <FormControlLabel value={choice.id} control={<Radio/>}
+                                                                                  label={"C" + (index1 + 1) + ". " + choice.value}
+                                                                                  sx={{'& .MuiFormControlLabel-label': {fontSize: '20px'}}}/> :
+                                                                <MDBox>
+                                                                    <MDTypography
+                                                                        fontWeight={"bold"}>{"C" + (index1 + 1) + ". " + choice.value}</MDTypography>
+                                                                    {
+                                                                        choice.choices.map((subChoice, index2) => {
+                                                                                return (
+                                                                                    <FormControlLabel value={subChoice.id}
+                                                                                                      control={<Radio/>}
+                                                                                                      label={String.fromCharCode(index2 + 65) + ". " + subChoice.value}/>
+                                                                                )
+                                                                            }
+                                                                        )
+                                                                    }
+                                                                </MDBox>
+                                                        }
+                                                        <hr/>
+                                                    </MDBox>
+                                                )
+                                            }
+                                        )
+                                    }
+                                </RadioGroup>
+                            </FormControl>
+                        </MDBox> : null
+                    }
+                    <MDBox m={2}>
+                        <MDButton variant="gradient" color="info" onClick={submitAnswer}>
+                            Next
+                        </MDButton>
+                    </MDBox>
+                </MDBox>
+            </Card>
+        </MDBox>
+    );
+}
+
 function Survey() {
     const navigate = useNavigate();
     const project = JSON.parse(localStorage.getItem('project'));
@@ -32,6 +100,10 @@ function Survey() {
     const [openErrorDialog, setOpenErrorDialog] = React.useState(false);
     const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
     const answerDescription = useRef(null);
+
+    const handleRadioChange = (event) => {
+        setCurrentChoiceId(event.target.value);
+    };
 
     function startPhase() {
         phase = JSON.parse(localStorage.getItem('phase'));
@@ -219,76 +291,6 @@ function Survey() {
         );
     }
 
-    function Question() {
-        const handleRadioChange = (event) => {
-            event.preventDefault();
-            setCurrentChoiceId(event.target.value);
-        };
-
-        return (
-            <MDBox>
-                <Card>
-                    <MDBox m={2}>
-                        <MDTypography fontWeight={"bold"}>Q{qIndex}. {currentQuestion.description} </MDTypography>
-                    </MDBox>
-                    <MDBox>
-                        {
-                            currentQuestion.questionType.name === "descriptive" ? <MDBox m={2}>
-                                <TextField
-                                    label="Answer"
-                                    multiline
-                                    rows={3}
-                                    fullWidth
-                                    inputRef={answerDescription}
-                                />
-                            </MDBox> : currentQuestion.questionType.name === "multiple-choice" ? <MDBox m={2}>
-                                <FormControl fullWidth>
-                                    <RadioGroup onChange={handleRadioChange}
-                                    >
-                                        {
-                                            currentQuestion.choices.map((choice, index1) => {
-                                                    return (
-                                                        <MDBox m={1}>
-                                                            {
-                                                                choice.choices.length === 0 ?
-                                                                    <FormControlLabel value={choice.id} control={<Radio/>}
-                                                                                      label={"C" + (index1 + 1) + ". " + choice.value}
-                                                                                      sx={{'& .MuiFormControlLabel-label': {fontSize: '20px'}}}/> :
-                                                                    <MDBox>
-                                                                        <MDTypography
-                                                                            fontWeight={"bold"}>{"C" + (index1 + 1) + ". " + choice.value}</MDTypography>
-                                                                        {
-                                                                            choice.choices.map((subChoice, index2) => {
-                                                                                    return (
-                                                                                        <FormControlLabel value={subChoice.id}
-                                                                                                          control={<Radio/>}
-                                                                                                          label={String.fromCharCode(index2 + 65) + ". " + subChoice.value}/>
-                                                                                    )
-                                                                                }
-                                                                            )
-                                                                        }
-                                                                    </MDBox>
-                                                            }
-                                                            <hr/>
-                                                        </MDBox>
-                                                    )
-                                                }
-                                            )
-                                        }
-                                    </RadioGroup>
-                                </FormControl>
-                            </MDBox> : null
-                        }
-                        <MDBox m={2}>
-                            <MDButton variant="gradient" color="info" onClick={submitAnswer}>
-                                Next
-                            </MDButton>
-                        </MDBox>
-                    </MDBox>
-                </Card>
-            </MDBox>
-        );
-    }
 
     return (
         <DashboardLayout>
@@ -301,7 +303,7 @@ function Survey() {
             </MDBox>
             {
                 currentQuestion ? <MDBox>
-                    <Question/>
+                    <Questions currentQuestion={currentQuestion} handleRadioChange={handleRadioChange} answerDescription={answerDescription} qIndex={qIndex} submitAnswer={submitAnswer}/>
                 </MDBox> : null
             }
         </DashboardLayout>
