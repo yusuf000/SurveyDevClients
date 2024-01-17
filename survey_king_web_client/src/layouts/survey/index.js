@@ -61,12 +61,14 @@ function Survey() {
     function submitAnswer() {
         handleClickOpenLoadingDialog();
         const token = localStorage.getItem('token');
+        const phase = JSON.parse(localStorage.getItem('phase'));
         let description = null;
         if (answerDescription.current !== null) description = answerDescription.current.value;
         axios
             .post(url + 'api/v1/answer/submit', {
                 questionId: currentQuestion.id,
                 sasCode: project.sasCode,
+                phaseId: phase.id,
                 choiceId: currentChoiceId,
                 description: description
             }, {
@@ -105,6 +107,7 @@ function Survey() {
                     localStorage.setItem('qIndex', nextIndex + "");
                     localStorage.setItem('previousQuestion', JSON.stringify(currentQuestion));
                     setCurrentQuestion(response.data);
+                    handleClickCloseLoadingDialog();
                 } else {
                     if (phase.serial === project.phases.length - 1) {
                         handleClickCloseLoadingDialog();
