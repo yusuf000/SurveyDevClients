@@ -95,8 +95,8 @@ function ContactUs() {
                         </MKBox>
                         <MKBox p={3}>
                             <MKTypography variant="body2" color="text" mb={3}>
-                                For further questions, including partnership opportunities, please email
-                                osmansazid13@gmail.com / yusufst000@gmail.com or contact using our contact form.
+                                For further questions please email
+                                surveydevs@gmail.com or contact using our contact form.
                             </MKTypography>
                             <MKBox width="100%" component="form" method="post" autoComplete="off" onSubmit={sendMail}>
                                 <Grid container spacing={3}>
