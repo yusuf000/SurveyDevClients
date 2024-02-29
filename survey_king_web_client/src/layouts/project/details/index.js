@@ -26,6 +26,13 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import MDButton from "../../../components/MDButton";
 import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
+import {useFilePicker} from "use-file-picker";
+import {
+    FileAmountLimitValidator,
+    FileSizeValidator,
+    FileTypeValidator,
+    ImageDimensionsValidator
+} from "use-file-picker/validators";
 
 
 const url = `http://203.161.57.194:8080/`
@@ -57,6 +64,43 @@ function AddMember({openAddMemberDialog, handleCloseAddMemberDialog, newMemberId
     );
 }
 
+function ChoseFile({onImport, handleCloseChoseFileDialog, openChoseFileDialog}) {
+    const { openFilePicker, filesContent, loading, errors, plainFiles, clear} = useFilePicker({
+        multiple: true,
+        validators: [
+            new FileAmountLimitValidator({ max: 1 }),
+            new FileTypeValidator(['csv']),
+        ],
+    });
+
+    return (
+        <Dialog open={openChoseFileDialog} onClose={handleCloseChoseFileDialog}>
+            <DialogTitle>Chose a file to import</DialogTitle>
+            <DialogContent>
+                <MDBox display="flex"
+                       flexDirection={{xs: "column", sm: "row"}}>
+                    <MDTypography component="a" role="button"
+                                  color="info" mx={3} onClick={openFilePicker}>
+                        <Icon>folder</Icon>
+                    </MDTypography>
+
+                    <MDTypography variant="h6" fontWeight="medium" onClick={openFilePicker}>
+                        {
+                            filesContent.length === 0 ? "...": filesContent.map((file, index) => (
+                                file.name
+                            ))
+                        }
+                    </MDTypography>
+                </MDBox>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleCloseChoseFileDialog}>Cancel</Button>
+                <Button onClick={()=>onImport({plainFiles})}>Import</Button>
+            </DialogActions>
+        </Dialog>
+    );
+}
+
 function ProjectDetails() {
     const location = useLocation();
     const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
@@ -67,7 +111,8 @@ function ProjectDetails() {
     const [tableDataMember, setTableDataMember] = useState(null);
     const [tableDataPhase, setTableDataPhase] = useState(null);
     const [selectedPhase, setSelectedPhase] = useState(null);
-    const [openAddMemberDialog, setOpenAddMemberDialog] = React.useState(false);
+    const [openAddMemberDialog, setOpenAddMemberDialog] = useState(false);
+    const [openChoseFileDialog, setOpenChoseFileDialog] = useState(false);
     const newMemberIdRef = useRef(null);
     const navigate = useNavigate();
 
@@ -96,6 +141,14 @@ function ProjectDetails() {
         setOpenAddMemberDialog(false);
     };
 
+    const handleClickOpenChooseFileDialog = () => {
+        setOpenChoseFileDialog(true);
+    };
+
+    const handleCloseChooseFileDialog = () => {
+        setOpenChoseFileDialog(false);
+    };
+
     const onAdd = () => {
         const memberId = newMemberIdRef.current.value;
         if (memberId) {
@@ -121,6 +174,33 @@ function ProjectDetails() {
         }
 
         setOpenAddMemberDialog(false);
+    };
+
+    const onImport = ({plainFiles}) => {
+        if (plainFiles.length !== 0) {
+            const token = localStorage.getItem('token');
+            let formData = new FormData();
+            formData.append('file',plainFiles[0]);
+            axios
+                .post(url + "api/v1/question/add-csv", formData, {
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        "Content-type": "multipart/form-data",
+                    },
+                    params: {
+                        'sasCode': project.sasCode
+                    }
+                })
+                .then(() => {
+                    handleCloseChooseFileDialog()
+                })
+                .catch((e) => {
+                    handleCloseChooseFileDialog()
+                    console.log(e);
+                })
+        }
+
+        setOpenChoseFileDialog(false);
     };
 
     if (location.state != null) {
@@ -383,6 +463,9 @@ function ProjectDetails() {
             <AddMember onAdd={onAdd} handleCloseAddMemberDialog={handleCloseAddMemberDialog}
                        newMemberIdRef={newMemberIdRef} openAddMemberDialog={openAddMemberDialog}/>
 
+            <ChoseFile onImport={onImport} handleCloseChoseFileDialog={handleCloseChooseFileDialog}
+                       openChoseFileDialog={openChoseFileDialog}/>
+
             <MDBox>
                 <Card sx={{height: '100%', width: '100%'}}>
                     <MDBox
@@ -467,9 +550,28 @@ function ProjectDetails() {
                         <Grid item md={6} lg={12}>
                             {
                                 <Card sx={{height: '100%', width: '100%'}}>
-                                    <MDTypography variant="h4" fontWeight="medium" color="dark" mt={1} my={3} mx={3}>
-                                        Phases
-                                    </MDTypography>
+                                    <MDBox
+                                        display="flex"
+                                        justifyContent="space-between"
+                                        alignItems={{xs: "flex-start", sm: "center"}}
+                                        flexDirection={{xs: "column", sm: "row"}}
+                                        mb={2}
+                                    >
+                                        <MDTypography variant="h4" fontWeight="medium" color="dark" mt={1} my={3}
+                                                      mx={3}>
+                                            Phases
+                                        </MDTypography>
+                                        <MDBox mt={1} my={3} mx={3}>
+                                            <MDTypography component="a" href="#" role="button"
+                                                          color="text" mx={3}>
+                                                <Icon>info</Icon>
+                                            </MDTypography>
+                                            <MDButton variant="gradient" onClick={handleClickOpenChooseFileDialog}
+                                                      color="info">
+                                                Import From CSV
+                                            </MDButton>
+                                        </MDBox>
+                                    </MDBox>
                                     <MDTypography variant="h6" fontWeight="light" color="dark" mt={1} my={3} mx={3}>
                                         Expand a phase to see questions under it
                                     </MDTypography>
