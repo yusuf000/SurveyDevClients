@@ -33,6 +33,7 @@ import {
     FileTypeValidator,
     ImageDimensionsValidator
 } from "use-file-picker/validators";
+import {BouncingBalls} from "react-cssfx-loading";
 
 
 const url = `http://203.161.57.194:8080/`
@@ -109,12 +110,32 @@ function ProjectDetails() {
     const [isDataLoaded, setIsDataLoaded] = useState(false);
     const [isPhaseDataLoaded, setIsPhaseDataLoaded] = useState(false);
     const [tableDataMember, setTableDataMember] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
     const [tableDataPhase, setTableDataPhase] = useState(null);
     const [selectedPhase, setSelectedPhase] = useState(null);
     const [openAddMemberDialog, setOpenAddMemberDialog] = useState(false);
     const [openChoseFileDialog, setOpenChoseFileDialog] = useState(false);
     const newMemberIdRef = useRef(null);
+    const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
     const navigate = useNavigate();
+
+    const handleClickOpenLoadingDialog = () => {
+        setOpenLoadingDialog(true);
+    }
+
+    const handleClickCloseLoadingDialog = () => {
+        setOpenLoadingDialog(false);
+    }
+
+    function LoadingDialog() {
+        return (
+            <Dialog open={openLoadingDialog} onClose={handleClickCloseLoadingDialog}>
+                <DialogContent>
+                    <BouncingBalls color="#2882eb" width="35px" height="10px" duration="1s"/>
+                </DialogContent>
+            </Dialog>
+        );
+    }
 
     const canProjectStart = (startDate) => {
         const formattedDate = startDate.substring(3, 5) + "/" + startDate.substring(0, 2) + "/" + startDate.substring(6);
@@ -178,6 +199,8 @@ function ProjectDetails() {
 
     const onImport = ({plainFiles}) => {
         if (plainFiles.length !== 0) {
+            handleCloseChooseFileDialog()
+            handleClickOpenLoadingDialog();
             const token = localStorage.getItem('token');
             let formData = new FormData();
             formData.append('file',plainFiles[0]);
@@ -191,11 +214,15 @@ function ProjectDetails() {
                         'sasCode': project.sasCode
                     }
                 })
-                .then(() => {
-                    handleCloseChooseFileDialog()
+                .then((response) => {
+                    handleClickCloseLoadingDialog()
+                    if(!response.data){
+                        handleClickOpenErrorDialog("Failed to import questions from csv file")
+                    }
                 })
                 .catch((e) => {
-                    handleCloseChooseFileDialog()
+                    handleClickCloseLoadingDialog()
+                    handleClickOpenErrorDialog("Failed to import questions from csv file")
                     console.log(e);
                 })
         }
@@ -398,7 +425,8 @@ function ProjectDetails() {
         setOpenErrorDialog(false)
     }
 
-    const handleClickOpenErrorDialog = () => {
+    const handleClickOpenErrorDialog = (errorMsg) => {
+        setErrorMessage(errorMsg)
         setOpenErrorDialog(true)
     }
 
@@ -444,7 +472,7 @@ function ProjectDetails() {
                 <DialogTitle color="red"><Icon fontSize="medium">info</Icon> &nbsp; Error</DialogTitle>
                 <DialogContent>
                     <MDTypography fontSize="small"
-                                  color="info">{"Project can be started after " + project.startDate}</MDTypography>
+                                  color="info">{errorMessage}</MDTypography>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClickCloseErrorDialog}>Ok</Button>
@@ -456,6 +484,7 @@ function ProjectDetails() {
 
     return (
         <DashboardLayout>
+            <LoadingDialog/>
             <DashboardNavbar/>
             <ConfirmationDialog/>
             <ErrorDialog/>
@@ -485,7 +514,7 @@ function ProjectDetails() {
                                     <MDButton color={"success"} variant={"gradient"}
                                               onClick={handleClickOpenStartConfirmationDialog}>Start</MDButton> :
                                     <MDButton color={"error"} variant={"gradient"}
-                                              onClick={handleClickOpenErrorDialog}>Start</MDButton>
+                                              onClick={()=>handleClickOpenErrorDialog("Project can be started after ".concat(project.startDate))}>Start</MDButton>
                             }
                         </MDBox>
                     </MDBox>
