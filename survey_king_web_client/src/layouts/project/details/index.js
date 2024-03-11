@@ -29,11 +29,11 @@ import DashboardNavbar from "../../../examples/Navbars/DashboardNavbar";
 import {useFilePicker} from "use-file-picker";
 import {
     FileAmountLimitValidator,
-    FileSizeValidator,
-    FileTypeValidator,
-    ImageDimensionsValidator
+    FileTypeValidator
 } from "use-file-picker/validators";
 import {BouncingBalls} from "react-cssfx-loading";
+import CardMedia from "@mui/material/CardMedia";
+import sampleImage from "assets/images/sampleImage.jpg";
 
 
 const url = `http://203.161.57.194:8080/`
@@ -102,6 +102,43 @@ function ChoseFile({onImport, handleCloseChoseFileDialog, openChoseFileDialog}) 
     );
 }
 
+
+function DownloadFile({handleCloseDownloadFileDialog, openDownloadFileDialog}) {
+
+
+    return (
+        <Dialog open={openDownloadFileDialog} onClose={handleCloseDownloadFileDialog}>
+            <DialogTitle>Download sample file?</DialogTitle>
+            <DialogContent>
+                <MDBox display="flex"
+                       flexDirection={{xs: "column", sm: "row"}}>
+                    <CardMedia
+                        component="img"
+                        image={sampleImage}
+                        onLoad={() => console.log("this is loading")}
+                        onError={() => console.log("this is error")}
+                        alt="This is a sample image"
+                        sx={{
+                            maxWidth: {
+                                xs: "100%",
+                                sm: "500px",
+                            },
+                            objectFit: "cover",
+                        }}
+                    />
+
+
+                </MDBox>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleCloseDownloadFileDialog}>Cancel</Button>
+                <Button href={process.env.PUBLIC_URL + "/sample.csv"}
+                        download={"sample.csv"} onClick={handleCloseDownloadFileDialog}>Download</Button>
+            </DialogActions>
+        </Dialog>
+    );
+}
+
 function ProjectDetails() {
     const location = useLocation();
     const [openConfirmationDialog, setOpenConfirmationDialog] = React.useState(false);
@@ -115,6 +152,7 @@ function ProjectDetails() {
     const [selectedPhase, setSelectedPhase] = useState(null);
     const [openAddMemberDialog, setOpenAddMemberDialog] = useState(false);
     const [openChoseFileDialog, setOpenChoseFileDialog] = useState(false);
+    const [openDownloadFileDialog, setOpenDownloadFileDialog] = useState(false);
     const newMemberIdRef = useRef(null);
     const [openLoadingDialog, setOpenLoadingDialog] = useState(false);
     const navigate = useNavigate();
@@ -168,6 +206,14 @@ function ProjectDetails() {
 
     const handleCloseChooseFileDialog = () => {
         setOpenChoseFileDialog(false);
+    };
+
+    const handleClickOpenDownloadFileDialog = () => {
+        setOpenDownloadFileDialog(true);
+    };
+
+    const handleCloseDownloadFileDialog = () => {
+        setOpenDownloadFileDialog(false);
     };
 
     const onAdd = () => {
@@ -495,6 +541,9 @@ function ProjectDetails() {
             <ChoseFile onImport={onImport} handleCloseChoseFileDialog={handleCloseChooseFileDialog}
                        openChoseFileDialog={openChoseFileDialog}/>
 
+            <DownloadFile handleCloseDownloadFileDialog={handleCloseDownloadFileDialog}
+                       openDownloadFileDialog={openDownloadFileDialog}/>
+
             <MDBox>
                 <Card sx={{height: '100%', width: '100%'}}>
                     <MDBox
@@ -591,9 +640,9 @@ function ProjectDetails() {
                                             Phases
                                         </MDTypography>
                                         <MDBox mt={1} my={3} mx={3}>
-                                            <MDTypography component="a" href="#" role="button"
-                                                          color="text" mx={3}>
-                                                <Icon>info</Icon>
+                                            <MDTypography component="a" role="button"
+                                                          color="text" mx={3} onClick={handleClickOpenDownloadFileDialog}>
+                                                <Icon>download</Icon>
                                             </MDTypography>
                                             <MDButton variant="gradient" onClick={handleClickOpenChooseFileDialog}
                                                       color="info">
