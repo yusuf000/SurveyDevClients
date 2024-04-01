@@ -130,13 +130,12 @@ function CreateProject({phaseNamesMap,openCreateProjectDialog, handleCloseCreate
     const isValidInput = ({
                               projectName,
                               clientName,
-                              sasCode,
                               jobNumber,
                               startDate,
                               endDate,
                               projectTypeSelected
                           }) => {
-        if (projectName === "" || clientName === "" || sasCode === "" || jobNumber === "" || startDate === "" || endDate === "") {
+        if (projectName === "" || clientName === "" || jobNumber === "" || startDate === "" || endDate === "") {
             setErrorMessage("Please give necessary information to create a project")
             return false;
         } else if (startDate > endDate) {
@@ -171,7 +170,6 @@ function CreateProject({phaseNamesMap,openCreateProjectDialog, handleCloseCreate
         if (isValidInput({
             projectName,
             clientName,
-            sasCode,
             jobNumber,
             startDate,
             endDate,
